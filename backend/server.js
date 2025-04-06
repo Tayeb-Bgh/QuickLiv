@@ -25,12 +25,12 @@ db.connect((err) => {
 });
 
 app.get("/",(req,res)=>{
-    const query = 'SELECT * FROM users ';
+    const query = 'SELECT id,username,role FROM users ';
     db.query(query, [], async (err, results) => {
         if (err) throw err;
 
         if (results.length > 0) {
-             res.json(results[1]);
+             res.json(results);
         } else {
             res.status(401).json({ message: 'Nom d\'utilisateur ou mot de passe incorrect' });
         }
