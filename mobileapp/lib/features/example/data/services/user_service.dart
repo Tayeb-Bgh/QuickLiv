@@ -8,7 +8,7 @@ class UserService {
   UserService(this.dio);
 
   Future<List<UserModel>> fetchUsers() async {
-    final response = await dio.get('${ApiConfig.baseUrl}/');
+    final response = await dio.get('${ApiConfig.baseUrl}/example');
 
     if (response.statusCode == 200) {
       print(response.data);
