@@ -8,6 +8,6 @@ class GetUsers {
   GetUsers(this.repository);
 
   Future<List<UserEntity>> call() async {
-    return await repository.getUsers();
+    return await repository.getUsersWithHobies();
   }
 }

@@ -2,7 +2,8 @@ import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mobileapp/features/example/presentation/pages/presentation_page.dart';
-import 'package:mobileapp/features/skeleton/presentation/widgets/custom_top_bar.dart';
+
+import 'package:mobileapp/features/client/skeleton/presentation/widgets/custom_top_bar.dart';
 import 'package:mobileapp/core/constants/constants.dart' as kColors;
 
 class Skeleton extends StatefulWidget {
@@ -40,11 +41,11 @@ class _SkeletonState extends State<Skeleton> {
 
   @override
   Widget build(BuildContext context) {
+    final height = MediaQuery.of(context).size.height;
+    final statusBarHeight = MediaQuery.of(context).padding.top;
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(
-          MediaQuery.of(context).size.height * 0.09,
-        ),
+        preferredSize: Size.fromHeight(statusBarHeight + height * 0.033),
         child: Container(
           color: kColors.kPrimaryWhite,
           child: CustomPaint(
@@ -54,10 +55,7 @@ class _SkeletonState extends State<Skeleton> {
           ),
         ),
       ),
-      body: IndexedStack(
-        index: _currentIndex,
-        children: _pages,
-      ),
+      body: IndexedStack(index: _currentIndex, children: _pages),
       bottomNavigationBar: CurvedNavigationBar(
         key: _bottomNavigationKey,
         index: _currentIndex,

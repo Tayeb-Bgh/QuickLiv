@@ -6,8 +6,8 @@ const router = express.Router();
 
 
 
-router.get("/",(req,res)=>{
-    const query = 'SELECT id,username,role FROM users ';
+router.get("/users",(req,res)=>{
+    const query = 'SELECT idUser,username,role,imgUrl,birthDate FROM users ';
     db.query(query, [], async (err, results) => {
         if (err) throw err;
 
@@ -15,6 +15,22 @@ router.get("/",(req,res)=>{
              res.json(results);
         } else {
             res.status(401).json({ message: 'Nom d\'utilisateur ou mot de passe incorrect' });
+        }
+    });
+})
+
+router.get("/hobies/:idUser",(req,res)=>{
+    const idUser = req.params.idUser;
+
+    const query = 'SELECT h.idHobie,h.nameHobie FROM hobies h JOIN UserHobie uh on uh.idHobie =  h.idHobie where uh.idUser =  ?';
+
+    db.query(query, [idUser], async (err, results) => {
+        if (err) throw err;
+
+        if (results.length >= 0) {
+             res.json(results);
+        } else {
+            res.status(404).json({ message: 'Youzer note fawnd' });
         }
     });
 })

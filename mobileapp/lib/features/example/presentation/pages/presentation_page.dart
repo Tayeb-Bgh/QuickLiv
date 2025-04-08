@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mobileapp/core/constants/constants.dart';
+import 'package:mobileapp/core/failure/failure.dart';
 import '../providers/user_provider.dart';
 import '../widgets/user_list.dart';
 
@@ -20,14 +22,20 @@ class _ExamplePageState extends ConsumerState<ExamplePage> {
     final usersAsyncValue = ref.watch(usersFutureProvider);
 
     return Container(
-      color: Colors.white,
+      color: kPrimaryWhite,
       child: usersAsyncValue.when(
-        data: (users) => RefreshIndicator(
-          onRefresh: _refresh,
-          child: UserList(users: users),
-        ),
+        data:
+            (users) => RefreshIndicator(
+              onRefresh: _refresh,
+              child: UserList(users: users),
+            ),
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (err, _) => Center(child: Text('Erreur : $err')),
+        error:
+            (err, _) => FailureWidget(
+              err: err,
+              onPressed: () => _refresh(),
+              show: true,
+            ),
       ),
     );
   }
