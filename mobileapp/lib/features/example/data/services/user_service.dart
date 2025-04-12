@@ -1,13 +1,14 @@
 import 'package:dio/dio.dart';
-import 'package:mobileapp/core/config/api_config.dart';
+import 'package:mobileapp/core/config/backend_api_config.dart';
 
 import 'package:mobileapp/features/example/data/models/hobie_model.dart';
 import '../models/user_model.dart';
+
 class UserService {
   final Dio dio;
 
   UserService(this.dio);
-  
+
   Future<List<UserModel>> fetchUsers() async {
     try {
       final url = await ApiConfig.getBaseUrl();
