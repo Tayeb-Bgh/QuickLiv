@@ -1,39 +1,56 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mobileapp/core/config/dark_mode_provider.dart';
 
-class LoginPage extends StatefulWidget {
+class LoginPage extends ConsumerStatefulWidget {
   const LoginPage({super.key});
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  ConsumerState<LoginPage> createState() => _LoginPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _LoginPageState extends ConsumerState<LoginPage> {
   final TextEditingController _phoneController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
+    final bool = ref.watch(darkModeProvider);
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
         height: height * 0.7,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Column(
               children: [
-                const Text(
-                  'Bienvenue !',
-                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(height: 8),
-                const Text(
-                  'Connectez-vous pour accéder à votre\nespace.',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 14, color: Colors.black87),
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 24,
+                    vertical: 20,
+                  ),
+                  child: Column(
+                    children: [
+                      Text(
+                        'Bienvenue !',
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      SizedBox(height: 8),
+                      AutoSizeText(
+                        'Connectez-vous pour accéder à votre\nespace.',
+                        textAlign: TextAlign.center,
+                        maxLines: 2,
+                        style: TextStyle(fontSize: 14, color: Colors.black87),
+                      ),
+                    ],
+                  ),
                 ),
                 const SizedBox(height: 35),
 
@@ -78,13 +95,34 @@ class _LoginPageState extends State<LoginPage> {
 
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: const [
-                    Text("Vous ne possédez pas de compte ? "),
-                    Text(
-                      "S’inscrire.",
-                      style: TextStyle(
-                        color: Color(0xFFE13838),
-                        fontWeight: FontWeight.bold,
+                  children: [
+                    SizedBox(
+                      width: width * 0.6,
+
+                      child: AutoSizeText(
+                        "Vous ne possédez pas de compte ? ",
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                        ),
+                        maxFontSize: 16,
+                        minFontSize: 10,
+                        maxLines: 1,
+                      ),
+                    ),
+                    const SizedBox(width: 5),
+                    SizedBox(
+                      width: width * 0.2,
+                      child: AutoSizeText(
+                        "Renvoyer",
+                        style: TextStyle(
+                          color: Color(0xFFE13838),
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        maxFontSize: 16,
+                        minFontSize: 10,
+                        maxLines: 1,
                       ),
                     ),
                   ],

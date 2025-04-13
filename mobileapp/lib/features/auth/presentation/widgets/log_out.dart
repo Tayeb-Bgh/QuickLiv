@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mobileapp/core/config/dark_mode_provider.dart';
 import 'package:mobileapp/core/constants/constants.dart';
 
 class LogOut extends ConsumerWidget {
-  final isDarkMode;
-
-  const LogOut({super.key, required this.isDarkMode});
+  const LogOut({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
     final dialogHeight = screenHeight * 0.22;
+    final isDarkMode = ref.watch(darkModeProvider);
 
     final Color textColor = isDarkMode ? kLightGray : kPrimaryBlack;
     final Color backgroundColor = isDarkMode ? kPrimaryDark : kSecondaryWhite;

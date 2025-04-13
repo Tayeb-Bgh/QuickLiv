@@ -1,18 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mobileapp/core/config/dark_mode_provider.dart';
 
-class RegisterWidget extends StatefulWidget {
+class RegisterWidget extends ConsumerStatefulWidget {
   const RegisterWidget({super.key});
 
   @override
-  State<RegisterWidget> createState() => _TestState();
+  ConsumerState<RegisterWidget> createState() => _TestState();
 }
 
-class _TestState extends State<RegisterWidget> {
+class _TestState extends ConsumerState<RegisterWidget> {
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
     bool isChecked = false;
+    bool isDarkMode = ref.watch(darkModeProvider);
 
     return Container(
       width: double.infinity,
