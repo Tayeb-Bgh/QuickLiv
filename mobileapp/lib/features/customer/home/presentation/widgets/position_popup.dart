@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mobileapp/core/config/dark_mode_provider.dart';
 
-class PositionPopup extends StatelessWidget {
+class PositionPopup extends ConsumerWidget {
   const PositionPopup({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final screenWidth = MediaQuery.of(context).size.width;
+    final bool isDarkMode = ref.watch(darkModeProvider);
     return Center(
       child: Container(
         width: screenWidth * 0.9,

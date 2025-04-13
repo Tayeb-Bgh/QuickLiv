@@ -1,9 +1,11 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mobileapp/core/config/dark_mode_provider.dart';
 import 'package:mobileapp/features/customer/groceries/business/entities/grocery_entity.dart';
 import 'package:mobileapp/core/constants/constants.dart';
 
-class BusinessStoryBtn extends StatelessWidget {
+class BusinessStoryBtn extends ConsumerWidget {
   final Grocery grocery;
   final bool isDarkMode;
 
@@ -14,7 +16,8 @@ class BusinessStoryBtn extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isDarkMode = ref.watch(darkModeProvider);
     final Color textColor = isDarkMode ? kLightGray : kPrimaryBlack;
 
     return Column(

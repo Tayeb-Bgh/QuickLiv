@@ -1,6 +1,8 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:mobileapp/core/config/dark_mode_provider.dart';
 
 class OrderItem2 {
   final String name;
@@ -10,7 +12,7 @@ class OrderItem2 {
   OrderItem2({required this.name, required this.price, required this.quantity});
 }
 
-class OrderDialog2 extends StatefulWidget {
+class OrderDialog2 extends ConsumerStatefulWidget {
   final String orderNumber;
   final String imgUrl;
   final List<OrderItem2> items;
@@ -42,15 +44,16 @@ class OrderDialog2 extends StatefulWidget {
   });
 
   @override
-  State<OrderDialog2> createState() => _OrderDialogState();
+  ConsumerState<OrderDialog2> createState() => _OrderDialogState();
 }
 
-class _OrderDialogState extends State<OrderDialog2> {
+class _OrderDialogState extends ConsumerState<OrderDialog2> {
   bool _expanded = false;
 
   @override
   Widget build(BuildContext context) {
     final dialogWidth = MediaQuery.of(context).size.width * 0.9;
+    final bool isDarkMode = ref.watch(darkModeProvider);
     return Padding(
       padding: const EdgeInsets.only(
         top: 8.0,

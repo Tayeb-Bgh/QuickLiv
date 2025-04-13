@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mobileapp/core/config/dark_mode_provider.dart';
 
-class NoticeInputWidget extends StatefulWidget {
+class NoticeInputWidget extends ConsumerStatefulWidget {
   const NoticeInputWidget({super.key});
 
   @override
-  _NoticeInputWidgetState createState() => _NoticeInputWidgetState();
+  ConsumerState<NoticeInputWidget> createState() => _NoticeInputWidgetState();
 }
 
-class _NoticeInputWidgetState extends State<NoticeInputWidget> {
+class _NoticeInputWidgetState extends ConsumerState<NoticeInputWidget> {
   final TextEditingController _controller = TextEditingController();
   final int _maxLength = 150;
 
@@ -22,8 +24,8 @@ class _NoticeInputWidgetState extends State<NoticeInputWidget> {
   @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
-
     final dialogHeight = screenHeight * 0.28;
+    bool isDarkMode = ref.watch(darkModeProvider);
 
     return Dialog(
       backgroundColor: const Color(0xFFF5F5F5),

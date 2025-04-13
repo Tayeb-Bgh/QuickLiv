@@ -1,16 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mobileapp/features/customer/groceries/business/entities/product_with_reduc_entity.dart';
 import 'package:mobileapp/core/utils/utility_functions.dart';
+import 'package:mobileapp/core/config/dark_mode_provider.dart';
 
-class ProductReducCard extends StatelessWidget {
+class ProductReducCard extends ConsumerWidget {
   final ProductWithReduc product;
 
   const ProductReducCard({super.key, required this.product});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
+
+    final bool isDarkMode = ref.watch(darkModeProvider);
+
     return Container(
       width: width * 0.4,
       height: height * 0.35,

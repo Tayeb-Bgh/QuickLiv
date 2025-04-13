@@ -25,7 +25,7 @@ class Coupon extends StatelessWidget {
           width: 250,
           height: 130,
           margin: EdgeInsets.symmetric(horizontal: 25),
-    
+
           child: Stack(
             children: [
               Positioned(

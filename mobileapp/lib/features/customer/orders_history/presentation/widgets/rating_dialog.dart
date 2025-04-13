@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mobileapp/core/config/dark_mode_provider.dart';
 
-class RatingDialog extends StatefulWidget {
+class RatingDialog extends ConsumerStatefulWidget {
   final String title;
   final double initialRating;
   final Function(double) onRatingConfirmed;
@@ -14,10 +16,10 @@ class RatingDialog extends StatefulWidget {
   });
 
   @override
-  State<RatingDialog> createState() => _RatingDialogState();
+  ConsumerState<RatingDialog> createState() => _RatingDialogState();
 }
 
-class _RatingDialogState extends State<RatingDialog> {
+class _RatingDialogState extends ConsumerState<RatingDialog> {
   late double _currentRating;
 
   @override
@@ -28,6 +30,7 @@ class _RatingDialogState extends State<RatingDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final bool isDarkMode = ref.watch(darkModeProvider);
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
 

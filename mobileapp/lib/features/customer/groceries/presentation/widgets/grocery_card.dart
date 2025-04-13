@@ -1,18 +1,22 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mobileapp/core/config/dark_mode_provider.dart';
 import 'package:mobileapp/features/customer/groceries/business/entities/grocery_entity.dart';
 import 'package:mobileapp/core/utils/utility_functions.dart';
 
-class GroceryCard extends StatelessWidget {
+class GroceryCard extends ConsumerWidget {
   final bool isFull;
   final Grocery grocery;
 
   const GroceryCard({super.key, required this.grocery, this.isFull = true});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
+    final bool isDarkMode = ref.watch(darkModeProvider);
+
     return Padding(
       padding: const EdgeInsets.all(4.0),
       child: SizedBox(

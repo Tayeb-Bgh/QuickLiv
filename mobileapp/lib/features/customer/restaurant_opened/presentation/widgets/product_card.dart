@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:mobileapp/core/config/dark_mode_provider.dart';
 
-class ProductCard extends StatelessWidget {
+class ProductCard extends ConsumerWidget {
   final String imgUrl;
   final String nameProd;
   final String descProd;
@@ -15,7 +17,8 @@ class ProductCard extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final bool isDarkMode = ref.watch(darkModeProvider);
     return Dialog(
       shadowColor: Colors.black,
       backgroundColor: Colors.white,
