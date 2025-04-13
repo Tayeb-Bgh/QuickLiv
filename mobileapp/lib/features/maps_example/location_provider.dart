@@ -2,7 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:mobileapp/core/config/location_config.dart';
-import 'package:mobileapp/core/params/route_params.dart';
+import 'package:mobileapp/core/params/origin_dest_params.dart';
 import 'package:mobileapp/core/config/distance_duration_service.dart';
 
 final locationServiceProvider = Provider<LocationService>((ref) {
@@ -49,7 +49,8 @@ final polylineProvider = FutureProvider.family<List<LatLng>, LatLng>((
 });
 
 // Pour avoir une route tracer entre la position actuel et la destination
-final polylineTwoPointsProvider = FutureProvider.family<List<LatLng>, OriginDestParams>((ref, params) async {
+final polylineTwoPointsProvider =
+    FutureProvider.family<List<LatLng>, OriginDestParams>((ref, params) async {
       try {
         final LatLng originPos = params.origin;
         final LatLng destinationPos = params.destination;
@@ -81,15 +82,19 @@ final polylineTwoPointsProvider = FutureProvider.family<List<LatLng>, OriginDest
     });
 
 // Pour recuperer la distance en deux points
-final distanceInMetersProvider = FutureProvider.family<double, OriginDestParams>((ref, params) async {
-  return await getDrivingDistanceInMeters(
-    origin: params.origin,
-    destination: params.destination,
-  );
-});
+final distanceInMetersProvider =
+    FutureProvider.family<double, OriginDestParams>((ref, params) async {
+      return await getDrivingDistanceInMeters(
+        origin: params.origin,
+        destination: params.destination,
+      );
+    });
 
 // Pour recuperer la duree de trajet entre deux points
-final drivingDurationProvider = FutureProvider.family<int, OriginDestParams>((ref, params) async {
+final drivingDurationProvider = FutureProvider.family<int, OriginDestParams>((
+  ref,
+  params,
+) async {
   return await getDrivingDurationInSeconds(
     origin: params.origin,
     destination: params.destination,

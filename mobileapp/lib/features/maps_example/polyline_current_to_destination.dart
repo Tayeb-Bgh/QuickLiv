@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mobileapp/features/client/maps_example/location_provider.dart'; // ta fonction ici
+import 'package:mobileapp/features/maps_example/location_provider.dart'; // ta fonction ici
 
 class GoogleMapsPage extends ConsumerStatefulWidget {
   const GoogleMapsPage({super.key});
