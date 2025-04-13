@@ -198,14 +198,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.0"
-  flutter_project:
-    dependency: "direct main"
-    description:
-      name: flutter_project
-      sha256: a9cceac620ddd229000b5c6211681165d16f1bede46492da75b501ed2eabaa00
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.0.1"
   flutter_rating_bar:
     dependency: "direct main"
     description:
