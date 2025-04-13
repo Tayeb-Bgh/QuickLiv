@@ -25,7 +25,7 @@ class UserModel {
     return {'idUser': idUser, 'username': username, 'role': role,  'birthDate':birthDate};
   }
 
-  UserEntity toEntity(List<HobieEntity> hobies) {
+  UserEntity toEntity(List<Hobie> hobies) {
     return UserEntity(
       id: idUser,
       username: username,

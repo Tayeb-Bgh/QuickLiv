@@ -1,10 +1,7 @@
-
-
-class HobieEntity {
+class Hobie {
   final int id;
   final String? name;
 
-  HobieEntity({required this.id, required this.name});
-
+  Hobie({required this.id, required this.name});
 
 }

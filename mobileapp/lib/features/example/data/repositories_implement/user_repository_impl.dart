@@ -57,7 +57,7 @@ class UserRepositoryImpl implements UserRepository {
 
     // 3. Convert models to entities
     print('[DEBUG] Conversion des modèles en entités...');
-    final List<List<HobieEntity>> hobieEntitiesList =
+    final List<List<Hobie>> hobieEntitiesList =
         hobiesList.map((hobies) {
           print('[DEBUG] Conversion de ${hobies.length} hobbies');
           return hobies.map((hobie) => hobie.toEntity()).toList();

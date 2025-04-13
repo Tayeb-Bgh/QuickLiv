@@ -21,8 +21,8 @@ class HobieModel {
     };
   }
 
-   HobieEntity toEntity() {
-    return HobieEntity(
+   Hobie toEntity() {
+    return Hobie(
       id: id,
       name: name,
     );

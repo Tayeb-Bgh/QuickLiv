@@ -7,7 +7,7 @@ class UserEntity {
   final String imgUrl;
 
   final int age;
-  final List<HobieEntity> hobies;
+  final List<Hobie> hobies;
 
   UserEntity({
     required this.id,
