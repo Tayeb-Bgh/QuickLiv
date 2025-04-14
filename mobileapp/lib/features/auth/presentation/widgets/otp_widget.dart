@@ -22,9 +22,9 @@ class _OtpWidgetState extends ConsumerState<OtpWidget> {
     final height = MediaQuery.of(context).size.height;
     final isDarkMode = ref.watch(darkModeProvider);
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: Container(
-        height: height * 0.7,
+      padding: EdgeInsets.symmetric(horizontal: 20),
+      child: SizedBox(
+        height: height * 0.68,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -32,22 +32,35 @@ class _OtpWidgetState extends ConsumerState<OtpWidget> {
               children: [
                 Column(
                   children: [
-                    const Text(
-                      'Saiser le code !',
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 24,
+                        vertical: 20,
                       ),
-                    ),
-                    const SizedBox(height: 8),
-                    const Text(
-                      'Veuillez saisir le code d’accès qui vous a été envoyé par SMS.',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: 14, color: Colors.black87),
+                      child: Column(
+                        children: [
+                          Text(
+                            'Saiser le code !',
+                            style: TextStyle(
+                              fontSize: 31,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          SizedBox(height: 6),
+                          Text(
+                            'Veuillez saisir le code d’accès qui vous a été envoyé par Telegram.',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.black87,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ],
                 ),
-                const SizedBox(height: 35),
+                SizedBox(height: 30),
                 OtpTextField(
                   numberOfFields: 5,
                   filled: true,
@@ -61,27 +74,27 @@ class _OtpWidgetState extends ConsumerState<OtpWidget> {
                   onCodeChanged: (String code) {},
                 ),
 
-                const SizedBox(height: 30),
+                SizedBox(height: 30),
 
                 SizedBox(
                   width: width * 0.6,
                   height: height * 0.055,
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFFE13838),
+                      backgroundColor: Color(0xFFE13838),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),
                     ),
                     onPressed: () {},
-                    child: const Text(
+                    child: Text(
                       'Se connecter',
                       style: TextStyle(fontSize: 16, color: Color(0xFFF5F5F5)),
                     ),
                   ),
                 ),
 
-                const SizedBox(height: 15),
+                SizedBox(height: 15),
 
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -100,7 +113,7 @@ class _OtpWidgetState extends ConsumerState<OtpWidget> {
                         maxLines: 1,
                       ),
                     ),
-                    const SizedBox(width: 5),
+                    SizedBox(width: 5),
                     SizedBox(
                       width: width * 0.2,
                       child: AutoSizeText(
@@ -121,7 +134,7 @@ class _OtpWidgetState extends ConsumerState<OtpWidget> {
             ),
 
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
               child: AutoSizeText(
                 "En vous connectant, vous acceptez nos conditions d’utilisation et notre politique de confidentialité.",
                 style: TextStyle(fontSize: 16),

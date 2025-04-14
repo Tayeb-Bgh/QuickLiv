@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:mobileapp/core/constants/constants.dart' ;
+import 'package:mobileapp/core/constants/constants.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:mobileapp/features/auth/presentation/pages/login_page.dart';
 
 class MyPainter extends CustomPainter {
   @override
@@ -43,6 +44,43 @@ class CustomTopBar extends StatelessWidget {
 
   const CustomTopBar({super.key, required this.title});
 
+  void _showAuthPopup(BuildContext context) {
+    showDialog(
+      context: context,
+      builder:
+          (context) => AlertDialog(
+            title: const Text('Connexion requise'),
+            content: const Text(
+              'Veillez vous connecter pour accéder à plus de fonctionnalité et commander vos plats.',
+            ),
+            actions: [
+              // Bouton "Retourner explorer" - ferme simplement le popup
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: const Text('Retourner explorer'),
+              ),
+              // Bouton "Se connecter" - ferme le popup ET navigue vers LoginPage
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(backgroundColor: kPrimaryRed),
+                onPressed: () {
+                  // Fermer d'abord le popup
+                  Navigator.of(context).pop();
+                  // Puis naviguer vers la page de connexion
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => LoginPage()),
+                  );
+                },
+                child: const Text(
+                  'Se connecter',
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+            ],
+          ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
@@ -76,7 +114,10 @@ class CustomTopBar extends StatelessWidget {
                 width * 0.06,
               ),
               const SizedBox(width: 6),
-              _buildIcon(context, "assets/images/user.svg"),
+              GestureDetector(
+                onTap: () => _showAuthPopup(context),
+                child: _buildIcon(context, "assets/images/user.svg"),
+              ),
             ],
           ),
         ),
@@ -95,10 +136,7 @@ class CustomTopBar extends StatelessWidget {
       width: width * 0.088,
       height: width * 0.088,
       child: Container(
-        decoration: BoxDecoration(
-          color: kDarkGray,
-          shape: BoxShape.circle,
-        ),
+        decoration: BoxDecoration(color: kDarkGray, shape: BoxShape.circle),
         child: Center(
           child: SvgPicture.asset(
             assetPath,

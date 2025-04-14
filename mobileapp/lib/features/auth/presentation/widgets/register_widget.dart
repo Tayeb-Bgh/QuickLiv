@@ -1,6 +1,9 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mobileapp/core/config/dark_mode_provider.dart';
+import 'package:mobileapp/core/constants/constants.dart';
+import 'package:mobileapp/features/auth/presentation/pages/login_page.dart';
 
 class RegisterWidget extends ConsumerStatefulWidget {
   const RegisterWidget({super.key});
@@ -17,41 +20,49 @@ class _TestState extends ConsumerState<RegisterWidget> {
     bool isChecked = false;
     bool isDarkMode = ref.watch(darkModeProvider);
 
+    final backgroundColor = isDarkMode ? kPrimaryDark : kSecondaryWhite;
+    final textColor1 = isDarkMode ? kPrimaryWhite : kPrimaryDark;
+    final textFieldColor = isDarkMode ? kSecondaryDark : kWhiteGray;
+
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
-      decoration: const BoxDecoration(
-        color: Color(0xFFF5F5F5),
+      decoration: BoxDecoration(
+        color: backgroundColor,
         borderRadius: BorderRadius.vertical(top: Radius.circular(32)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Center(
+          Center(
             child: Column(
               children: [
                 Text(
                   'Bienvenue !',
-                  style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                    fontSize: 28,
+                    fontWeight: FontWeight.bold,
+                    color: textColor1,
+                  ),
                 ),
                 SizedBox(height: 4),
                 Text(
                   'Créez votre compte et commencez à vous\nfaire livrer',
                   textAlign: TextAlign.center,
-                  style: TextStyle(color: Colors.black54, fontSize: 14),
+                  style: TextStyle(color: textColor1, fontSize: 14),
                 ),
               ],
             ),
           ),
           const SizedBox(height: 24),
 
-          _buildInput(Icons.person, 'Nom'),
+          _buildInput(Icons.person, 'Nom',textColor1,textFieldColor),
           SizedBox(height: height * 0.015),
-          _buildInput(Icons.person, 'Prénom'),
+          _buildInput(Icons.person, 'Prénom',textColor1,textFieldColor),
           SizedBox(height: height * 0.015),
-          _buildInput(Icons.phone, 'Numéro de téléphone'),
+          _buildInput(Icons.phone, 'Numéro de téléphone',textColor1,textFieldColor),
           SizedBox(height: height * 0.015),
-          _buildInput(Icons.calendar_today, 'Date de naissance'),
+          _buildInput(Icons.calendar_today, 'Date de naissance',textColor1,textFieldColor),
           SizedBox(height: height * 0.015),
 
           Row(
@@ -63,18 +74,18 @@ class _TestState extends ConsumerState<RegisterWidget> {
                     isChecked = value ?? false;
                   });
                 },
-                activeColor: Colors.red,
+                activeColor: kPrimaryRed,
               ),
               Expanded(
                 child: RichText(
                   text: TextSpan(
-                    style: TextStyle(color: Colors.black),
+                    style: TextStyle(color: textColor1),
                     children: [
                       TextSpan(text: 'Accepter les '),
                       TextSpan(
                         text: 'termes & politiques de confidentialité.',
                         style: TextStyle(
-                          color: Colors.red,
+                          color: kPrimaryRed,
                           fontWeight: FontWeight.w500,
                         ),
                       ),
@@ -94,7 +105,7 @@ class _TestState extends ConsumerState<RegisterWidget> {
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   fixedSize: Size.fromWidth(20.0),
-                  backgroundColor: Color(0xffE13838),
+                  backgroundColor: kPrimaryRed,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
@@ -103,7 +114,7 @@ class _TestState extends ConsumerState<RegisterWidget> {
                 onPressed: () {},
                 child: Text(
                   'S’inscrire',
-                  style: TextStyle(fontSize: 16, color: Colors.white),
+                  style: TextStyle(fontSize: 16, color: kPrimaryWhite),
                 ),
               ),
             ),
@@ -111,19 +122,49 @@ class _TestState extends ConsumerState<RegisterWidget> {
 
           const SizedBox(height: 20),
 
-          Center(
-            child: RichText(
-              text: const TextSpan(
-                style: TextStyle(color: Colors.black87),
-                children: [
-                  TextSpan(text: 'Vous avez déjà un compte ? '),
-                  TextSpan(
-                    text: 'Se connecter.',
-                    style: TextStyle(color: Colors.red),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SizedBox(
+                width: width * 0.6,
+
+                child: AutoSizeText(
+                  "Vous possédez deja un compte ?",
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                    color: textColor1,
                   ),
-                ],
+                  maxFontSize: 15,
+                  minFontSize: 10,
+                  maxLines: 1,
+                ),
               ),
-            ),
+              const SizedBox(width: 5),
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => LoginPage()),
+                  );
+                },
+                child: SizedBox(
+                  width: width * 0.26,
+                  child: AutoSizeText(
+                    "Se connecter",
+                    style: TextStyle(
+                      color: kPrimaryRed,
+
+                      fontSize: 15,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    maxFontSize: 16,
+                    minFontSize: 13,
+                    maxLines: 2,
+                  ),
+                ),
+              ),
+            ],
           ),
         ],
       ),
@@ -131,13 +172,17 @@ class _TestState extends ConsumerState<RegisterWidget> {
   }
 }
 
-Widget _buildInput(IconData icon, String hint) {
+Widget _buildInput(IconData icon, String hint,Color textColor1, textFieldColor) {
   return TextField(
+    style: TextStyle(color: textColor1), 
     decoration: InputDecoration(
-      prefixIcon: Icon(icon),
+      prefixIcon: Icon(icon, color: textColor1), // Icône en blanc
       hintText: hint,
+      hintStyle: TextStyle(
+        color: textColor1,
+      ), // Hint en blanc semi-transparent
       filled: true,
-      fillColor: const Color(0xFFEDEDED),
+      fillColor: textFieldColor, // Fond gris foncé
       contentPadding: const EdgeInsets.symmetric(vertical: 16),
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(14),

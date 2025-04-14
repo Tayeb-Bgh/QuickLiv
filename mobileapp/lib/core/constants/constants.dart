@@ -16,6 +16,7 @@ const Color kDarkGray = Color(0xFF504E4E);
 const Color kMediumGray = Color(0xFF686868); 
 const Color kRegularGray = Color(0xFFBCBCBC); 
 const Color kLightGray = Color(0xFFCCCCCC);
+const Color kWhiteGray = Color.fromARGB(255, 225, 224, 224);
 
 // Noir
 const Color kPrimaryBlack = Color(0xFF1A1A1A);

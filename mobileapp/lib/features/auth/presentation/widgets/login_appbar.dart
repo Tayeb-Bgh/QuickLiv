@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mobileapp/core/config/dark_mode_provider.dart';
+
 
 class LoginAppBar extends StatelessWidget {
   const LoginAppBar({super.key});
@@ -11,11 +10,11 @@ class LoginAppBar extends StatelessWidget {
     return CustomPaint(
       painter: MyPainter1(),
       child: Container(
-        height: height * 0.3,
+        height: height * 0.36,
         width: double.infinity,
         child: Center(
           child: Padding(
-            padding: EdgeInsets.all(height * 0.05),
+            padding: EdgeInsets.all(height * 0.08),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
@@ -24,6 +23,7 @@ class LoginAppBar extends StatelessWidget {
                   backgroundColor: Colors.grey,
                   child: Icon(Icons.person, size: 50, color: Colors.white),
                 ),
+                SizedBox(height: height * 0.019,),
                 Text(
                   'QuickLiv',
                   style: TextStyle(

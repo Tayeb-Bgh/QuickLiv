@@ -1,25 +1,32 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mobileapp/core/config/dark_mode_provider.dart';
+import 'package:mobileapp/core/constants/constants.dart';
 import 'package:mobileapp/features/auth/presentation/widgets/login_appbar.dart';
-import 'package:mobileapp/features/auth/presentation/widgets/otp_widget.dart';
+import 'package:mobileapp/features/auth/presentation/widgets/register_widget.dart';
 
 
-class OtpPage extends StatefulWidget {
-  const OtpPage({super.key});
+class RegisterPage extends ConsumerStatefulWidget {
+  const RegisterPage({super.key});
 
   @override
-  State<OtpPage> createState() => _OtpPageState();
+  ConsumerState<RegisterPage> createState() => _RegisterPageState();
 }
 
-class _OtpPageState extends State<OtpPage> {
+class _RegisterPageState extends ConsumerState<RegisterPage> {
   bool isChecked = false;
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = ref.watch(darkModeProvider);
     final height = MediaQuery.of(context).size.height;
+
+    final backgroundColor = isDarkMode ? kPrimaryDark : kSecondaryWhite;
+    
     return Scaffold(
-      backgroundColor: Color(0xFFF5F5F5),
+      backgroundColor: backgroundColor,
       body: SingleChildScrollView(
-        child: Container(
+        child: SizedBox(
           height: MediaQuery.of(context).size.height,
           width: double.infinity,
           child: Stack(
@@ -28,7 +35,7 @@ class _OtpPageState extends State<OtpPage> {
                 top: height * 0.31,
                 left: 0,
                 right: 0,
-                child: OtpWidget(),
+                child: RegisterWidget(),
               ),
               Positioned(top: 0, left: 0, right: 0, child: LoginAppBar()),
             ],
