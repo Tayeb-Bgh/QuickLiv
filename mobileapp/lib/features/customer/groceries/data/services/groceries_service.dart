@@ -3,13 +3,15 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:mobileapp/features/customer/groceries/data/models/business_model.dart';
 import 'package:mobileapp/core/config/backend_api_config.dart';
+import 'package:mobileapp/features/customer/groceries/data/models/product_business_model.dart';
+import 'package:mobileapp/features/customer/groceries/data/models/product_model.dart';
 
 class GroceriesService {
   final Dio dio;
 
   GroceriesService(this.dio);
 
-  Future<List<BusinessModel>> fetchGroceriesModels(
+  Future<List<BusinessModel>> fetchGroceriesModelsByLocation(
     String wilaya,
     double lat,
     double lng,
@@ -17,28 +19,77 @@ class GroceriesService {
     try {
       final url = await ApiConfig.getBaseUrl();
 
-      print("[DEBUG] $url");
-
-      print("[DEBUG] waiting for response");
-      final response = await dio.get(
-        "http://192.168.43.83:3000/api/groceries/?wilaya=béjaïa",
-      );
-      print("[DEBUG] response received");
+      final response = await dio.get("$url/groceries/?wilaya=béjaïa");
 
       if (response.statusCode == 200) {
-        final List<Map<String, dynamic>> data = response.data;
-        print("[DEBUG] $data");
-
+        final List data = response.data;
+        print(data[1]);
         return data.map((e) => BusinessModel.fromJson(e)).toList();
       } else {
         throw Exception(
           'Failed to load groceries: status ${response.statusCode}',
         );
       }
-    } on DioException catch (dioError) {
-      print("[DIO ERROR] ${dioError.message}");
-      print("[DIO ERROR] ${dioError.response}");
+    } catch (e) {
       rethrow;
+    }
+  }
+
+  Future<List<ProductModel>> fetctProcutsModelsForReductions() async {
+    try {
+      final url = await ApiConfig.getBaseUrl();
+
+      final response = await dio.get("$url/groceries/reductions/products");
+
+      if (response.statusCode == 200) {
+        final List data = response.data;
+        return data.map((e) => ProductModel.fromJson(e)).toList();
+      } else {
+        throw Exception(
+          'Failed to load groceries: status ${response.statusCode}',
+        );
+      }
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<List<BusinessModel>> fetctBusinessModelsForReductions() async {
+    try {
+      final url = await ApiConfig.getBaseUrl();
+
+      final response = await dio.get("$url/groceries/reductions/business");
+
+      if (response.statusCode == 200) {
+        final List data = response.data;
+        return data.map((e) => BusinessModel.fromJson(e)).toList();
+      } else {
+        throw Exception(
+          'Failed to load groceries: status ${response.statusCode}',
+        );
+      }
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<List<ProductBusinessModel>>
+  fetctProductsBusinessModelsForReductions() async {
+    try {
+      final url = await ApiConfig.getBaseUrl();
+
+      final response = await dio.get(
+        "$url/groceries/reductions/products-business",
+      );
+
+      if (response.statusCode == 200) {
+        final List data = response.data;
+        return data.map((e) => ProductBusinessModel.fromJson(e)).toList();
+      } else {
+        throw Exception(
+          'Failed to load groceries: status ${response.statusCode}',
+        );
+      }
     } catch (e) {
       rethrow;
     }

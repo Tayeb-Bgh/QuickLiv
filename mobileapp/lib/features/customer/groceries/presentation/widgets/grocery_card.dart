@@ -2,6 +2,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mobileapp/core/config/dark_mode_provider.dart';
+import 'package:mobileapp/core/constants/constants.dart';
 import 'package:mobileapp/features/customer/groceries/business/entities/grocery_entity.dart';
 import 'package:mobileapp/core/utils/utility_functions.dart';
 
@@ -9,13 +10,18 @@ class GroceryCard extends ConsumerWidget {
   final bool isFull;
   final Grocery grocery;
 
-  const GroceryCard({super.key, required this.grocery, this.isFull = true});
+  const GroceryCard({super.key, required this.grocery, this.isFull = false});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
     final bool isDarkMode = ref.watch(darkModeProvider);
+
+    final Color likeBtnColor = isDarkMode ? kSecondaryDark : kRegularGray;
+    final Color footerBgColor = isDarkMode ? kSecondaryDark : kRegularGray;
+    final Color footerTitleColor = isDarkMode ? kPrimaryWhite : kPrimaryBlack;
+    final Color footerTextColor = isDarkMode ? kLightGray : kMediumGray;
 
     return Padding(
       padding: const EdgeInsets.all(4.0),
@@ -51,14 +57,13 @@ class GroceryCard extends ConsumerWidget {
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
 
-                          color: const Color(0xFFD9D9D9),
+                          color: likeBtnColor,
                         ),
                         child: Icon(
                           grocery.liked
                               ? Icons.favorite
                               : Icons.favorite_border,
-                          color:
-                              grocery.liked ? Color(0xFFE13838) : Colors.grey,
+                          color: grocery.liked ? kPrimaryRed : kMediumGray,
                           size: 21,
                         ),
                       ),
@@ -74,10 +79,10 @@ class GroceryCard extends ConsumerWidget {
                   bottomLeft: Radius.circular(10),
                   bottomRight: Radius.circular(10),
                 ),
-                color: Colors.white,
+                color: footerBgColor,
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.4),
+                    color: footerTitleColor.withOpacity(0.4),
                     blurRadius: 6,
                     offset: const Offset(0, 4),
                   ),
@@ -102,7 +107,7 @@ class GroceryCard extends ConsumerWidget {
                       width: double.infinity,
                       child: AutoSizeText(
                         grocery.description,
-                        style: TextStyle(fontSize: 10, color: Colors.grey[600]),
+                        style: TextStyle(fontSize: 10, color: footerTextColor),
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -117,7 +122,7 @@ class GroceryCard extends ConsumerWidget {
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 12,
-                            color: Colors.grey[600],
+                            color: footerTextColor,
                           ),
                         ),
                         const SizedBox(width: 2),
@@ -128,7 +133,7 @@ class GroceryCard extends ConsumerWidget {
                           parseTime(grocery.delivTime),
                           style: TextStyle(
                             fontSize: 12,
-                            color: Colors.grey[600],
+                            color: footerTextColor,
                           ),
                         ),
                         const SizedBox(width: 2),
@@ -139,7 +144,7 @@ class GroceryCard extends ConsumerWidget {
                           grocery.rating.toString(),
                           style: TextStyle(
                             fontSize: 12,
-                            color: Colors.grey[600],
+                            color: footerTextColor,
                           ),
                         ),
                       ],

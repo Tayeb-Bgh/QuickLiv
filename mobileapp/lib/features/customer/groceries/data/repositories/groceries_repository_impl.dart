@@ -1,6 +1,7 @@
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:mobileapp/core/params/origin_dest_params.dart';
 import 'package:mobileapp/features/customer/groceries/business/entities/grocery_entity.dart';
+import 'package:mobileapp/features/customer/groceries/business/entities/product_with_reduc_entity.dart';
 import 'package:mobileapp/features/customer/groceries/business/repositories/groceries_repository.dart';
 import 'package:mobileapp/features/customer/groceries/data/models/business_model.dart';
 import 'package:mobileapp/features/customer/groceries/data/services/groceries_service.dart';
@@ -20,22 +21,19 @@ class GroceriesRepositoryImpl implements GroceriesRepository {
     double lat,
     double lng,
   ) async {
-    print("[DEBUG] $wilaya");
-    print("[DEBUG] $lng");
-    print("[DEBUG] $lat");
-
-    print("[DEBUG] FETCHING DATA FROM DB ...");
+    print("[DEBUG] fetching business models ...");
 
     List<BusinessModel> groceriesModelList = await groceriesService
-        .fetchGroceriesModels("Béjaïa", lat, lng);
+        .fetchGroceriesModelsByLocation("Béjaïa", lat, lng);
 
-    if (groceriesModelList.isEmpty) {
-      return [];
-    }
-    print("[DEBUG] DATA FETCHED");
+    print("[DEBUG] business models fetched !");
 
+    print("[DEBUG] converting business models to entities ...");
+    int i = 1;
     final groceries = await Future.wait(
       groceriesModelList.map((grocery) async {
+        print("[DEBUG] calculating duration in seconds for item $i ");
+
         final durationInSeconds = await ref.watch(
           drivingDurationProvider(
             OriginDestParams(
@@ -44,6 +42,9 @@ class GroceriesRepositoryImpl implements GroceriesRepository {
             ),
           ).future,
         );
+        print("[DEBUG] duration calculous finished !");
+
+        print("[DEBUG] calculating distance for item $i ");
 
         final distanceInMeters = await ref.watch(
           distanceInMetersProvider(
@@ -54,17 +55,26 @@ class GroceriesRepositoryImpl implements GroceriesRepository {
           ).future,
         );
 
-        final double distanceInKilometers = toKilometers(distanceInMeters);
+        print("[DEBUG] distance calculous finished ! ");
 
+        final double distanceInKilometers = toKilometers(distanceInMeters);
+        i++;
         return grocery.toEntity(
           false,
           distanceInKilometers,
           durationInSeconds,
           4.5,
+          distanceInKilometers,
         );
       }),
     );
 
-    return groceries;
+    print("[DEBUG] filtering by distance ");
+
+    final List<Grocery> groceriesAtLimitedDistance =
+        groceries.where((groc) => groc.distance <= 15).toList();
+    print("[DEBUG] filtering finished !");
+
+    return groceriesAtLimitedDistance;
   }
 }

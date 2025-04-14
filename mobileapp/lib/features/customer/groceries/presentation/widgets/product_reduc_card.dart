@@ -118,7 +118,7 @@ class ProductReducCard extends ConsumerWidget {
             child: Row(
               children: [
                 Text(
-                  '${product.delivPriceWithReduc} DZD',
+                  '${product.priceWithReduc} DZD',
                   style: TextStyle(
                     decoration: TextDecoration.lineThrough,
                     fontSize: 10,
@@ -132,7 +132,7 @@ class ProductReducCard extends ConsumerWidget {
             child: Row(
               children: [
                 Text(
-                  '${product.delivPrice} DZD',
+                  '${product.price} DZD',
                   style: TextStyle(
                     fontSize: 12,
                     color: Colors.redAccent,

@@ -27,7 +27,7 @@ final getGroceriesProvider = Provider<GetByWilayaOrCity>((ref) {
     groceriesRepositoryImpl: ref.watch(groceriesRepositoryProvider),
   );
 });
-
+/*
 final groceriesListProvider = FutureProvider<List<Grocery>>((ref) async {
   final LatLng? currentPos = await ref.watch(locationProvider.future);
 
@@ -41,3 +41,5 @@ final groceriesListProvider = FutureProvider<List<Grocery>>((ref) async {
       .watch(getGroceriesProvider)
       .call(currentWilaya, currentPos.latitude, currentPos.longitude);
 });
+
+*/

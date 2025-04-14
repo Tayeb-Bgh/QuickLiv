@@ -7,13 +7,8 @@ import 'package:mobileapp/core/constants/constants.dart';
 
 class BusinessStoryBtn extends ConsumerWidget {
   final Grocery grocery;
-  final bool isDarkMode;
 
-  BusinessStoryBtn({
-    super.key,
-    required this.grocery,
-    required this.isDarkMode,
-  });
+  BusinessStoryBtn({super.key, required this.grocery});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -22,7 +17,27 @@ class BusinessStoryBtn extends ConsumerWidget {
 
     return Column(
       children: [
-        CircleAvatar(child: Image.network(grocery.imgUrl)),
+        Container(
+          padding: const EdgeInsets.all(
+            3,
+          ), // gap between image and outer stroke
+          decoration: BoxDecoration(shape: BoxShape.circle, color: kPrimaryRed),
+          child: Container(
+            padding: const EdgeInsets.all(3), // space inside the stroke
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color:
+                  Theme.of(
+                    context,
+                  ).scaffoldBackgroundColor, // gap color (usually background)
+            ),
+            child: CircleAvatar(
+              radius: 30,
+              backgroundImage: NetworkImage(grocery.imgUrl),
+            ),
+          ),
+        ),
+        const SizedBox(height: 6),
         AutoSizeText(
           grocery.name,
           style: TextStyle(fontFamily: 'Roboto', color: textColor),

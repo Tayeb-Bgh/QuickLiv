@@ -2,15 +2,15 @@ import 'package:mobileapp/features/customer/groceries/business/entities/grocery_
 
 class BusinessModel {
   final int idBusns;
-  final String nameBusns;
-  final String descBusns;
+  final String? nameBusns;
+  final String? descBusns;
   final String categoryBusns;
   final double latBusns;
   final double lngBusns;
-  final String wilayaBusns;
+  final String? wilayaBusns;
 
-  final String imgUrlBusns;
-  final String vidUrlBusns;
+  final String? imgUrlBusns;
+  final String? vidUrlBusns;
 
   BusinessModel({
     required this.idBusns,
@@ -57,18 +57,20 @@ class BusinessModel {
     double deliveryPrice,
     int deliveryTime,
     double rating,
+    double distance,
   ) {
     return Grocery(
       id: idBusns,
-      name: nameBusns,
-      description: descBusns,
+      name: nameBusns ?? "",
+      description: descBusns ?? "",
       category: categoryBusns,
-      imgUrl: imgUrlBusns,
-      vidUrl: vidUrlBusns,
+      imgUrl: imgUrlBusns ?? "",
+      vidUrl: vidUrlBusns ?? "",
       liked: liked,
       delivTime: deliveryTime,
       delivPrice: deliveryPrice,
       rating: rating,
+      distance: distance,
     );
   }
 }
