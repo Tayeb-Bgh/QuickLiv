@@ -1,3 +1,6 @@
+import 'package:geocoding/geocoding.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+
 int toMinuts(int seconds) {
   return seconds ~/ 60;
 }
@@ -25,4 +28,13 @@ String parseTime(int seconds) {
       : firstTimeInterval >= 60 && finalTimeInterval >= 60
       ? "$firstTimeInterval - $finalTimeInterval h"
       : "$finalTimeInterval - $finalTimeInterval min";
+}
+
+double toKilometers(double metersDistance) {
+  return metersDistance / 1000;
+}
+
+double calculateDelivPrice(double kilometersDistance) {
+  // ! IL FAUT PASSER LA DISTANCE EN KILOMOTRES DONCT D'UTILISER CETTE FONCTION APPELEZ toKilometers()
+  return kilometersDistance * 125;
 }

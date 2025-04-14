@@ -7,6 +7,7 @@ class BusinessModel {
   final String categoryBusns;
   final double latBusns;
   final double lngBusns;
+  final String wilayaBusns;
 
   final String imgUrlBusns;
   final String vidUrlBusns;
@@ -18,6 +19,7 @@ class BusinessModel {
     required this.categoryBusns,
     required this.latBusns,
     required this.lngBusns,
+    required this.wilayaBusns,
     required this.imgUrlBusns,
     required this.vidUrlBusns,
   });
@@ -25,11 +27,12 @@ class BusinessModel {
   factory BusinessModel.fromJson(Map<String, dynamic> json) {
     return BusinessModel(
       idBusns: json["idBusns"],
-      nameBusns: json["idBusns"],
-      descBusns: json["idBusns"],
-      categoryBusns: json["typeBusns"],
+      nameBusns: json["nameBusns"],
+      descBusns: json["descBusns"],
+      categoryBusns: json["categoryBusns"],
       latBusns: json["latBusns"],
       lngBusns: json["lngBusns"],
+      wilayaBusns: json["wilayaBusns"],
       imgUrlBusns: json["imgUrlBusns"],
       vidUrlBusns: json["vidUrlBusns"],
     );
@@ -45,6 +48,7 @@ class BusinessModel {
       "lngBusns": lngBusns,
       "imgUrlBusns": imgUrlBusns,
       "vidUrlBusns": vidUrlBusns,
+      "wilayaBusns": wilayaBusns,
     };
   }
 
