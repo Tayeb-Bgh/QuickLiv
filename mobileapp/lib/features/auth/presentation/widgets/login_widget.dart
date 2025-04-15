@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mobileapp/core/config/dark_mode_provider.dart';
 import 'package:mobileapp/core/constants/constants.dart';
+import 'package:mobileapp/features/auth/presentation/pages/otp_code_page.dart';
 import 'package:mobileapp/features/auth/presentation/pages/register_page.dart';
+import 'package:mobileapp/features/auth/presentation/providers/auth_provider.dart';
 
 class LoginWidget extends ConsumerStatefulWidget {
   const LoginWidget({super.key});
@@ -93,12 +95,37 @@ class _LoginWidgetState extends ConsumerState<LoginWidget> {
                     height: 45,
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFFE13838),
+                        backgroundColor: kPrimaryRed,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),
                       ),
-                      onPressed: () {},
+                      onPressed: () async {
+                        print("------------------");
+                        final phone = _phoneController.text.trim();
+                        print(phone);
+                        final checkPhone = ref.read(checkPhoneUseCaseProvider);
+                        final exists = await checkPhone(phone);
+                        if (exists) {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => OtpCodePage(),
+                            ),
+                          );
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text("Ce numéro n'existe pas.")),
+                          );
+                        }
+
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => OtpCodePage(),
+                          ),
+                        );
+                      },
                       child: const Text(
                         'Se connecter',
                         style: TextStyle(
@@ -173,7 +200,8 @@ class _LoginWidgetState extends ConsumerState<LoginWidget> {
                         text: "En vous connectant, vous acceptez nos ",
                       ),
                       TextSpan(
-                        text: "conditions d’utilisation et notre politique de confidentialité.",
+                        text:
+                            "conditions d’utilisation et notre politique de confidentialité.",
                         style: TextStyle(color: Colors.red), // Texte en rouge
                       ),
                     ],

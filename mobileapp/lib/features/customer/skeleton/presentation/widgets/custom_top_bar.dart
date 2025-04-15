@@ -3,6 +3,7 @@ import 'package:mobileapp/core/constants/constants.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mobileapp/features/auth/presentation/pages/login_page.dart';
 
+
 class MyPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {

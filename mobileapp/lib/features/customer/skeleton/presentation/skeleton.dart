@@ -1,8 +1,7 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:mobileapp/features/maps_example/polyline_origin_to_destination.dart';
-
+import 'package:mobileapp/features/maps_example/polyline_current_to_destination.dart';
 import 'package:mobileapp/features/example/presentation/pages/presentation_page.dart';
 
 import 'package:mobileapp/features/customer/skeleton/presentation/widgets/custom_top_bar.dart';
@@ -28,7 +27,7 @@ class _SkeletonState extends State<Skeleton> {
   ];
 
   final List<Widget> _pages = [
-    ExamplePage(),
+    Container(color: kPrimaryWhite),
     GoogleMapsPage(),
     Container(color: kPrimaryWhite),
     Container(color: kPrimaryWhite),

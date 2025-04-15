@@ -2,25 +2,31 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_verification_code/flutter_verification_code.dart';
 import 'package:mobileapp/core/config/dark_mode_provider.dart';
-import 'package:pin_code_fields/pin_code_fields.dart';
+import 'package:mobileapp/core/constants/constants.dart';
 
-class OtpWidget extends ConsumerStatefulWidget {
-  const OtpWidget({super.key});
+class OtpCodeWidget extends ConsumerStatefulWidget {
+  const OtpCodeWidget({super.key});
 
   @override
-  ConsumerState<OtpWidget> createState() => _OtpWidgetState();
+  ConsumerState<OtpCodeWidget> createState() => _OtpCodeWidgetState();
 }
 
-class _OtpWidgetState extends ConsumerState<OtpWidget> {
+class _OtpCodeWidgetState extends ConsumerState<OtpCodeWidget> {
   final TextEditingController _phoneController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = ref.watch(darkModeProvider);
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
-    final isDarkMode = ref.watch(darkModeProvider);
+
+
+    final textColor1 = isDarkMode ? kPrimaryWhite : kPrimaryDark;
+    final textFieldColor = isDarkMode ? kSecondaryDark : kWhiteGray;
+    final borderTextFieldColor = isDarkMode ? kPrimaryWhite : kDarkGray;
+    
+
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 20),
       child: SizedBox(
@@ -44,16 +50,14 @@ class _OtpWidgetState extends ConsumerState<OtpWidget> {
                             style: TextStyle(
                               fontSize: 31,
                               fontWeight: FontWeight.bold,
+                              color: textColor1,
                             ),
                           ),
                           SizedBox(height: 6),
                           Text(
                             'Veuillez saisir le code d’accès qui vous a été envoyé par Telegram.',
                             textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: Colors.black87,
-                            ),
+                            style: TextStyle(fontSize: 14, color: textColor1),
                           ),
                         ],
                       ),
@@ -64,13 +68,15 @@ class _OtpWidgetState extends ConsumerState<OtpWidget> {
                 OtpTextField(
                   numberOfFields: 5,
                   filled: true,
-                  borderColor: Color(0xFF512DA8),
+                  cursorColor: kPrimaryRed,
                   borderRadius: BorderRadius.circular(20),
                   fieldWidth: width * 0.14,
+                  enabledBorderColor: borderTextFieldColor,
+                  focusedBorderColor: kPrimaryRed,
                   fieldHeight: width * 0.14,
-                  fillColor: Color(0xFFD9D9D9),
+                  fillColor: textFieldColor,
                   showFieldAsBox: true,
-                  textStyle: TextStyle(),
+                  textStyle: TextStyle(color: textColor1),
                   onCodeChanged: (String code) {},
                 ),
 
@@ -107,6 +113,7 @@ class _OtpWidgetState extends ConsumerState<OtpWidget> {
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w500,
+                          color: textColor1,
                         ),
                         maxFontSize: 16,
                         minFontSize: 10,
@@ -134,14 +141,22 @@ class _OtpWidgetState extends ConsumerState<OtpWidget> {
             ),
 
             Container(
-              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-              child: AutoSizeText(
-                "En vous connectant, vous acceptez nos conditions d’utilisation et notre politique de confidentialité.",
-                style: TextStyle(fontSize: 16),
-                maxFontSize: 16,
-                minFontSize: 10,
-                maxLines: 2,
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+              child: RichText(
                 textAlign: TextAlign.center,
+                text: TextSpan(
+                  style: TextStyle(fontSize: 12, color: textColor1),
+                  children: [
+                    const TextSpan(
+                      text: "En vous connectant, vous acceptez nos ",
+                    ),
+                    TextSpan(
+                      text:
+                          "conditions d’utilisation et notre politique de confidentialité.",
+                      style: TextStyle(color: Colors.red), // Texte en rouge
+                    ),
+                  ],
+                ),
               ),
             ),
           ],
