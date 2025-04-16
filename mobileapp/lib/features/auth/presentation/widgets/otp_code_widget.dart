@@ -4,9 +4,14 @@ import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mobileapp/core/config/dark_mode_provider.dart';
 import 'package:mobileapp/core/constants/constants.dart';
+import 'package:mobileapp/features/auth/business/entities/verify_otp_result.dart';
+import 'package:mobileapp/features/auth/presentation/providers/auth_provider.dart';
+import 'package:mobileapp/features/customer/skeleton/presentation/skeleton.dart';
+import 'package:mobileapp/features/example/presentation/pages/presentation_page.dart';
 
 class OtpCodeWidget extends ConsumerStatefulWidget {
-  const OtpCodeWidget({super.key});
+  final int phoneNumber;
+  const OtpCodeWidget({super.key, required this.phoneNumber});
 
   @override
   ConsumerState<OtpCodeWidget> createState() => _OtpCodeWidgetState();
@@ -14,6 +19,7 @@ class OtpCodeWidget extends ConsumerStatefulWidget {
 
 class _OtpCodeWidgetState extends ConsumerState<OtpCodeWidget> {
   final TextEditingController _phoneController = TextEditingController();
+  String otpCode = "";
 
   @override
   Widget build(BuildContext context) {
@@ -21,11 +27,9 @@ class _OtpCodeWidgetState extends ConsumerState<OtpCodeWidget> {
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
 
-
     final textColor1 = isDarkMode ? kPrimaryWhite : kPrimaryDark;
     final textFieldColor = isDarkMode ? kSecondaryDark : kWhiteGray;
     final borderTextFieldColor = isDarkMode ? kPrimaryWhite : kDarkGray;
-    
 
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 20),
@@ -68,6 +72,9 @@ class _OtpCodeWidgetState extends ConsumerState<OtpCodeWidget> {
                 OtpTextField(
                   numberOfFields: 5,
                   filled: true,
+                  onSubmit: (String code) {
+                    otpCode = code;
+                  },
                   cursorColor: kPrimaryRed,
                   borderRadius: BorderRadius.circular(20),
                   fieldWidth: width * 0.14,
@@ -87,12 +94,47 @@ class _OtpCodeWidgetState extends ConsumerState<OtpCodeWidget> {
                   height: height * 0.055,
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Color(0xFFE13838),
+                      backgroundColor: kPrimaryRed,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),
                     ),
-                    onPressed: () {},
+                    onPressed: () async {
+                      final useCase = ref.read(verifyOtpUseCaseProvider);
+                      final result = await useCase.call(
+                        phoneNumber: widget.phoneNumber.toString(),
+                        otp: otpCode,
+                      );
+                      
+                      if (result.success) {
+                        print("++++++++++++++++++ ${result.role}");
+                        if (result.role == "customer") {
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(builder: (context) => Skeleton()),
+                          );
+                        } else if (result.role == "deliverer") {
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ExamplePage(),
+                            ),
+                          );
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                "Rôle inconnu. Contactez le support.",
+                              ),
+                            ),
+                          );
+                        }
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text("OTP invalide ou expiré")),
+                        );
+                      }
+                    },
                     child: Text(
                       'Se connecter',
                       style: TextStyle(fontSize: 16, color: Color(0xFFF5F5F5)),
@@ -126,7 +168,7 @@ class _OtpCodeWidgetState extends ConsumerState<OtpCodeWidget> {
                       child: AutoSizeText(
                         "Renvoyer",
                         style: TextStyle(
-                          color: Color(0xFFE13838),
+                          color: kPrimaryRed,
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
                         ),
@@ -153,7 +195,7 @@ class _OtpCodeWidgetState extends ConsumerState<OtpCodeWidget> {
                     TextSpan(
                       text:
                           "conditions d’utilisation et notre politique de confidentialité.",
-                      style: TextStyle(color: Colors.red), // Texte en rouge
+                      style: TextStyle(color: kPrimaryRed), // Texte en rouge
                     ),
                   ],
                 ),

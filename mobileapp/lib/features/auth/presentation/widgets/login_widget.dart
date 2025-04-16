@@ -110,7 +110,7 @@ class _LoginWidgetState extends ConsumerState<LoginWidget> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => OtpCodePage(),
+                              builder: (context) => OtpCodePage(phoneNumber: int.parse(phone),),
                             ),
                           );
                         } else {
@@ -119,12 +119,7 @@ class _LoginWidgetState extends ConsumerState<LoginWidget> {
                           );
                         }
 
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => OtpCodePage(),
-                          ),
-                        );
+                        
                       },
                       child: const Text(
                         'Se connecter',
