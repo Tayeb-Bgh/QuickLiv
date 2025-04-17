@@ -2,9 +2,8 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_verification_code/flutter_verification_code.dart';
 import 'package:mobileapp/core/config/dark_mode_provider.dart';
-import 'package:pin_code_fields/pin_code_fields.dart';
+
 
 class OtpWidget extends ConsumerStatefulWidget {
   const OtpWidget({super.key});
