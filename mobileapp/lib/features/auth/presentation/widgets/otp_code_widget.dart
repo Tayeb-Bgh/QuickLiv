@@ -4,10 +4,9 @@ import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mobileapp/core/config/dark_mode_provider.dart';
 import 'package:mobileapp/core/constants/constants.dart';
-import 'package:mobileapp/features/auth/business/entities/verify_otp_result.dart';
 import 'package:mobileapp/features/auth/presentation/providers/auth_provider.dart';
-import 'package:mobileapp/features/customer/skeleton/presentation/skeleton.dart';
-import 'package:mobileapp/features/example/presentation/pages/presentation_page.dart';
+import 'package:mobileapp/features/customer/skeleton/presentation/customer_skeleton.dart';
+import 'package:mobileapp/features/deliverer/skeleton/presentation/deliverer_skeleton.dart';
 
 class OtpCodeWidget extends ConsumerStatefulWidget {
   final int phoneNumber;
@@ -18,7 +17,6 @@ class OtpCodeWidget extends ConsumerStatefulWidget {
 }
 
 class _OtpCodeWidgetState extends ConsumerState<OtpCodeWidget> {
-  final TextEditingController _phoneController = TextEditingController();
   String otpCode = "";
 
   @override
@@ -84,7 +82,9 @@ class _OtpCodeWidgetState extends ConsumerState<OtpCodeWidget> {
                   fillColor: textFieldColor,
                   showFieldAsBox: true,
                   textStyle: TextStyle(color: textColor1),
-                  onCodeChanged: (String code) {},
+                  onCodeChanged: (String code) {
+                    otpCode = code;
+                  },
                 ),
 
                 SizedBox(height: 30),
@@ -105,19 +105,33 @@ class _OtpCodeWidgetState extends ConsumerState<OtpCodeWidget> {
                         phoneNumber: widget.phoneNumber.toString(),
                         otp: otpCode,
                       );
-                      
+
                       if (result.success) {
-                        print("++++++++++++++++++ ${result.role}");
+                        final secureStorage = ref.watch(secureStorageProvider);
+                        await secureStorage.write(
+                          key: 'authToken',
+                          value: result.token,
+                        );
+                        
+                        /* 
+                        String? token = await secureStorage.read(
+                          key: 'authToken',
+                        ); */
+                       
+
                         if (result.role == "customer") {
+                          Navigator.pop(context);
                           Navigator.pushReplacement(
                             context,
-                            MaterialPageRoute(builder: (context) => Skeleton()),
+                            MaterialPageRoute(
+                              builder: (context) => CustomerSkeleton(),
+                            ),
                           );
                         } else if (result.role == "deliverer") {
                           Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => ExamplePage(),
+                              builder: (context) => DelivererSkeleton(),
                             ),
                           );
                         } else {

@@ -16,7 +16,8 @@ class LoginWidget extends ConsumerStatefulWidget {
 
 class _LoginWidgetState extends ConsumerState<LoginWidget> {
   final TextEditingController _phoneController = TextEditingController();
-
+  bool isLoading = false;
+  
   @override
   Widget build(BuildContext context) {
     final isDarkMode = ref.watch(darkModeProvider);
@@ -100,34 +101,50 @@ class _LoginWidgetState extends ConsumerState<LoginWidget> {
                           borderRadius: BorderRadius.circular(10),
                         ),
                       ),
-                      onPressed: () async {
-                        print("------------------");
-                        final phone = _phoneController.text.trim();
-                        print(phone);
-                        final checkPhone = ref.read(checkPhoneUseCaseProvider);
-                        final exists = await checkPhone(phone);
-                        if (exists) {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => OtpCodePage(phoneNumber: int.parse(phone),),
-                            ),
-                          );
-                        } else {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text("Ce numéro n'existe pas.")),
-                          );
-                        }
+                      onPressed: isLoading
+                          ? null
+                          : () async {
+                              setState(() => isLoading = true); // On active le chargement
+                              final phone = _phoneController.text.trim();
+                              final checkPhone = ref.read(checkPhoneUseCaseProvider);
+                              final exists = await checkPhone(phone);
 
-                        
-                      },
-                      child: const Text(
-                        'Se connecter',
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Color(0xFFF5F5F5),
-                        ),
-                      ),
+                              if (!mounted) return;
+                              setState(() => isLoading = false); // On désactive
+
+                              if (exists) {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => OtpCodePage(
+                                      phoneNumber: int.parse(phone),
+                                    ),
+                                  ),
+                                );
+                              } else {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text("Ce numéro n'existe pas."),
+                                  ),
+                                );
+                              }
+                            },
+                      child: isLoading
+                          ? const SizedBox(
+                              width: 22,
+                              height: 22,
+                              child: CircularProgressIndicator(
+                                color: Colors.white,
+                                strokeWidth: 2.5,
+                              ),
+                            )
+                          : const Text(
+                              'Se connecter',
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: Color(0xFFF5F5F5),
+                              ),
+                            ),
                     ),
                   ),
 

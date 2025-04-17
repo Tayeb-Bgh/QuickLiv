@@ -1,6 +1,7 @@
 class VerifyOtpResult {
   final bool success;
-  final String? role; // "client", "livreur", ou null
+  final String token;
+  final String? role; // "Customer", "Deliverer", or "null"
 
-  VerifyOtpResult({required this.success, required this.role});
+  VerifyOtpResult({required this.success,required this.token, required this.role});
 }

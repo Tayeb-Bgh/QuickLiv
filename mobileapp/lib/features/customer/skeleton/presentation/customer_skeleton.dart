@@ -2,19 +2,17 @@ import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mobileapp/features/maps_example/polyline_current_to_destination.dart';
-import 'package:mobileapp/features/example/presentation/pages/presentation_page.dart';
-
-import 'package:mobileapp/features/customer/skeleton/presentation/widgets/custom_top_bar.dart';
+import 'package:mobileapp/features/customer/skeleton/presentation/widgets/customer_custom_top_bar.dart';
 import 'package:mobileapp/core/constants/constants.dart';
 
-class Skeleton extends StatefulWidget {
-  const Skeleton({super.key});
+class CustomerSkeleton extends StatefulWidget {
+  const CustomerSkeleton({super.key});
 
   @override
-  State<Skeleton> createState() => _SkeletonState();
+  State<CustomerSkeleton> createState() => _CustomerSkeletonState();
 }
 
-class _SkeletonState extends State<Skeleton> {
+class _CustomerSkeletonState extends State<CustomerSkeleton> {
   int _currentIndex = 0;
   final GlobalKey<CurvedNavigationBarState> _bottomNavigationKey = GlobalKey();
 

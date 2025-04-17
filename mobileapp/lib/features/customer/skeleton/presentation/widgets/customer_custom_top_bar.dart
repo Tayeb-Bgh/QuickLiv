@@ -1,21 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mobileapp/core/constants/constants.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mobileapp/features/auth/presentation/pages/login_page.dart';
-
+import 'package:mobileapp/features/auth/presentation/providers/auth_provider.dart';
 
 class MyPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     Path path = Path();
 
-    // Nouveau chemin basé sur le fond que tu préfères
+   
     path.moveTo(size.width, 0);
     path.lineTo(0, 0);
     path.lineTo(
       0,
       size.height * 1.05,
-    ); // Ajustement pour respecter le ratio de hauteur 72/80
+    ); 
     path.cubicTo(
       size.width * 0.68,
       size.height * 0.5875,
@@ -27,10 +28,10 @@ class MyPainter extends CustomPainter {
     path.lineTo(size.width, 0);
     path.close();
 
-    // Mise à jour de la couleur et du style de remplissage
+    
     Paint paintFill = Paint()..style = PaintingStyle.fill;
     paintFill.color =
-        kPrimaryRed; // Remplacer par ta couleur préférée si besoin
+        kPrimaryRed; 
     canvas.drawPath(path, paintFill);
   }
 
@@ -40,7 +41,7 @@ class MyPainter extends CustomPainter {
   }
 }
 
-class CustomTopBar extends StatelessWidget {
+class CustomTopBar extends ConsumerWidget {
   final String title;
 
   const CustomTopBar({super.key, required this.title});
@@ -83,7 +84,7 @@ class CustomTopBar extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
     final statusBarHeight = MediaQuery.of(context).padding.top;
@@ -116,7 +117,38 @@ class CustomTopBar extends StatelessWidget {
               ),
               const SizedBox(width: 6),
               GestureDetector(
-                onTap: () => _showAuthPopup(context),
+                onTap: () async {
+                  final secureStorage = ref.watch(secureStorageProvider);
+                  final token = await secureStorage.read(key: 'authToken');
+
+                  if (token != null && token.isNotEmpty) {
+                    showDialog(
+                      context: context,
+                      builder:
+                          (context) => AlertDialog(
+                            title: const Text('Déjà connecté'),
+                            content: const Text(
+                              'Vous êtes déjà connecté à votre compte.',
+                            ),
+                            actions: [
+                              TextButton(
+                                onPressed: () => Navigator.of(context).pop(),
+                                child: const Text('Fermer'),
+                              ),
+                              TextButton(
+                                onPressed: () {
+                                  secureStorage.delete(key: 'authToken');
+                                  Navigator.of(context).pop();
+                                },
+                                child: const Text('Se deconnecter'),
+                              ),
+                            ],
+                          ),
+                    );
+                  } else {
+                    _showAuthPopup(context);
+                  }
+                },
                 child: _buildIcon(context, "assets/images/user.svg"),
               ),
             ],

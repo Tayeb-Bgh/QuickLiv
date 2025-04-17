@@ -1,6 +1,6 @@
 import 'package:mobileapp/features/auth/business/entities/verify_otp_result.dart';
 import 'package:mobileapp/features/auth/business/repositories/auth_repository_abstr.dart';
-import 'package:mobileapp/features/auth/data/models/verify_otp_model.dart';
+import 'package:mobileapp/features/auth/data/models/verify_otp_result_model.dart';
 import 'package:mobileapp/features/auth/data/service/auth_service.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
@@ -18,8 +18,8 @@ class AuthRepositoryImpl implements AuthRepository {
     required String phoneNumber,
     required String otp,
   }) async {
-    final VerifyOtpModel verifyResult = await service.verifyOtp(phoneNumber: phoneNumber, otp: otp);
+    final VerifyOtpResultModel verifyResult = await service.verifyOtp(phoneNumber: phoneNumber, otp: otp);
 
-    return VerifyOtpResult(success: verifyResult.success, role: verifyResult.role);
+    return VerifyOtpResult(success: verifyResult.success, role: verifyResult.role, token: verifyResult.token);
   }
 }

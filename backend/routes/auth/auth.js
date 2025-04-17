@@ -1,9 +1,12 @@
 const express = require('express');
-const path = require('path')
+const path = require('path');
 const axios = require('axios');
 const bodyParser = require('body-parser');
 const NodeCache = require('node-cache');
+const jwt = require('jsonwebtoken');
 const db = require("../../dbConnexion");
+const generateJWT = require('./utils/generate_jwt');
+const generateOTP = require('./utils/generate_otp');
 
 require('dotenv').config({ path: __dirname + '/../../.env' });
 
@@ -21,10 +24,10 @@ router.post('/login', async (req, res) => {
 
     db.query(query, [phoneNumber, phoneNumber], async (err, results) => {
         if (err) throw err;
-
+        
         if (results.length > 0 && results[0].idChat) {
-
-            const otp = Math.floor(10000 + Math.random() * 90000).toString();
+            const otp = generateOTP();            
+            
             try {
                 const response = await axios.post(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`, {
                     chat_id: results[0]["idChat"],
@@ -32,28 +35,28 @@ router.post('/login', async (req, res) => {
                 });
                 if (response.status == 200) {
                     otpCache.set(phoneNumber, otp);
+                    
                     return res.json({ success: true });
                 } else {
                     return res.status(500).json({ success: false });
                 }
 
             } catch (err) {
-                console.error(err.response?.data);
-                res.status(500).json({ "success": false });
+                return res.status(500).json({ "success": false });
             }
 
         } else {
-            res.status(500).json({ "success": false });
+           return res.json({ success: false });
         }
     });
 
 });
 
 router.post('/verify-otp', (req, res) => {
-    const query = "SELECT 'customer' as role FROM Customer WHERE phoneCust = ? UNION SELECT 'deliverer' as role FROM Deliverer WHERE phoneDel = ?";
+    const query = "SELECT 'customer' as role,idCust as id FROM Customer WHERE phoneCust = ? UNION SELECT 'deliverer' as role, idDel as id FROM Deliverer WHERE phoneDel = ?";
     const { phoneNumber, otp } = req.body;
     const validOtp = otpCache.get(phoneNumber);
-    console.log(validOtp);
+    
 
     if (!validOtp) {
         return res.status(410).json({ success: false });
@@ -62,14 +65,14 @@ router.post('/verify-otp', (req, res) => {
     if (validOtp == otp) {
         db.query(query, [phoneNumber, phoneNumber], async (err, results) => {
             if (err) throw err;
-            console.log(results)
+
             if (results.length > 0 ) {
+                const token = generateJWT(results[0]["id"],results[0]["role"], phoneNumber);
+
                 if(results[0]["role"] == "customer"){
-                    console.log("je suis customer")
-                    return res.json({success: true, role:"customer"});
+                    return res.json({success: true, role:"customer",token:token});
                 }else if(results[0]["role"]== "deliverer"){
-                    console.log("je suis livreur")
-                    return res.json({success:true, role:"deliverer"})
+                    return res.json({success:true, role:"deliverer",token:token})
                 }
 
             } else {
