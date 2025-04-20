@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mobileapp/core/constants/constants.dart';
 import 'package:mobileapp/features/customer/groceries/business/entities/product_with_reduc_entity.dart';
 import 'package:mobileapp/core/utils/utility_functions.dart';
 import 'package:mobileapp/core/config/dark_mode_provider.dart';
@@ -16,11 +17,17 @@ class ProductReducCard extends ConsumerWidget {
 
     final bool isDarkMode = ref.watch(darkModeProvider);
 
+    final Color footerBgColor = isDarkMode ? kSecondaryDark : kSecondaryWhite;
+    final Color footerTxtColor = isDarkMode ? kLightGray : kDarkGray;
+    final Color footerTitleColor = isDarkMode ? kSecondaryWhite : kPrimaryBlack;
+    final Color bannerTxtColor = kPrimaryWhite;
+    final Color iconColor = kPrimaryRed;
+
     return Container(
       width: width * 0.4,
       height: height * 0.35,
       decoration: BoxDecoration(
-        color: const Color.fromARGB(255, 158, 154, 154),
+        color: footerBgColor,
         borderRadius: BorderRadius.circular(12),
       ),
       child: Column(
@@ -33,21 +40,27 @@ class ProductReducCard extends ConsumerWidget {
                   topLeft: Radius.circular(12),
                   topRight: Radius.circular(12),
                 ),
-                child: Image.asset(
-                  product.imgUrl, // Replace with your asset path
+                child: Image.network(
+                  product.imgUrl,
                   width: double.infinity,
-                  height: height * 0.18,
+                  height: height * 0.15,
                   fit: BoxFit.cover,
                 ),
               ),
               Positioned(
-                bottom: -5,
+                bottom: 5,
                 right: 5,
-                child: IconButton(
-                  icon: Image.asset('assets/images/Add_to_panier.png'),
-                  iconSize: 33,
-                  onPressed: () {},
-                  padding: EdgeInsets.zero,
+                child: GestureDetector(
+                  onTap: () {}, // Replace with your action
+                  child: Container(
+                    padding: const EdgeInsets.all(4),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      shape: BoxShape.circle,
+                      border: Border.all(color: iconColor, width: 2),
+                    ),
+                    child: Icon(Icons.add, color: iconColor, size: 20),
+                  ),
                 ),
               ),
               Positioned(
@@ -59,14 +72,14 @@ class ProductReducCard extends ConsumerWidget {
                     vertical: 2,
                   ),
                   decoration: BoxDecoration(
-                    color: Colors.red,
+                    color: iconColor,
                     borderRadius: BorderRadius.circular(5),
                   ),
-                  child: const Text(
-                    'Superette',
+                  child: Text(
+                    product.nameBusns,
                     style: TextStyle(
                       fontSize: 10,
-                      color: Colors.white,
+                      color: bannerTxtColor,
                       fontWeight: FontWeight.bold,
                     ),
                     overflow: TextOverflow.ellipsis,
@@ -82,7 +95,7 @@ class ProductReducCard extends ConsumerWidget {
                     vertical: 2,
                   ),
                   decoration: BoxDecoration(
-                    color: Colors.red,
+                    color: iconColor,
                     borderRadius: const BorderRadius.only(
                       topRight: Radius.circular(8),
                       bottomLeft: Radius.circular(8),
@@ -92,7 +105,7 @@ class ProductReducCard extends ConsumerWidget {
                     "-${product.reducRate}%",
                     style: TextStyle(
                       fontSize: 10,
-                      color: Colors.white,
+                      color: bannerTxtColor,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -105,11 +118,11 @@ class ProductReducCard extends ConsumerWidget {
             child: Text(
               product.nameProd,
               style: TextStyle(
-                color: Colors.white,
+                color: footerTitleColor,
                 fontWeight: FontWeight.bold,
                 fontSize: 12,
               ),
-              maxLines: 1,
+              maxLines: 2,
               overflow: TextOverflow.ellipsis,
             ),
           ),
@@ -118,7 +131,7 @@ class ProductReducCard extends ConsumerWidget {
             child: Row(
               children: [
                 Text(
-                  '${product.priceWithReduc} DZD',
+                  '${product.price} DZD',
                   style: TextStyle(
                     decoration: TextDecoration.lineThrough,
                     fontSize: 10,
@@ -132,19 +145,19 @@ class ProductReducCard extends ConsumerWidget {
             child: Row(
               children: [
                 Text(
-                  '${product.price} DZD',
+                  '${product.priceWithReduc} DZD',
                   style: TextStyle(
                     fontSize: 12,
-                    color: Colors.redAccent,
+                    color: iconColor,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
                 Spacer(),
-                Icon(Icons.access_time, size: 12, color: Colors.red),
+                Icon(Icons.access_time, size: 12, color: iconColor),
                 SizedBox(width: 2),
                 Text(
                   parseTime(product.delivDuration),
-                  style: TextStyle(fontSize: 10, color: Colors.white),
+                  style: TextStyle(fontSize: 10, color: footerTxtColor),
                 ),
               ],
             ),

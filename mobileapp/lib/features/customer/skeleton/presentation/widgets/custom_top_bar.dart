@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mobileapp/core/constants/constants.dart' ;
+import 'package:mobileapp/core/constants/constants.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class MyPainter extends CustomPainter {
@@ -95,10 +95,7 @@ class CustomTopBar extends StatelessWidget {
       width: width * 0.088,
       height: width * 0.088,
       child: Container(
-        decoration: BoxDecoration(
-          color: kDarkGray,
-          shape: BoxShape.circle,
-        ),
+        decoration: BoxDecoration(color: kDarkGray, shape: BoxShape.circle),
         child: Center(
           child: SvgPicture.asset(
             assetPath,

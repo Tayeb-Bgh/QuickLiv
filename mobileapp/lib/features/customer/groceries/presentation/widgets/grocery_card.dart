@@ -10,24 +10,26 @@ class GroceryCard extends ConsumerWidget {
   final bool isFull;
   final Grocery grocery;
 
-  const GroceryCard({super.key, required this.grocery, this.isFull = false});
+  const GroceryCard({super.key, required this.grocery, required this.isFull});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
+    final coverHeight = isFull ? height * 0.25 : height * 0.15;
     final bool isDarkMode = ref.watch(darkModeProvider);
 
     final Color likeBtnColor = isDarkMode ? kSecondaryDark : kRegularGray;
     final Color footerBgColor = isDarkMode ? kSecondaryDark : kRegularGray;
-    final Color footerTitleColor = isDarkMode ? kPrimaryWhite : kPrimaryBlack;
+    final Color footerTitleColor = isDarkMode ? kSecondaryWhite : kPrimaryBlack;
     final Color footerTextColor = isDarkMode ? kLightGray : kMediumGray;
+    final Color iconColor = kPrimaryRed;
 
-    return Padding(
-      padding: const EdgeInsets.all(4.0),
-      child: SizedBox(
-        height: isFull ? height * 0.5 : height * 0.35,
+    return Container(
+      child: Container(
+        height: isFull ? height * 0.35 : height * 0.3,
         width: isFull ? width * 0.9 : width * 0.7,
+        margin: EdgeInsets.only(bottom: 10),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
@@ -41,7 +43,7 @@ class GroceryCard extends ConsumerWidget {
                   Image.network(
                     grocery.imgUrl,
                     width: double.infinity,
-                    height: height * 0.2,
+                    height: coverHeight,
                     fit: BoxFit.cover,
                   ),
                   Positioned(
@@ -82,7 +84,7 @@ class GroceryCard extends ConsumerWidget {
                 color: footerBgColor,
                 boxShadow: [
                   BoxShadow(
-                    color: footerTitleColor.withOpacity(0.4),
+                    color: Colors.black.withOpacity(0.4),
                     blurRadius: 6,
                     offset: const Offset(0, 4),
                   ),
@@ -96,7 +98,8 @@ class GroceryCard extends ConsumerWidget {
                   children: [
                     AutoSizeText(
                       grocery.name,
-                      style: const TextStyle(
+                      style: TextStyle(
+                        color: footerTitleColor,
                         fontSize: 14,
                         fontWeight: FontWeight.w900,
                       ),
@@ -116,7 +119,7 @@ class GroceryCard extends ConsumerWidget {
                     Row(
                       spacing: 2,
                       children: [
-                        Icon(Icons.delivery_dining, size: 11),
+                        Icon(Icons.delivery_dining, size: 11, color: iconColor),
                         Text(
                           "${grocery.delivPrice}",
                           style: TextStyle(
@@ -127,7 +130,7 @@ class GroceryCard extends ConsumerWidget {
                         ),
                         const SizedBox(width: 2),
 
-                        Icon(Icons.access_time, size: 11, color: Colors.red),
+                        Icon(Icons.access_time, size: 11, color: iconColor),
 
                         Text(
                           parseTime(grocery.delivTime),
@@ -138,7 +141,7 @@ class GroceryCard extends ConsumerWidget {
                         ),
                         const SizedBox(width: 2),
 
-                        Icon(Icons.star, size: 11, color: Colors.amber),
+                        Icon(Icons.star, size: 11, color: iconColor),
 
                         Text(
                           grocery.rating.toString(),

@@ -1,6 +1,3 @@
-import 'package:geocoding/geocoding.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-
 int toMinuts(int seconds) {
   return seconds ~/ 60;
 }
@@ -34,5 +31,5 @@ double calculateDelivPrice(double kilometersDistance) {
 }
 
 double getPriceWithReduction(double price, double reduction) {
-  return price * reduction;
+  return price - price * reduction / 100;
 }

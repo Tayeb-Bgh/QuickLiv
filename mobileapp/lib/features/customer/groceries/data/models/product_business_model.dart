@@ -1,7 +1,7 @@
 class ProductBusinessModel {
   final int idProd;
   final int idBusns;
-  final double? reducRateProdBusns;
+  final double reducRateProdBusns;
   final double priceProdBusns;
 
   ProductBusinessModel({
@@ -15,8 +15,8 @@ class ProductBusinessModel {
     return ProductBusinessModel(
       idBusns: json["idBusns"],
       idProd: json["idProd"],
-      priceProdBusns: json["priceProdBusns"],
-      reducRateProdBusns: json["reducRateProdBusns"],
+      priceProdBusns: json["priceProdBusns"].toDouble(),
+      reducRateProdBusns: json["reducRateProdBusns"].toDouble(),
     );
   }
 
@@ -24,8 +24,8 @@ class ProductBusinessModel {
     return {
       "idBusns": idBusns,
       "idProd": idProd,
-      "priceProdBusns": priceProdBusns,
-      "reducRateProdBusns": reducRateProdBusns,
+      "priceProdBusns": priceProdBusns.toDouble(),
+      "reducRateProdBusns": reducRateProdBusns.toDouble(),
     };
   }
 }

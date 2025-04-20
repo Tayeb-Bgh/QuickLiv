@@ -15,20 +15,23 @@ class ProductModel {
   });
 
   factory ProductModel.fromJson(Map<String, dynamic> json) {
+    int unitProd = json["unitProd"];
+    bool unitProdBool = unitProd == 0 ? false : true;
     return ProductModel(
       idProd: json["idProd"],
       nameProd: json["nameProd"],
       imgUrlProd: json["imgUrlProd"],
-      unitProd: json["unitProd"],
+      unitProd: unitProdBool,
     );
   }
 
   Map<String, dynamic> toJson() {
+    int unit = unitProd == false ? 0 : 1;
     return {
       "idProd": idProd,
       "nameProd": nameProd,
       "imgUrlProd": imgUrlProd,
-      "unitProd": unitProd,
+      "unitProd": unit,
     };
   }
 

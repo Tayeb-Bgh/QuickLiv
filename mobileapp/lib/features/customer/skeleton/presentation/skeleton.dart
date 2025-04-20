@@ -1,6 +1,7 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:mobileapp/features/customer/groceries/presentation/pages/test.dart';
 import 'package:mobileapp/features/maps_example/polyline_origin_to_destination.dart';
 
 import 'package:mobileapp/features/example/presentation/pages/presentation_page.dart';
@@ -28,9 +29,9 @@ class _SkeletonState extends State<Skeleton> {
   ];
 
   final List<Widget> _pages = [
-    ExamplePage(),
-    GoogleMapsPage(),
     Container(color: kPrimaryWhite),
+    Container(color: kPrimaryWhite),
+    GroceriesPageTest(),
     Container(color: kPrimaryWhite),
     Container(color: kPrimaryWhite),
   ];
@@ -49,7 +50,7 @@ class _SkeletonState extends State<Skeleton> {
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(statusBarHeight + height * 0.033),
         child: Container(
-          color: kPrimaryWhite,
+          color: kPrimaryDark,
           child: CustomPaint(
             size: Size(double.infinity, double.infinity),
             painter: MyPainter(),
@@ -81,7 +82,7 @@ class _SkeletonState extends State<Skeleton> {
         ],
         color: kPrimaryRed,
         buttonBackgroundColor: kPrimaryRed,
-        backgroundColor: kPrimaryWhite,
+        backgroundColor: kPrimaryDark,
         animationCurve: Curves.easeInOut,
         animationDuration: const Duration(milliseconds: 500),
         onTap: _setCurrentIndex,

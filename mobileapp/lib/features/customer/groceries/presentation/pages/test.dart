@@ -1,70 +1,71 @@
 import 'dart:async';
 
-import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
 import 'package:mobileapp/core/config/dark_mode_provider.dart';
 import 'package:mobileapp/core/constants/constants.dart';
-import 'package:mobileapp/features/customer/groceries/business/entities/grocery_entity.dart';
-import 'package:mobileapp/features/customer/groceries/business/entities/product_with_reduc_entity.dart';
-import 'package:mobileapp/features/customer/groceries/presentation/widgets/business_story_btn.dart';
-import 'package:mobileapp/features/customer/groceries/presentation/widgets/grocery_card.dart';
-import 'package:mobileapp/features/customer/groceries/presentation/widgets/product_reduc_card.dart';
+import 'package:mobileapp/features/customer/groceries/presentation/widgets/groceries_list_view.dart';
+import 'package:mobileapp/features/customer/groceries/presentation/widgets/groceries_stories.dart';
+import 'package:mobileapp/features/customer/groceries/presentation/widgets/reductions_list_view.dart';
+import 'package:mobileapp/features/customer/groceries/presentation/widgets/vertical_market_list.dart';
 import '../providers/groceries_provider.dart';
 
-class idkoui extends ConsumerStatefulWidget {
-  const idkoui({super.key});
+class GroceriesPageTest extends ConsumerStatefulWidget {
+  const GroceriesPageTest({super.key});
 
   @override
-  ConsumerState<idkoui> createState() => _ExamplePageState();
+  ConsumerState<GroceriesPageTest> createState() => _GroceriesPageTestState();
 }
 
-class _ExamplePageState extends ConsumerState<idkoui> {
+class _GroceriesPageTestState extends ConsumerState<GroceriesPageTest> {
+  Future<void> _refresh() async {
+    return await ref.refresh(groceriesListProvider);
+  }
+
+  Future<void> _refreshGroceriesByCategoy() async {
+    ref.invalidate(groceriesByCategoryListProvider);
+  }
+
   @override
   Widget build(BuildContext context) {
-  
-    final bool isDarkMode = ref.watch(darkModeProvider);
+    final asyncGroceriesList = ref.watch(groceriesListProvider);
+    final asyncGroceriesByCategoryList = ref.watch(
+      groceriesByCategoryListProvider,
+    );
 
-    Color bgColor = isDarkMode ? kPrimaryDark : kSecondaryWhite;
+    final asyncReductionsList = ref.watch(reductionsListProvider);
 
-    return Scaffold(
-      appBar: AppBar(centerTitle: true, title: Text("test de mes widgets")),
-      backgroundColor: bgColor,
-      body: Column(
-        children: [
-          SizedBox(
-            height: 400,
-            child:
-            ),
+    final isDarkMode = ref.watch(darkModeProvider);
+    final bgColor = isDarkMode ? kPrimaryDark : kSecondaryWhite;
+    return ListView(
+      children: [
+        ColoredBox(
+          color: bgColor,
+          child: Column(
+            children: [
+              GroceriesStoriesList(
+                groceries: asyncGroceriesList,
+                onRefresh: _refresh,
+              ),
+              GroceriesListView(
+                groceries: asyncGroceriesList,
+                onRefresh: _refresh,
+              ),
+              ReductionsListView(
+                reductions: asyncReductionsList,
+                onRefresh: _refresh,
+              ),
+              VerticalMarketList(
+                groceries: asyncGroceriesByCategoryList,
+                onRefresh: _refreshGroceriesByCategoy,
+              ),
+            ],
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
 
 
-/*  asyncGroceriesList.when(
-
-          final asyncGroceriesList = ref.watch(groceriesListProvider);
-            Future<void> _refresh() async {
-              return await ref.refresh(groceriesListProvider);
-            }
-
-              data:
-                  (groceries) => RefreshIndicator(
-                    onRefresh: _refresh,
-                    child: SizedBox(
-                      height: 200,
-                      child: ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: groceries.length,
-                        itemBuilder: (context, index) {
-                          final grocer = groceries[index];
-                          return GroceryCard(grocery: grocer);
-                        },
-                      ),
-                    ),
-                  ),
-              error: (err, _) => Text('errooor'),
-              loading: () => const Center(child: CircularProgressIndicator()), */
+/*   */

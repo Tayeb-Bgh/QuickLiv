@@ -24,7 +24,7 @@ class ApiConfig {
         final isEmulator = !iosInfo.isPhysicalDevice;
         return isEmulator
             ? 'http://localhost:3000/api'
-            : 'http://192.168.1.155:3000/api';
+            : 'http://192.168.7.7:3000/api';
       }
     }
 
