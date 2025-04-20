@@ -123,6 +123,13 @@ class CustomTopBar extends ConsumerWidget {
                                 onPressed: () => Navigator.of(context).pop(),
                                 child: const Text('Fermer'),
                               ),
+                              TextButton(
+                                onPressed: () {
+                                  secureStorage.delete(key: 'authToken');
+                                  Navigator.of(context).pop();
+                                },
+                                child: const Text('Se deconnecter'),
+                              ),
                             ],
                           ),
                     );

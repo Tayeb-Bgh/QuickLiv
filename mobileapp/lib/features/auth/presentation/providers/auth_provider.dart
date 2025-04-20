@@ -1,6 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:mobileapp/features/auth/business/usecases/check_phone_usecase.dart';
+import 'package:mobileapp/features/auth/business/usecases/get_customer_info_usecase.dart';
+import 'package:mobileapp/features/auth/business/usecases/get_deliverer_info_usecase.dart';
 import 'package:mobileapp/features/auth/business/usecases/verify_otp_usecase.dart';
 import 'package:mobileapp/features/auth/data/repositories/auth_repository_impl.dart';
 import 'package:mobileapp/features/auth/data/service/auth_service.dart';
@@ -19,9 +21,13 @@ final authRepositoryProvider = Provider(
 final checkPhoneUseCaseProvider = Provider(
   (ref) => CheckPhoneUseCase(ref.watch(authRepositoryProvider)),
 );
+
 final verifyOtpUseCaseProvider = Provider(
   (ref) => VerifyOtpUseCase(ref.watch(authRepositoryProvider)),
 );
-final getUserInfo = Provider(
-  (ref) => VerifyOtpUseCase(ref.watch(authRepositoryProvider)),
+final getCustomerInfoUseCaseProvider = Provider(
+  (ref) => GetCustomerInfoUseCase(ref.watch(authRepositoryProvider)),
+);
+final getDelivererInfoUseCaseProvider = Provider(
+  (ref) => GetDelivererInfoUsecase(ref.watch(authRepositoryProvider)),
 );

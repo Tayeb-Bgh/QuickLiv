@@ -35,7 +35,7 @@ class _OtpCodePageState extends ConsumerState<OtpCodePage> {
                 top: height * 0.31,
                 left: 0,
                 right: 0,
-                child: OtpCodeWidget(phoneNumber: widget.phoneNumber ,),
+                child: OtpCodeWidget(phoneNumber: widget.phoneNumber ),
               ),
               Positioned(top: 0, left: 0, right: 0, child: LoginAppBar()),
             ],
