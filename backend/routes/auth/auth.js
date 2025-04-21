@@ -7,6 +7,7 @@ const jwt = require('jsonwebtoken');
 const db = require("../../dbConnexion");
 const generateJWT = require('./utils/generate_jwt');
 const generateOTP = require('./utils/generate_otp');
+const authenticate = require('./utils/verify_jwt');
 
 require('dotenv').config({ path: __dirname + '/../../.env' });
 
@@ -88,7 +89,7 @@ router.post('/verify-otp', (req, res) => {
     }
 });
 
-router.get('/customers/by-phone', (req, res) => {
+router.get('/customers/by-phone',authenticate, (req, res) => {
     const query = "SELECT idCust, firstNameCust, lastNameCust, registerDateCust, pointsCust, isSubmittedDelivererCust,isSubmittedPartnerCust FROM Customer WHERE phoneCust = ?";
     const { phoneNumber } = req.body;
 
@@ -113,7 +114,7 @@ router.get('/customers/by-phone', (req, res) => {
     })
 });
 
-router.get('/deliverers/by-phone', (req, res) => {
+router.get('/deliverers/by-phone',authenticate, (req, res) => {
     const query = "SELECT idDel, firstNameDel, lastNameDel, registerDateDel, emailDel, adrsDel, statusDel FROM Deliverer WHERE phoneDel = ?";
     const { phoneNumber } = req.body;
 
@@ -139,7 +140,7 @@ router.get('/deliverers/by-phone', (req, res) => {
 }
 );
 
-router.get('/deliverer/vehicle/by-deliverer-id', (req, res) => {
+router.get('/deliverer/vehicle/by-deliverer-id',authenticate, (req, res) => {
     const query = `SELECT idVehc, typeVehc, brandVehc, modelVehc, colorVehc, insuranceExprVehc, registerNbrVehc,yearVehc FROM Vehicle WHERE idVehc IN(
                         SELECT vehicleDel FROM Deliverer WHERE idDel = ?
                 ) `;
@@ -169,7 +170,7 @@ router.get('/deliverer/vehicle/by-deliverer-id', (req, res) => {
     });
 });
 
-router.get('/deliverer/rating', (req, res) => {
+router.get('/deliverer/rating',authenticate, (req, res) => {
      const query = `
         SELECT AVG(ratingDelOrd) as rating FROM CustomerOrder o JOIN Delivery d ON o.idOrd = d.idOrd 
         WHERE idDel = ? AND ratingDelOrd IS NOT NULL
@@ -191,7 +192,7 @@ router.get('/deliverer/rating', (req, res) => {
 
 });
 
-router.get('/deliverer/delivery-number', (req, res) => {
+router.get('/deliverer/delivery-number',authenticate, (req, res) => {
     const query = `
         SELECT COUNT(*) as deliveryNbr FROM Delivery d JOIN CustomerOrder o ON d.idOrd = o.idOrd WHERE idDel = ? AND statusOrd = ?
     `;

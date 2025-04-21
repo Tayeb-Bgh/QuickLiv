@@ -12,7 +12,7 @@ final secureStorageProvider = Provider((ref) => FlutterSecureStorage());
 
 final dioProvider = Provider((ref) => Dio());
 final authServiceProvider = Provider(
-  (ref) => AuthService(ref.watch(dioProvider)),
+  (ref) => AuthService(ref.watch(dioProvider), ref),
 );
 final authRepositoryProvider = Provider(
   (ref) => AuthRepositoryImpl(ref.watch(authServiceProvider)),
@@ -31,3 +31,8 @@ final getCustomerInfoUseCaseProvider = Provider(
 final getDelivererInfoUseCaseProvider = Provider(
   (ref) => GetDelivererInfoUsecase(ref.watch(authRepositoryProvider)),
 );
+
+final jwtTokenProvider = FutureProvider<String?>((ref) async {
+  final secureStorage = ref.watch(secureStorageProvider);
+  return await secureStorage.read(key: 'authToken');
+});
