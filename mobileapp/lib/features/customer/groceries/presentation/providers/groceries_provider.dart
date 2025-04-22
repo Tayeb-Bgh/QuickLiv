@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:mobileapp/core/utils/location_provider.dart';
 import 'package:mobileapp/features/customer/groceries/business/entities/grocery_entity.dart';
 import 'package:mobileapp/features/customer/groceries/business/entities/product_with_reduc_entity.dart';
 import 'package:mobileapp/features/customer/groceries/business/usecases/get_near_groceries.dart';
@@ -8,7 +9,6 @@ import 'package:mobileapp/features/customer/groceries/business/usecases/get_near
 import 'package:mobileapp/features/customer/groceries/business/usecases/get_reductions.dart';
 import 'package:mobileapp/features/customer/groceries/data/repositories/groceries_repository_impl.dart';
 import 'package:mobileapp/features/customer/groceries/data/services/groceries_service.dart';
-import 'package:mobileapp/features/maps_example/location_provider.dart';
 
 final dioProvider = Provider<Dio>((ref) {
   return Dio();

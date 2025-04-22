@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mobileapp/core/params/origin_dest_params.dart';
-import 'package:mobileapp/features/maps_example/location_provider.dart';
+import 'package:mobileapp/core/utils/location_provider.dart';
 
 class GoogleMapsPage extends ConsumerStatefulWidget {
   const GoogleMapsPage({super.key});
