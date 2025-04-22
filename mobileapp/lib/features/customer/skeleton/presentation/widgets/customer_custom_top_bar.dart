@@ -155,7 +155,7 @@ class CustomTopBar extends ConsumerWidget {
           ),
         ),
       ],
-    );
+    );  
   }
 
   Widget _buildIcon(

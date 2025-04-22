@@ -12,7 +12,6 @@ class UserService {
   Future<List<UserModel>> fetchUsers() async {
     try {
       final url = await ApiConfig.getBaseUrl();
-      print('[UserService] Base URL: $url');
 
       final response = await dio.get(
         '$url/example/users',
@@ -22,9 +21,6 @@ class UserService {
         ),
       );
 
-      print('[UserService] Response status: ${response.statusCode}');
-      print('[UserService] Response data: ${response.data}');
-
       if (response.statusCode == 200) {
         List data = response.data;
         return data.map((e) => UserModel.fromJson(e)).toList();
@@ -32,7 +28,6 @@ class UserService {
         throw Exception('Failed to load users: status ${response.statusCode}');
       }
     } catch (e) {
-      print('[UserService] fetchUsers error: $e');
       rethrow;
     }
   }
@@ -40,7 +35,6 @@ class UserService {
   Future<List<HobieModel>> fetchHobiesByUserId(int idUser) async {
     try {
       final url = await ApiConfig.getBaseUrl();
-      print('[UserService] Base URL: $url');
 
       final response = await dio.get(
         '$url/example/hobies/$idUser',
@@ -50,9 +44,6 @@ class UserService {
         ),
       );
 
-      print('[UserService] Response status: ${response.statusCode}');
-      print('[UserService] Response data: ${response.data}');
-
       if (response.statusCode == 200) {
         List data = response.data;
         return data.map((e) => HobieModel.fromJson(e)).toList();
@@ -60,7 +51,6 @@ class UserService {
         throw Exception('Failed to load hobies: status ${response.statusCode}');
       }
     } catch (e) {
-      print('[UserService] fetchHobiesByUserId error: $e');
       rethrow;
     }
   }

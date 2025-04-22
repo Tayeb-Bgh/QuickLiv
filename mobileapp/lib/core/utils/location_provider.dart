@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:mobileapp/core/config/location_config.dart';
@@ -9,19 +10,19 @@ final locationServiceProvider = Provider<LocationService>((ref) {
   return LocationService();
 });
 
-// Pour avoir la position actuelle de l utilisateur mais par contre ca s actualise pas quand il se deplace
+// * Pour avoir la position actuelle de l utilisateur mais par contre ca s actualise pas quand il se deplace
 final locationProvider = FutureProvider<LatLng?>((ref) async {
   final locationService = ref.read(locationServiceProvider);
   return await locationService.getUserPosition();
 });
 
-// Pour avoir la position actuelle de l utilisateur qui s actualise a chaque deplacement
+// * Pour avoir la position actuelle de l utilisateur qui s actualise a chaque deplacement
 final locationAutoRefreshProvider = StreamProvider<LatLng>((ref) {
   final locationService = ref.read(locationServiceProvider);
   return locationService.getUserPositionStream();
 });
 
-// Pour avoir une route tracer entre la position actuel et la destination
+// * Pour avoir une route tracer entre la position actuel et la destination
 final polylineProvider = FutureProvider.family<List<LatLng>, LatLng>((
   ref,
   destination,
@@ -48,7 +49,7 @@ final polylineProvider = FutureProvider.family<List<LatLng>, LatLng>((
   return result.points.map((e) => LatLng(e.latitude, e.longitude)).toList();
 });
 
-// Pour avoir une route tracer entre la position actuel et la destination
+// * Pour avoir une route tracer entre la position actuel et la destination
 final polylineTwoPointsProvider =
     FutureProvider.family<List<LatLng>, OriginDestParams>((ref, params) async {
       try {
@@ -81,7 +82,7 @@ final polylineTwoPointsProvider =
       }
     });
 
-// Pour recuperer la distance en deux points
+// * Pour recuperer la distance en deux points
 final distanceInMetersProvider =
     FutureProvider.family<double, OriginDestParams>((ref, params) async {
       return await getDrivingDistanceInMeters(
@@ -90,7 +91,7 @@ final distanceInMetersProvider =
       );
     });
 
-// Pour recuperer la duree de trajet entre deux points
+// * Pour recuperer la duree de trajet entre deux points
 final drivingDurationProvider = FutureProvider.family<int, OriginDestParams>((
   ref,
   params,
@@ -99,4 +100,25 @@ final drivingDurationProvider = FutureProvider.family<int, OriginDestParams>((
     origin: params.origin,
     destination: params.destination,
   );
+});
+
+final wilayaProvider = FutureProvider.family<String, LatLng>((
+  ref,
+  params,
+) async {
+  try {
+    List<Placemark> placemarks = await placemarkFromCoordinates(
+      params.latitude,
+      params.longitude,
+    );
+
+    if (placemarks.isNotEmpty) {
+      final placemark = placemarks.first;
+      return placemark.administrativeArea ?? 'Unknown Wilaya';
+    } else {
+      return 'No Wilaya found';
+    }
+  } catch (e) {
+    return 'Error retrieving Wilaya';
+  }
 });

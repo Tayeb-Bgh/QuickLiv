@@ -6,8 +6,8 @@ class ProductWithReduc {
   final String nameBusns;
   final String imgUrl;
 
-  final double delivPrice;
-  final double delivPriceWithReduc;
+  final double price;
+  final double priceWithReduc;
   final int delivDuration;
 
   ProductWithReduc({
@@ -18,7 +18,7 @@ class ProductWithReduc {
     required this.imgUrl,
     required this.reducRate,
     required this.delivDuration,
-    required this.delivPrice,
-    required this.delivPriceWithReduc,
+    required this.price,
+    required this.priceWithReduc,
   });
 }

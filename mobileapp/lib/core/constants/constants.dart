@@ -12,9 +12,9 @@ const Color kLightGrayWhite = Color(0xFFEEEEEE);
 const Color kPrimaryYellow = Color(0xFFF5CB58);
 
 // Gris
-const Color kDarkGray = Color(0xFF504E4E); 
-const Color kMediumGray = Color(0xFF686868); 
-const Color kRegularGray = Color(0xFFBCBCBC); 
+const Color kDarkGray = Color(0xFF504E4E);
+const Color kMediumGray = Color(0xFF686868);
+const Color kRegularGray = Color(0xFFBCBCBC);
 const Color kLightGray = Color(0xFFCCCCCC);
 const Color kWhiteGray = Color.fromARGB(255, 225, 224, 224);
 

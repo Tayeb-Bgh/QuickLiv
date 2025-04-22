@@ -4,8 +4,6 @@ const db = require('../../../dbConnexion');
 
 const router = express.Router();
 
-
-
 router.get("/users",(req,res)=>{
     const query = 'SELECT idUser,username,role,imgUrl,birthDate FROM users ';
     db.query(query, [], async (err, results) => {
@@ -22,7 +20,7 @@ router.get("/users",(req,res)=>{
 router.get("/hobies/:idUser",(req,res)=>{
     const idUser = req.params.idUser;
 
-    const query = 'SELECT h.idHobie,h.nameHobie FROM hobies h JOIN UserHobie uh on uh.idHobie =  h.idHobie where uh.idUser =  ?';
+    const query = 'SELECT h.idHobie,h.nameHobie FROM hobies h JOIN UserHobie uh on uh.idHobie = h.idHobie where uh.idUser =  ?';
 
     db.query(query, [idUser], async (err, results) => {
         if (err) throw err;

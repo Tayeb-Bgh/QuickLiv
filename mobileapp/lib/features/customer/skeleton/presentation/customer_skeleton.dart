@@ -1,18 +1,20 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:mobileapp/features/maps_example/polyline_current_to_destination.dart';
+import 'package:mobileapp/core/config/dark_mode_provider.dart';
 import 'package:mobileapp/features/customer/skeleton/presentation/widgets/customer_custom_top_bar.dart';
+import 'package:mobileapp/features/customer/groceries/presentation/pages/groceries_page.dart';
 import 'package:mobileapp/core/constants/constants.dart';
 
-class CustomerSkeleton extends StatefulWidget {
+class CustomerSkeleton extends ConsumerStatefulWidget {
   const CustomerSkeleton({super.key});
 
   @override
-  State<CustomerSkeleton> createState() => _CustomerSkeletonState();
+  ConsumerState<CustomerSkeleton> createState() => _CustomerSkeletonState();
 }
 
-class _CustomerSkeletonState extends State<CustomerSkeleton> {
+class _CustomerSkeletonState extends ConsumerState<CustomerSkeleton> {
   int _currentIndex = 0;
   final GlobalKey<CurvedNavigationBarState> _bottomNavigationKey = GlobalKey();
 
@@ -26,8 +28,8 @@ class _CustomerSkeletonState extends State<CustomerSkeleton> {
 
   final List<Widget> _pages = [
     Container(color: kPrimaryWhite),
-    GoogleMapsPage(),
     Container(color: kPrimaryWhite),
+    GroceriesPageTest(),
     Container(color: kPrimaryWhite),
     Container(color: kPrimaryWhite),
   ];
@@ -42,11 +44,13 @@ class _CustomerSkeletonState extends State<CustomerSkeleton> {
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
     final statusBarHeight = MediaQuery.of(context).padding.top;
+    final isDarkMode = ref.watch(darkModeProvider);
+
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(statusBarHeight + height * 0.033),
         child: Container(
-          color: kPrimaryWhite,
+          color: isDarkMode ? kPrimaryDark : kSecondaryWhite,
           child: CustomPaint(
             size: Size(double.infinity, double.infinity),
             painter: MyPainter(),
@@ -78,7 +82,7 @@ class _CustomerSkeletonState extends State<CustomerSkeleton> {
         ],
         color: kPrimaryRed,
         buttonBackgroundColor: kPrimaryRed,
-        backgroundColor: kPrimaryWhite,
+        backgroundColor: isDarkMode ? kPrimaryDark : kSecondaryWhite,
         animationCurve: Curves.easeInOut,
         animationDuration: const Duration(milliseconds: 500),
         onTap: _setCurrentIndex,

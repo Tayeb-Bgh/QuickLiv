@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mobileapp/core/constants/constants.dart';
 import 'package:mobileapp/features/customer/groceries/business/entities/product_with_reduc_entity.dart';
 import 'package:mobileapp/core/utils/utility_functions.dart';
 import 'package:mobileapp/core/config/dark_mode_provider.dart';
@@ -16,13 +17,28 @@ class ProductReducCard extends ConsumerWidget {
 
     final bool isDarkMode = ref.watch(darkModeProvider);
 
+    final Color footerBgColor = isDarkMode ? kSecondaryDark : kPrimaryWhite;
+    final Color footerTxtColor = isDarkMode ? kLightGray : kDarkGray;
+    final Color footerTitleColor = isDarkMode ? kSecondaryWhite : kPrimaryBlack;
+    final Color reducTxtColor = isDarkMode ? kLightGray : kDarkGray;
+    final Color bannerTxtColor = kPrimaryWhite;
+    final Color iconColor = kPrimaryRed;
+
     return Container(
-      width: width * 0.4,
-      height: height * 0.35,
+      width: width * 0.39,
+      height: height * 0.36,
       decoration: BoxDecoration(
-        color: const Color.fromARGB(255, 158, 154, 154),
+        color: footerBgColor,
         borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.4),
+                    blurRadius: 3.5,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
       ),
+      
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -33,40 +49,47 @@ class ProductReducCard extends ConsumerWidget {
                   topLeft: Radius.circular(12),
                   topRight: Radius.circular(12),
                 ),
-                child: Image.asset(
-                  product.imgUrl, // Replace with your asset path
-                  width: double.infinity,
-                  height: height * 0.18,
+                child: Image.network(
+                  product.imgUrl,
+                  width: width * 0.39,
+                  height: height * 0.13,
                   fit: BoxFit.cover,
                 ),
               ),
               Positioned(
-                bottom: -5,
+                bottom: 5,
                 right: 5,
-                child: IconButton(
-                  icon: Image.asset('assets/images/Add_to_panier.png'),
-                  iconSize: 33,
-                  onPressed: () {},
-                  padding: EdgeInsets.zero,
+                child: GestureDetector(
+                  onTap: () {}, // Replace with your action
+                  child: Container(
+                    padding: const EdgeInsets.all(4),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      shape: BoxShape.circle,
+                      border: Border.all(color: iconColor, width: 2),
+                    ),
+                    child: Icon(Icons.add, color: iconColor, size: 20),
+                  ),
                 ),
               ),
               Positioned(
-                top: 20,
+                top: 10,
                 left: -2,
+                width: width * 0.23,
                 child: Container(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 5,
                     vertical: 2,
                   ),
                   decoration: BoxDecoration(
-                    color: Colors.red,
+                    color: iconColor,
                     borderRadius: BorderRadius.circular(5),
                   ),
-                  child: const Text(
-                    'Superette',
+                  child: Text(
+                    product.nameBusns,
                     style: TextStyle(
-                      fontSize: 10,
-                      color: Colors.white,
+                      fontSize: width * 0.025,
+                      color: bannerTxtColor,
                       fontWeight: FontWeight.bold,
                     ),
                     overflow: TextOverflow.ellipsis,
@@ -82,7 +105,7 @@ class ProductReducCard extends ConsumerWidget {
                     vertical: 2,
                   ),
                   decoration: BoxDecoration(
-                    color: Colors.red,
+                    color: iconColor,
                     borderRadius: const BorderRadius.only(
                       topRight: Radius.circular(8),
                       bottomLeft: Radius.circular(8),
@@ -92,7 +115,7 @@ class ProductReducCard extends ConsumerWidget {
                     "-${product.reducRate}%",
                     style: TextStyle(
                       fontSize: 10,
-                      color: Colors.white,
+                      color: bannerTxtColor,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -101,50 +124,59 @@ class ProductReducCard extends ConsumerWidget {
             ],
           ),
           Padding(
-            padding: const EdgeInsets.fromLTRB(8, 6, 8, 2),
+            padding: const EdgeInsets.only(left: 8),
             child: Text(
               product.nameProd,
               style: TextStyle(
-                color: Colors.white,
+                color: footerTitleColor,
                 fontWeight: FontWeight.bold,
-                fontSize: 12,
+                fontSize: width * 0.029,
               ),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
             ),
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8),
+            padding: EdgeInsets.symmetric(horizontal: width * 0.065 , vertical: 0),
             child: Row(
               children: [
                 Text(
-                  '${product.delivPriceWithReduc} DZD',
+                  '${product.price} DZD',
                   style: TextStyle(
                     decoration: TextDecoration.lineThrough,
-                    fontSize: 10,
+                    decorationThickness:
+                        1, // Augmentez cette valeur pour un trait plus épais
+                    decorationColor: reducTxtColor,
+                    fontSize: width * 0.029,
+                    color: reducTxtColor,
                   ),
                 ),
               ],
             ),
           ),
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+            padding: EdgeInsets.symmetric(horizontal: 8, vertical: 0),
             child: Row(
               children: [
                 Text(
-                  '${product.delivPrice} DZD',
+                  '${product.priceWithReduc} DZD',
                   style: TextStyle(
-                    fontSize: 12,
-                    color: Colors.redAccent,
+                    fontSize: width * 0.035,
+                    color: iconColor,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
                 Spacer(),
-                Icon(Icons.access_time, size: 12, color: Colors.red),
-                SizedBox(width: 2),
+                Icon(Icons.access_time, size: 11, color: iconColor),
+                SizedBox(width: 1),
                 Text(
                   parseTime(product.delivDuration),
-                  style: TextStyle(fontSize: 10, color: Colors.white),
+                  style: TextStyle(
+                    fontSize: width * 0.024,
+                    color: footerTxtColor,
+                    fontWeight: FontWeight.bold,
+                    
+                  ),
                 ),
               ],
             ),
