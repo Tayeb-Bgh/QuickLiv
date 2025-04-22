@@ -10,6 +10,7 @@ class Grocery {
   final int delivTime;
   final double rating;
   final bool liked;
+  final double distance;
 
   Grocery({
     required this.id,
@@ -22,5 +23,6 @@ class Grocery {
     required this.delivTime,
     required this.rating,
     required this.liked,
+    required this.distance,
   });
 }
