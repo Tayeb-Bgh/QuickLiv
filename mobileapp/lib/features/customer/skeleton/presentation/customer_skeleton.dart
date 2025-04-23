@@ -1,22 +1,21 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:mobileapp/features/customer/coupons_store/presentation/pages/Coupon_page.dart';
-import 'package:mobileapp/features/maps_example/polyline_origin_to_destination.dart';
-
-import 'package:mobileapp/features/example/presentation/pages/presentation_page.dart';
-
-import 'package:mobileapp/features/customer/skeleton/presentation/widgets/custom_top_bar.dart';
+import 'package:mobileapp/core/config/dark_mode_provider.dart';
+import 'package:mobileapp/features/customer/restaurants/presentation/pages/restaurants_page.dart';
+import 'package:mobileapp/features/customer/skeleton/presentation/widgets/customer_custom_top_bar.dart';
+import 'package:mobileapp/features/customer/groceries/presentation/pages/groceries_page.dart';
 import 'package:mobileapp/core/constants/constants.dart';
 
-class Skeleton extends StatefulWidget {
-  const Skeleton({super.key});
+class CustomerSkeleton extends ConsumerStatefulWidget {
+  const CustomerSkeleton({super.key});
 
   @override
-  State<Skeleton> createState() => _SkeletonState();
+  ConsumerState<CustomerSkeleton> createState() => _CustomerSkeletonState();
 }
 
-class _SkeletonState extends State<Skeleton> {
+class _CustomerSkeletonState extends ConsumerState<CustomerSkeleton> {
   int _currentIndex = 0;
   final GlobalKey<CurvedNavigationBarState> _bottomNavigationKey = GlobalKey();
 
@@ -29,11 +28,11 @@ class _SkeletonState extends State<Skeleton> {
   ];
 
   final List<Widget> _pages = [
-    ExamplePage(),
-    GoogleMapsPage(),
+    Container(color: kPrimaryWhite),
+    RestaurantsPageTest(),
+    GroceriesPageTest(),
     Container(color: kPrimaryWhite),
     Container(color: kPrimaryWhite),
-    CouponPage(), // ← ici on remplace par la vraie page
   ];
 
   void _setCurrentIndex(int index) {
@@ -46,11 +45,13 @@ class _SkeletonState extends State<Skeleton> {
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
     final statusBarHeight = MediaQuery.of(context).padding.top;
+    final isDarkMode = ref.watch(darkModeProvider);
+
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(statusBarHeight + height * 0.033),
         child: Container(
-          color: kPrimaryWhite,
+          color: isDarkMode ? kPrimaryDark : kSecondaryWhite,
           child: CustomPaint(
             size: Size(double.infinity, double.infinity),
             painter: MyPainter(),
@@ -82,7 +83,7 @@ class _SkeletonState extends State<Skeleton> {
         ],
         color: kPrimaryRed,
         buttonBackgroundColor: kPrimaryRed,
-        backgroundColor: kPrimaryWhite,
+        backgroundColor: isDarkMode ? kPrimaryDark : kSecondaryWhite,
         animationCurve: Curves.easeInOut,
         animationDuration: const Duration(milliseconds: 500),
         onTap: _setCurrentIndex,
