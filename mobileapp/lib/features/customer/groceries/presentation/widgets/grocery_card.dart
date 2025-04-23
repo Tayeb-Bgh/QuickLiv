@@ -48,21 +48,18 @@ class GroceryCard extends ConsumerWidget {
                   top: 5,
                   right: 5,
                   child: GestureDetector(
-                    onTap:
-                        () => {print("${grocery.name} ajouté à favoris !")},
+                    onTap: () => {print("${grocery.name} ajouté à favoris !")},
                     child: Container(
                       height: isFull ? 43 : 36,
                       width: isFull ? 43 : 36,
                       padding: EdgeInsets.all(3),
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-    
+
                         color: likeBtnColor,
                       ),
                       child: Icon(
-                        grocery.liked
-                            ? Icons.favorite
-                            : Icons.favorite_border,
+                        grocery.liked ? Icons.favorite : Icons.favorite_border,
                         color: grocery.liked ? kPrimaryRed : kMediumGray,
                         size: isFull ? 33 : 28,
                       ),
@@ -72,7 +69,7 @@ class GroceryCard extends ConsumerWidget {
               ],
             ),
           ),
-    
+
           Container(
             height: isFull ? height * 0.11 : height * 0.099,
             decoration: BoxDecoration(
@@ -90,7 +87,7 @@ class GroceryCard extends ConsumerWidget {
               ],
             ),
             child: Padding(
-              padding: EdgeInsets.only(bottom: 10, top:10, right:10, left:  10),
+              padding: EdgeInsets.only(top: 10, right: 10, left: 10),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
@@ -109,7 +106,10 @@ class GroceryCard extends ConsumerWidget {
                     width: double.infinity,
                     child: AutoSizeText(
                       grocery.description,
-                      style: TextStyle(fontSize: isFull ? width * 0.033 : width * 0.026, color: footerTextColor),
+                      style: TextStyle(
+                        fontSize: isFull ? width * 0.033 : width * 0.026,
+                        color: footerTextColor,
+                      ),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -123,29 +123,34 @@ class GroceryCard extends ConsumerWidget {
                         children: [
                           Icon(
                             Icons.delivery_dining,
-                            size: isFull ? width * 0.06 : width * 0.038,                              color: iconColor,
+                            size: isFull ? width * 0.06 : width * 0.038,
+                            color: iconColor,
                           ),
                           Text(
                             "${grocery.delivPrice}",
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
-                              fontSize: isFull ? width * 0.04 :width * 0.031,
+                              fontSize: isFull ? width * 0.04 : width * 0.031,
                               color: footerTextColor,
                             ),
                           ),
                         ],
                       ),
                       const SizedBox(width: 2),
-    
+
                       Row(
                         spacing: width * 0.01,
                         children: [
-                          Icon(Icons.access_time, size: isFull ? width * 0.06 : width * 0.038, color: iconColor),
-    
+                          Icon(
+                            Icons.access_time,
+                            size: isFull ? width * 0.06 : width * 0.038,
+                            color: iconColor,
+                          ),
+
                           Text(
                             parseTime(grocery.delivTime),
                             style: TextStyle(
-                              fontSize: isFull ? width * 0.04 :width * 0.031,
+                              fontSize: isFull ? width * 0.04 : width * 0.031,
                               fontWeight: FontWeight.bold,
                               color: footerTextColor,
                             ),
@@ -153,16 +158,20 @@ class GroceryCard extends ConsumerWidget {
                         ],
                       ),
                       const SizedBox(width: 2),
-    
+
                       Row(
                         spacing: width * 0.01,
                         children: [
-                          Icon(Icons.star, size: isFull ? width * 0.06 : width * 0.038,color: iconColor),
-    
+                          Icon(
+                            Icons.star,
+                            size: isFull ? width * 0.06 : width * 0.038,
+                            color: iconColor,
+                          ),
+
                           Text(
                             grocery.rating.toString(),
                             style: TextStyle(
-                              fontSize: isFull ? width * 0.04 :width * 0.031,
+                              fontSize: isFull ? width * 0.04 : width * 0.031,
                               fontWeight: FontWeight.bold,
                               color: footerTextColor,
                             ),

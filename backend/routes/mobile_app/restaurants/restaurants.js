@@ -15,7 +15,7 @@ router.get("/", (req, res) => {
         WHERE typeBusns = ? AND dayOffBusns != ? AND wilayaBusns = ?
     `;
 
-    const params = ['grocery', currDayNbr, wilaya];
+    const params = ['restaurant', currDayNbr, wilaya];
 
     if (category) {
         query += ` AND LOWER(categoryBusns) = ?`;
@@ -31,34 +31,35 @@ router.get("/", (req, res) => {
         if (results.length > 0) {
             return res.status(200).json(results);
         } else {
-            return res.status(404).json({ message: 'No grocery found' });
+            return res.status(404).json({ message: 'No restaurant found' });
         }
     });
 });
 
 
-router.get("/reductions/products-business/:idBusns", (req, res) => {
+router.get("/products-business/:idBusns", (req, res) => {
     const { idBusns } = req.params;
 
-    const query = `SELECT ProductBusiness.idProd, ProductBusiness.idBusns, ProductBusiness.reducRateProdBusns, ProductBusiness.priceProdBusns
+    const query = `SELECT pb.idProd, pb.idBusns, pb.priceProdBusns
                    FROM Business b 
-                   JOIN ProductBusiness ON ProductBusiness.idBusns = b.idBusns
-                   JOIN Product p ON p.idProd = ProductBusiness.idProd
-                   WHERE p.byAdminProd = ? AND ProductBusiness.reducRateProdBusns IS NOT NULL AND ProductBusiness.reducRateProdBusns >= 30
-                   AND b.typeBusns = ? AND ProductBusiness.qttyProdBusns > ? AND b.idBusns = ?`;
+                   JOIN ProductBusiness pb ON pb.idBusns = b.idBusns
+                   JOIN Product p ON p.idProd = pb.idProd
+                   WHERE p.byAdminProd = ? AND pb.reducRateProdBusns IS NULL
+                   AND b.typeBusns = ?  AND b.idBusns = ? LIMIT 1`;
 
-    db.query(query, [1, 'grocery', 0, idBusns], (err, results) => {
+    db.query(query, [0, 'restaurant', idBusns], (err, results) => {
 
         if (err) {
             console.error("[SQL ERROR]", err);
             return res.status(500).json({ error: "Database error" });
         }
 
+        console.log("[DEBUG] SQL results", results);
 
         if (results.length > 0) {
             res.status(200).json(results);
         } else {
-            res.status(404).json({ message: 'No product on reduction found' });
+            res.status(404).json({ message: 'No product found' });
         };
     });
 
@@ -69,7 +70,7 @@ router.get("/products/:idProd", (req, res) => {
 
     const { idProd } = req.params;
 
-    const query = `SELECT idProd,nameProd,imgUrlProd,unitProd FROM Product
+    const query = `SELECT idProd,nameProd,imgUrlProd,unitProd,descProd FROM Product
                    WHERE idProd = ? `;
 
     db.query(query, [idProd], async (err, results) => {
@@ -79,9 +80,10 @@ router.get("/products/:idProd", (req, res) => {
         } 
         
         if (results) {
+            //console.log("[DEBUG] SQL results", results);
             res.status(200).json(results);
         } else {
-            res.status(404).json({ message: 'No product on reduction found' });
+            res.status(404).json({ message: 'No product found' });
         }
     });
 });
