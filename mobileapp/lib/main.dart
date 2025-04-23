@@ -6,7 +6,7 @@ import 'package:mobileapp/features/customer/skeleton/presentation/skeleton.dart'
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // Initialiser Hive avant tout
+
   await HiveStorageService.init();
   SystemChrome.setEnabledSystemUIMode(
     SystemUiMode.manual,
@@ -14,7 +14,7 @@ void main() async {
   );
   runApp(ProviderScope(child: MyApp()));
 }
-
+@override
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -26,4 +26,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-

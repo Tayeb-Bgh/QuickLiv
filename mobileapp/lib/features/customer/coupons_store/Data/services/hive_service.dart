@@ -12,11 +12,11 @@ class HiveStorageService {
   // Initialiser Hive
   static Future<void> init() async {
     await Hive.initFlutter();
-    
+
     // Enregistrer les adaptateurs
     Hive.registerAdapter(CustomerPointsHiveModelAdapter());
     Hive.registerAdapter(CouponHiveModelAdapter());
-    
+
     // Ouvrir les boxes
     await Hive.openBox<CustomerPointsHiveModel>(pointsBoxName);
     await Hive.openBox<CouponHiveModel>(couponsBoxName);
@@ -39,21 +39,27 @@ class HiveStorageService {
   static Future<void> saveCoupons(List<CouponEntity> coupons) async {
     final box = Hive.box<CouponHiveModel>(couponsBoxName);
     await box.clear(); // Effacer les anciens coupons
-    
+
     for (var coupon in coupons) {
-      await box.add(CouponHiveModel(
-        reductionCode: coupon.reductionCode ?? '',
-        discountRate: coupon.discountRate,
-      ));
+      await box.add(
+        CouponHiveModel(
+          reductionCode: coupon.reductionCode ?? '',
+          discountRate: coupon.discountRate,
+        ),
+      );
     }
   }
 
   static List<CouponEntity> getCoupons() {
     final box = Hive.box<CouponHiveModel>(couponsBoxName);
-    
-    return box.values.map((model) => CouponEntity(
-      reductionCode: model.reductionCode,
-      discountRate: model.discountRate,
-    )).toList();
+
+    return box.values
+        .map(
+          (model) => CouponEntity(
+            reductionCode: model.reductionCode,
+            discountRate: model.discountRate,
+          ),
+        )
+        .toList();
   }
 }

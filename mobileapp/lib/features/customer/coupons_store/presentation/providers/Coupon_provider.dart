@@ -1,5 +1,3 @@
-
-
 // import 'package:flutter_riverpod/flutter_riverpod.dart';
 // import 'package:mobileapp/features/customer/coupons_store/Data/repositories/Coupon_repositorie_impl.dart';
 // import 'package:mobileapp/features/customer/coupons_store/Data/services/Coupon_service.dart';
@@ -82,9 +80,6 @@
 //   }
 // }
 
-
-
-
 // import 'package:flutter_riverpod/flutter_riverpod.dart';
 // import 'package:mobileapp/features/customer/coupons_store/Data/repositories/Coupon_repositorie_impl.dart';
 // import 'package:mobileapp/features/customer/coupons_store/Data/services/Coupon_service.dart';
@@ -105,7 +100,7 @@
 // ) {
 //   final couponRepository = ref.watch(couponRepositoryProvider);
 //   final createCoupon = CreateCoupon(couponRepository);
-  
+
 //   return CouponNotifier(
 //     createCoupon: createCoupon,
 //   );
@@ -147,14 +142,14 @@
 
 //   CouponNotifier({
 //     required CreateCoupon createCoupon,
-//   }) : _createCoupon = createCoupon, 
+//   }) : _createCoupon = createCoupon,
 //        super(CouponState());
 
 //   Future<void> createCoupon(String reducCode, int discountRate) async {
 //     if (state.isProcessing) {
 //       return; // Éviter les doubles soumissions
 //     }
-    
+
 //     try {
 //       state = state.copyWith(
 //         status: CouponStatus.loading,
@@ -166,7 +161,7 @@
 //       final couponExists = state.coupons.any(
 //         (coupon) => coupon.discountRate == discountRate
 //       );
-      
+
 //       if (couponExists) {
 //         state = state.copyWith(
 //           status: CouponStatus.error,
@@ -215,10 +210,6 @@
 //     );
 //   }
 
-
-
-
-
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mobileapp/features/customer/coupons_store/Data/repositories/Coupon_repositorie_impl.dart';
 import 'package:mobileapp/features/customer/coupons_store/Data/services/Coupon_service.dart';
@@ -265,15 +256,15 @@ class CouponNotifier extends StateNotifier<CouponState> {
       super(CouponState()) {
     _loadCouponsFromStorage();
   }
-  
+  Future<void> fetchCoupons() async {
+    await _loadCouponsFromStorage();
+  }
+
   // Charger les coupons depuis Hive au démarrage
   Future<void> _loadCouponsFromStorage() async {
     final savedCoupons = HiveStorageService.getCoupons();
     if (savedCoupons.isNotEmpty) {
-      state = CouponState(
-        status: CouponStatus.success,
-        coupons: savedCoupons,
-      );
+      state = CouponState(status: CouponStatus.success, coupons: savedCoupons);
     }
   }
 
@@ -287,9 +278,9 @@ class CouponNotifier extends StateNotifier<CouponState> {
       );
 
       await _createCoupon(newCoupon);
-      
+
       final updatedCoupons = [...state.coupons, newCoupon];
-      
+
       // Sauvegarder dans Hive
       await HiveStorageService.saveCoupons(updatedCoupons);
 
@@ -311,7 +302,7 @@ class CouponNotifier extends StateNotifier<CouponState> {
         state.coupons
             .where((coupon) => coupon.discountRate != discountRate)
             .toList();
-    
+
     // Mettre à jour Hive
     await HiveStorageService.saveCoupons(updatedCoupons);
 
@@ -321,7 +312,7 @@ class CouponNotifier extends StateNotifier<CouponState> {
   void resetStatus() {
     state = CouponState(status: CouponStatus.initial, coupons: state.coupons);
   }
-  
+
   // Méthode pour forcer un rechargement des coupons depuis le stockage local
   void reloadCouponsFromStorage() {
     _loadCouponsFromStorage();
