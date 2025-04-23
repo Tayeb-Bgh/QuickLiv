@@ -1,3 +1,5 @@
+import 'dart:math';
+
 int toMinuts(int seconds) {
   return seconds ~/ 60;
 }
@@ -25,4 +27,19 @@ String parseTime(int seconds) {
       : firstTimeInterval >= 60 && finalTimeInterval >= 60
       ? "$firstTimeInterval - $finalTimeInterval h"
       : "$finalTimeInterval - $finalTimeInterval min";
+}
+
+
+String generateRandomCode(List<String> predefinedCodes) {
+  final random = Random();
+  int index = random.nextInt(predefinedCodes.length);
+  return predefinedCodes[index];
+}
+
+double calculateProgress(int currentPoints) {
+  return (currentPoints / 1000).clamp(0, 1);
+}
+
+int remainingPointsForMilestone(int currentPoints) {
+  return (1000 - currentPoints).clamp(0, 1000);
 }

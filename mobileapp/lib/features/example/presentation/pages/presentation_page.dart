@@ -34,7 +34,7 @@ class _ExamplePageState extends ConsumerState<ExamplePage> {
             (err, _) => FailureWidget(
               err: err,
               onPressed: () => _refresh(),
-              show: true,
+              show: false,
             ),
       ),
     );

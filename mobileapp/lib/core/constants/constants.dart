@@ -26,3 +26,23 @@ const Color kPrimaryBlur = Color(0x4D000000); // 30% opacity
 // Vert
 const Color kPrimaryGreen = Color(0xFF34EB4F);
 const Color kSecondaryGreen = Color(0xFF47CF5B);
+
+
+
+//autres
+const int kRequiredPoints30 = 250;
+const int kRequiredPoints60 = 750;
+const int kRequiredPoints100 = 1000;
+const List<String> predefinedCodes = [
+  'ABC123',
+  'DEF456',
+  'GHI789',
+  'JKL012',
+  'MNO345',
+    ];
+const double  priceCoupon30= 1000;
+const double  priceCoupon60= 1000;
+const double  priceCoupon100= 1000;
+
+const String descriptionCoupon= "Bénificie d'une livraison gratuite";
+
