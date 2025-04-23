@@ -2,15 +2,9 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 import 'package:mobileapp/core/config/dark_mode_provider.dart';
 import 'package:mobileapp/core/constants/constants.dart';
-import 'package:mobileapp/core/hive_object/customer_hive_object.dart';
-import 'package:mobileapp/core/hive_object/deliverer_hive_object.dart';
-import 'package:mobileapp/core/hive_object/vehicle_hive_object.dart';
-import 'package:mobileapp/features/auth/business/entities/customer_entity.dart';
 import 'package:mobileapp/features/auth/presentation/providers/auth_provider.dart';
-import 'package:mobileapp/features/auth/presentation/widgets/count_down_timer.dart';
 import 'package:mobileapp/features/customer/skeleton/presentation/customer_skeleton.dart';
 import 'package:mobileapp/features/deliverer/skeleton/presentation/deliverer_skeleton.dart';
 
@@ -24,7 +18,6 @@ class OtpCodeWidget extends ConsumerStatefulWidget {
 
 class _OtpCodeWidgetState extends ConsumerState<OtpCodeWidget> {
   String otpCode = "";
-   Key timerKey = UniqueKey();
 
   @override
   Widget build(BuildContext context) {
@@ -94,10 +87,6 @@ class _OtpCodeWidgetState extends ConsumerState<OtpCodeWidget> {
                   },
                 ),
 
-                SizedBox(height: 10),
-
-                CountdownTimer(key: timerKey),
-
                 SizedBox(height: 30),
 
                 SizedBox(
@@ -123,11 +112,12 @@ class _OtpCodeWidgetState extends ConsumerState<OtpCodeWidget> {
                           key: 'authToken',
                           value: result.token,
                         );
-
+                        
                         /* 
                         String? token = await secureStorage.read(
                           key: 'authToken',
                         ); */
+                       
 
                         if (result.role == "customer") {
                           Navigator.pop(context);
@@ -137,78 +127,12 @@ class _OtpCodeWidgetState extends ConsumerState<OtpCodeWidget> {
                               builder: (context) => CustomerSkeleton(),
                             ),
                           );
-
-                          final customerInfo = ref.read(
-                            getCustomerInfoUseCaseProvider,
-                          );
-                          final Customer customer = await customerInfo.call(
-                            phoneNumber: widget.phoneNumber.toString(),
-                          );
-
-                          print("Customer info: ${customer.toString()}");
-
-                          var box = await Hive.openBox<CustomerHiveObject>(
-                            'customerBox',
-                          );
-
-                          // Sauvegarde
-                          await box.put(
-                            'currentCustomer',
-                            CustomerHiveObject.toHiveCustomer(customer),
-                          );
-                          // Lecture
-                          CustomerHiveObject? savedCustomer = box.get(
-                            'currentCustomer',
-                          );
-                          print(
-                            "id : ${savedCustomer?.id}, ${savedCustomer?.firstName}, ${savedCustomer?.lastName}, ${savedCustomer?.phone}, ${savedCustomer?.registerDate}, ${savedCustomer?.points}, ${savedCustomer?.isSubmittedDeliverer}, ${savedCustomer?.isSubmittedPartner}",
-                          );
                         } else if (result.role == "deliverer") {
                           Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
                               builder: (context) => DelivererSkeleton(),
                             ),
-                          );
-
-                          final delivererInfo = ref.read(
-                            getDelivererInfoUseCaseProvider,
-                          );
-                          final deliverer = await delivererInfo.call(
-                            phoneNumber: widget.phoneNumber.toString(),
-                          );
-                          print("Deliverer info: ${deliverer.toString()}");
-
-                          var box = await Hive.openBox<DelivererHiveObject>(
-                            'delivererBox',
-                          );
-                          var vehicleBox =
-                              await Hive.openBox<VehicleHiveObject>(
-                                'vehicleBox',
-                              );
-
-                          // Sauvegarde
-                          await box.put(
-                            'currentDeliverer',
-                            DelivererHiveObject.toHiveDeliverer(deliverer),
-                          );
-
-                          // Sauvegarde de la voiture
-                          await vehicleBox.put(
-                            'currentVehicle',
-                            VehicleHiveObject.toHiveVehicle(deliverer.vehicle),
-                          );
-
-                          // Lecture
-                          DelivererHiveObject? savedDeliverer = box.get(
-                            'currentDeliverer',
-                          );
-                          VehicleHiveObject? savedVehicle = vehicleBox.get(
-                            'currentVehicle',
-                          );
-
-                          print(
-                            "id : ${savedDeliverer?.id}, ${savedDeliverer?.firstName}, ${savedDeliverer?.lastName}, ${savedDeliverer?.phone}, ${savedDeliverer?.registerDate}, ${savedDeliverer?.rating}, ${savedDeliverer?.deliveryNbr}, ${savedDeliverer?.email}, ${savedDeliverer?.adrs}, ${savedDeliverer?.status}, ${savedDeliverer?.nbrOrderThisDay}, ${savedDeliverer?.profitsThisDay}, ${savedVehicle?.id}, ${savedVehicle?.registerNbr}, ${savedVehicle?.brand}, ${savedVehicle?.model}, ${savedVehicle?.color}, ${savedVehicle?.year}, ${savedVehicle?.insuranceExpr}, ${savedVehicle?.type}",
                           );
                         } else {
                           ScaffoldMessenger.of(context).showSnackBar(
@@ -253,32 +177,18 @@ class _OtpCodeWidgetState extends ConsumerState<OtpCodeWidget> {
                       ),
                     ),
                     SizedBox(width: 5),
-                    GestureDetector(
-                      onTap: () async {
-                        final checkPhone = ref.read(checkPhoneUseCaseProvider);
-                        final exists = await checkPhone(
-                          widget.phoneNumber.toString(),
-                        );
-
-                        if (exists) {
-                          setState(() {
-                            timerKey = UniqueKey(); // ⏱️ reset le timer
-                          });
-                        }
-                      },
-                      child: SizedBox(
-                        width: width * 0.2,
-                        child: AutoSizeText(
-                          "Renvoyer",
-                          style: TextStyle(
-                            color: kPrimaryRed,
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
-                          maxFontSize: 16,
-                          minFontSize: 10,
-                          maxLines: 1,
+                    SizedBox(
+                      width: width * 0.2,
+                      child: AutoSizeText(
+                        "Renvoyer",
+                        style: TextStyle(
+                          color: kPrimaryRed,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
                         ),
+                        maxFontSize: 16,
+                         minFontSize: 10,
+                        maxLines: 1,
                       ),
                     ),
                   ],

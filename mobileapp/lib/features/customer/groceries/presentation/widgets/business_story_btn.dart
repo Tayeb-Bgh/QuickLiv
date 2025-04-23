@@ -9,7 +9,7 @@ class BusinessStoryBtn extends ConsumerWidget {
   final Grocery grocery;
   final bool isDarkMode;
 
-  BusinessStoryBtn({
+  const BusinessStoryBtn({
     super.key,
     required this.grocery,
     required this.isDarkMode,
