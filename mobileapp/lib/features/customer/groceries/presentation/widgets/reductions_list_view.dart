@@ -29,7 +29,7 @@ class ReductionsListView extends ConsumerWidget {
     return ColoredBox(
       color: isDarkMode ? kPrimaryDark : kSecondaryWhite,
       child: Container(
-        padding: EdgeInsets.only(left: 15,bottom: 10),
+        padding: EdgeInsets.only(left: width * kDefaultPadding),
           child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -43,7 +43,7 @@ class ReductionsListView extends ConsumerWidget {
                 fontSize: width * 0.060,
               ),
             ),
-            SizedBox(height: 6),
+            SizedBox(height: height * 0.006),
             reductions.when(
               data:
                   (reductions) => RefreshIndicator(
@@ -56,7 +56,7 @@ class ReductionsListView extends ConsumerWidget {
                         itemBuilder: (context, index) {
                           final reduction = reductions[index];
                           return Container(
-                            margin: EdgeInsets.only(right: 10 ,bottom: 8),
+                            margin: EdgeInsets.only(right: 10 ,bottom: height * 0.008),
                             child: ProductReducCard(product: reduction),
                           );
                         },

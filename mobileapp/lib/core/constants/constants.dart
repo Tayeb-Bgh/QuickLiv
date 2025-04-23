@@ -27,3 +27,5 @@ const Color kPrimaryBlur = Color(0x4D000000); // 30% opacity
 // Vert
 const Color kPrimaryGreen = Color(0xFF34EB4F);
 const Color kSecondaryGreen = Color(0xFF47CF5B);
+
+const double kDefaultPadding = 0.035;

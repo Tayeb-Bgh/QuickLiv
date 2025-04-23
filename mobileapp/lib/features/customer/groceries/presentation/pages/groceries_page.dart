@@ -37,6 +37,9 @@ class _GroceriesPageTestState extends ConsumerState<GroceriesPageTest> {
     final isDarkMode = ref.watch(darkModeProvider);
     final bgColor = isDarkMode ? kPrimaryDark : kSecondaryWhite;
 
+    final height = MediaQuery.of(context).size.height;
+    final width = MediaQuery.of(context).size.width;
+
     return ColoredBox(
       color: bgColor,
       child: CustomScrollView(
@@ -47,15 +50,15 @@ class _GroceriesPageTestState extends ConsumerState<GroceriesPageTest> {
               onRefresh: _refresh,
             ),
           ),
-          SliverToBoxAdapter(child: SizedBox(height: 10)),
+          SliverToBoxAdapter(child: SizedBox(height: height * 0)),
 
           // Sticky Header
           SliverPersistentHeader(
             pinned: true,
-            delegate: _StickyRadioButtonsDelegate(isDarkMode: isDarkMode),
+            delegate: _StickyRadioButtonsDelegate(isDarkMode: isDarkMode,height: height),
           ),
 
-          SliverToBoxAdapter(child: SizedBox(height: 13)),
+          SliverToBoxAdapter(child: SizedBox(height: height * 0)),
 
           SliverToBoxAdapter(
             child: ReductionsListView(
@@ -84,25 +87,28 @@ class _GroceriesPageTestState extends ConsumerState<GroceriesPageTest> {
 
 class _StickyRadioButtonsDelegate extends SliverPersistentHeaderDelegate {
   final bool isDarkMode;
-  _StickyRadioButtonsDelegate({required this.isDarkMode});
+  final double height;
+  _StickyRadioButtonsDelegate({required this.isDarkMode,required this.height});
 
   @override
   Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
     
+    
     return ColoredBox(
+
       color:  isDarkMode?  kPrimaryDark : kSecondaryWhite,
-      child: const Padding(
-        padding: EdgeInsets.symmetric(vertical: 8.0),
+      child: Padding(
+        padding: EdgeInsets.symmetric(vertical: height * 0.015),
         child: HorizontalRadioButtons(),
       ),
     );
   }
 
   @override
-  double get maxExtent => 50;
+  double get maxExtent => height * 0.0675;
 
   @override
-  double get minExtent => 50;
+  double get minExtent => height * 0.0675;
 
   @override
   bool shouldRebuild(_StickyRadioButtonsDelegate oldDelegate) => false;

@@ -6,7 +6,6 @@ import 'package:mobileapp/features/customer/groceries/business/entities/grocery_
 import 'package:mobileapp/features/customer/groceries/presentation/widgets/grocery_card.dart';
 
 class GroceriesListView extends ConsumerWidget {
-  
   final AsyncValue<List<Grocery>> groceries;
   final String title = "Notre sélection du jour";
   final Function onRefresh;
@@ -20,7 +19,7 @@ class GroceriesListView extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isDarkMode = ref.watch(darkModeProvider);
-    final height = MediaQuery.of(context).size.height ;
+    final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
 
     final Color titleColor = isDarkMode ? kSecondaryWhite : kPrimaryRed;
@@ -28,7 +27,7 @@ class GroceriesListView extends ConsumerWidget {
     return ColoredBox(
       color: isDarkMode ? kPrimaryDark : kSecondaryWhite,
       child: Container(
-        padding: EdgeInsets.only(left: 15),
+        padding: EdgeInsets.only(left: width * kDefaultPadding),
         margin: EdgeInsets.only(bottom: 0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -37,7 +36,7 @@ class GroceriesListView extends ConsumerWidget {
             Text(
               title,
               textAlign: TextAlign.left,
-              
+
               style: TextStyle(
                 color: titleColor,
                 fontWeight: FontWeight.bold,

@@ -32,8 +32,8 @@ class ProductReducCard extends ConsumerWidget {
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.4),
-                    blurRadius: 3.5,
+                    color: kPrimaryBlur,
+                    blurRadius: 1,
                     offset: const Offset(0, 4),
                   ),
                 ],
@@ -75,7 +75,7 @@ class ProductReducCard extends ConsumerWidget {
               Positioned(
                 top: 10,
                 left: -2,
-                width: width * 0.23,
+                width: width * 0.25,
                 child: Container(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 5,
@@ -124,7 +124,7 @@ class ProductReducCard extends ConsumerWidget {
             ],
           ),
           Padding(
-            padding: const EdgeInsets.only(left: 8),
+            padding: EdgeInsets.only(left: width * 0.015),
             child: Text(
               product.nameProd,
               style: TextStyle(

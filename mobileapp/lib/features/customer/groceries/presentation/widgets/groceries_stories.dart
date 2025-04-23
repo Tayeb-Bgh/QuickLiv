@@ -22,14 +22,14 @@ class GroceriesStoriesList extends ConsumerWidget {
     return ColoredBox(
       color: isDarkMode ? kPrimaryDark : kSecondaryWhite,
       child: Container(
-        margin: EdgeInsets.only(top: 10),
-        padding: EdgeInsets.only(left: 5, right: 5),
+        margin: EdgeInsets.only(top: height * 0.01),
+        padding: EdgeInsets.only(left: width * kDefaultPadding),
         child: groceries.when(
           data:
               (groceries) => RefreshIndicator(
                 onRefresh: () => onRefresh(),
                 child: SizedBox(
-                  height: width * 0.26,
+                  height: height * 0.123,//////////////////////////////////ICIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII STORYYYYYYYYYYYYY OVERFLOOOOOOOOOOOOOOW
                   child: ListView.builder(
                     physics: const AlwaysScrollableScrollPhysics(),
                     scrollDirection: Axis.horizontal,
@@ -37,9 +37,10 @@ class GroceriesStoriesList extends ConsumerWidget {
 
                     itemBuilder: (context, index) {
                       final grocer = groceries[index];
+                      
                       return Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 5,
+                        padding: EdgeInsets.only(
+                          right: width * 0.025,
                         ), // Réduit l'écart ici
                         child: BusinessStoryBtn(grocery: grocer),
                       );

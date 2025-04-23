@@ -33,12 +33,13 @@ class HorizontalRadioButtons extends ConsumerWidget {
             itemBuilder: (context, index) {
               final category = categories[index];
               final isSelected = selected == category['label'];
+              final widht = MediaQuery.of(context).size.width ;
               
               return RadioListTile<String>(
                 title: Row(
                   children: [
                     Icon(category['icon'] as IconData, color: kPrimaryRed),
-                    const SizedBox(width: 8),
+                    SizedBox(width: 8),
                     Text(category['label'] as String),
                   ],
                 ),
@@ -73,6 +74,7 @@ class HorizontalRadioButtons extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final height = MediaQuery.of(context).size.height;
+    final width = MediaQuery.of(context).size.width ;
     final isDarkMode = ref.watch(darkModeProvider);
 
     final selected = ref.watch(selectedCategoryProvider);
@@ -91,7 +93,7 @@ class HorizontalRadioButtons extends ConsumerWidget {
       height: height * 0.039,
       child: ListView.separated(
         scrollDirection: Axis.horizontal,
-        padding: const EdgeInsets.symmetric(horizontal: 12),
+        padding: EdgeInsets.symmetric(horizontal: width * kDefaultPadding),
         itemCount: categories.length + 1, // +1 pour le bouton settings
         separatorBuilder: (_, __) => const SizedBox(width: 10),
         itemBuilder: (context, index) {
@@ -109,7 +111,7 @@ class HorizontalRadioButtons extends ConsumerWidget {
                 child: Icon(
                   Icons.settings,
                   color: isDarkMode ? kWhiteGray : kPrimaryRed,
-                  size: 20,
+                  size: width * 0.058,
                 ),
               ),
             );
@@ -126,7 +128,7 @@ class HorizontalRadioButtons extends ConsumerWidget {
             },
             child: AnimatedContainer(
               duration: const Duration(milliseconds: 200),
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
+              padding:  EdgeInsets.symmetric(horizontal: width * 0.03, vertical: height * 0.005),
               decoration: BoxDecoration(
                 color: isSelected ? kPrimaryRed : Colors.transparent,
                 border: Border.all(color: kPrimaryRed, width: 2),
@@ -137,9 +139,9 @@ class HorizontalRadioButtons extends ConsumerWidget {
                   Icon(
                     category['icon'] as IconData,
                     color: isSelected ? kSecondaryWhite : isDarkMode ? kSecondaryWhite : kPrimaryRed,
-                    size: 20,
+                    size: width * 0.05,
                   ),
-                  const SizedBox(width: 8),
+                   SizedBox(width: width * 0.01),
                   Text(
                     category['label'] as String,
                     style: TextStyle(

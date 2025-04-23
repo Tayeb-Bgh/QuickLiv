@@ -16,6 +16,7 @@ class BusinessStoryBtn extends ConsumerWidget {
     final Color textColor = isDarkMode ? kPrimaryWhite: kPrimaryBlack;
     final radius = MediaQuery.of(context).size.height * 0.04;
     final width = MediaQuery.of(context).size.width;
+    final height = MediaQuery.of(context).size.height;
 
     return Column(
       children: [
@@ -38,9 +39,9 @@ class BusinessStoryBtn extends ConsumerWidget {
             ),
           ),
         ),
-        const SizedBox(height: 1.6), // Space between image and text
+        SizedBox(height: height * 0.001), // Space between image and text
         SizedBox(
-          width: width * 0.19,
+          width: width * 0.175, /////////////////// PEUT ETRE ICI AUSSIIIIIIIIIIIIIIIII
           child: AutoSizeText(
             grocery.name,
             style: TextStyle(color: textColor, fontSize: width*0.025),

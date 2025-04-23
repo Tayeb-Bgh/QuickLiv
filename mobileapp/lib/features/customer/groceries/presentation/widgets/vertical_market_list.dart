@@ -46,7 +46,11 @@ class VerticalMarketList extends ConsumerWidget {
               itemCount: groceries.length,
               itemBuilder: (context, index) {
                 final grocer = groceries[index];
-                return GroceryCard(grocery: grocer, isFull: isFull);
+                return Container(
+                  margin: EdgeInsets.only(
+                    bottom: 10,
+                  ),
+                  child: GroceryCard(grocery: grocer, isFull: isFull));
               },
             ),
           ],
