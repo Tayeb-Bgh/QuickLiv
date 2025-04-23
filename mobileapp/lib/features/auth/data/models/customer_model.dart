@@ -1,41 +1,70 @@
-import 'package:mobileapp/features/auth/data/models/person_model.dart';
+import 'package:mobileapp/features/auth/business/entities/customer_entity.dart';
 
-class CustomerModel extends PersonModel {
+class CustomerModel {
+  final int idCust;
+  final String firstNameCust;
+  final String lastNameCust;
+  final String phoneCust;
+  final DateTime registerDateCust;
   final int pointsCust;
+  final bool isSubmittedDelivererCust;
+  final bool isSubmittedPartnerCust;
 
   CustomerModel({
-    required int idPers,
-    required String firstNamePers,
-    required String lastNamePers,
-    required DateTime bdayDatePers,
-    required String phonePers,
+    required this.idCust,
+    required this.firstNameCust,
+    required this.lastNameCust,
+    required this.phoneCust,
+    required this.registerDateCust,
     required this.pointsCust,
-  }) : super(
-         idPers: idPers,
-         firstNamePers: firstNamePers,
-         lastNamePers: lastNamePers,
-         bdayDatePers: bdayDatePers,
-         phonePers: phonePers,
-       );
+    required this.isSubmittedDelivererCust,
+    required this.isSubmittedPartnerCust,
+  });
 
-  @override
+  /// ✅ Factory pour construire un objet depuis un JSON
   factory CustomerModel.fromJson(Map<String, dynamic> json) {
     return CustomerModel(
-      idPers: json["idPers"],
-      firstNamePers: json["firstNamePers"],
-      lastNamePers: json["lastNamePers"],
-      bdayDatePers: DateTime.parse(json["bdayDatePers"]),
-      phonePers: json["phonePers"],
-      pointsCust: json["pointsCust"],
+      idCust: json['idCust'],
+      firstNameCust: json['firstNameCust'],
+      lastNameCust: json['lastNameCust'],
+      phoneCust: json['phoneCust'],
+      registerDateCust: DateTime.parse(json['registerDateCust']),
+      pointsCust: json['pointsCust'],
+      isSubmittedDelivererCust:
+          json['isSubmittedDelivererCust'] == 0 ? false : true,
+      isSubmittedPartnerCust:
+          json['isSubmittedPartnerCust'] == 0 ? false : true,
     );
   }
 
-  @override
+  /// ✅ Méthode pour convertir l'objet en JSON
   Map<String, dynamic> toJson() {
-    // TODO: implement toJson
-    final data = super.toJson();
-    data.addAll({"pointsCust": pointsCust});
+    return {
+      'idCust': idCust,
+      'firstNameCust': firstNameCust,
+      'lastNameCust': lastNameCust,
+      'phoneCust': phoneCust,
+      'registerDateCust': registerDateCust.toIso8601String(),
+      'pointsCust': pointsCust,
+      'isSubmittedDelivererCust': isSubmittedDelivererCust,
+      'isSubmittedPartnerCust': isSubmittedPartnerCust,
+    };
+  }
 
-    return data;
+  Customer toEntity() {
+    return Customer(
+      id: idCust,
+      points: pointsCust,
+      firstName: firstNameCust,
+      lastName: lastNameCust,
+      phone: phoneCust,
+      registerDate: registerDateCust,
+      isSubmittedDeliverer: isSubmittedDelivererCust,
+      isSubmittedPartner: isSubmittedPartnerCust,
+      carts: List.empty(),
+      favorites: List.empty(),
+      ordersHistory: List.empty(),
+      coupons: List.empty(),
+    );
   }
 }

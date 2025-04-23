@@ -1,34 +1,41 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mobileapp/core/config/dark_mode_provider.dart';
+import 'package:mobileapp/core/constants/constants.dart';
 import 'package:mobileapp/features/auth/presentation/widgets/login_appbar.dart';
 import 'package:mobileapp/features/auth/presentation/widgets/login_widget.dart';
 
 
-class Test extends StatefulWidget {
-  const Test({super.key});
+class LoginPage extends ConsumerStatefulWidget {
+  const LoginPage({super.key});
 
   @override
-  State<Test> createState() => _TestState();
+  ConsumerState<LoginPage> createState() => _LoginPageState();
 }
 
-class _TestState extends State<Test> {
+class _LoginPageState extends ConsumerState<LoginPage> {
   bool isChecked = false;
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = ref.watch(darkModeProvider);
     final height = MediaQuery.of(context).size.height;
+
+    final backgroundColor = isDarkMode ? kPrimaryDark : kSecondaryWhite;
+    
     return Scaffold(
-      backgroundColor: Color(0xFFF5F5F5),
+      backgroundColor: backgroundColor,
       body: SingleChildScrollView(
-        child: Container(
+        child: SizedBox(
           height: MediaQuery.of(context).size.height,
           width: double.infinity,
           child: Stack(
             children: [
               Positioned(
-                top: height * 0.25,
+                top: height * 0.31,
                 left: 0,
                 right: 0,
-                child: LoginPage(),
+                child: LoginWidget(),
               ),
               Positioned(top: 0, left: 0, right: 0, child: LoginAppBar()),
             ],

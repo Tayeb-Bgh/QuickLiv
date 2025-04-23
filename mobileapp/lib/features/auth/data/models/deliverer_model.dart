@@ -1,69 +1,68 @@
-import 'package:mobileapp/features/auth/data/models/person_model.dart';
+import 'package:mobileapp/features/auth/business/entities/deliverer_entity.dart';
+import 'package:mobileapp/features/auth/business/entities/vehicle_entity.dart';
 
-class DelivererModel extends PersonModel {
+class DelivererModel {
+  final int idDel;
+  final String firstNameDel;
+  final String lastNameDel;
+  final String phoneDel;
+  final DateTime registerDateDel;
   final String emailDel;
-  final String sexDel;
   final String adrsDel;
-  final String socSecNbrDel;
-  final String driveLicDel;
   final bool statusDel;
-  final bool authorizedDel;
 
-  final int vehicleDel;
+  DelivererModel({required this.idDel, required this.firstNameDel, required this.lastNameDel, required this.phoneDel, required this.registerDateDel, required this.emailDel, required this.adrsDel, required this.statusDel});
 
-  DelivererModel({
-    required int idPers,
-    required String firstNamePers,
-    required String lastNamePers,
-    required DateTime bdayDatePers,
-    required String phonePers,
-    required this.emailDel,
-    required this.sexDel,
-    required this.adrsDel,
-    required this.socSecNbrDel,
-    required this.driveLicDel,
-    required this.statusDel,
-    required this.authorizedDel,
-    required this.vehicleDel,
-  }) : super(
-         idPers: idPers,
-         firstNamePers: firstNamePers,
-         lastNamePers: lastNamePers,
-         bdayDatePers: bdayDatePers,
-         phonePers: phonePers,
-       );
-
+  /// ✅ Factory pour construire un objet depuis un JSON
   factory DelivererModel.fromJson(Map<String, dynamic> json) {
     return DelivererModel(
-      idPers: json["idPers"],
-      firstNamePers: json["firstNamePers"],
-      lastNamePers: json["lastNamePers"],
-      bdayDatePers: DateTime.parse(json["bdayDatePers"]),
-      phonePers: json["phonePers"],
-      emailDel: json["emailDel"],
-      sexDel: json["sexDel"],
-      adrsDel: json["adrsDel"],
-      socSecNbrDel: json["socSecNbrDel"],
-      driveLicDel: json["driveLicDel"],
-      statusDel: json["statusDel"],
-      authorizedDel: json["authorizedDel"],
-      vehicleDel: json["vehicleDel"],
+      idDel: json['idDel'],
+      firstNameDel: json['firstNameDel'],
+      lastNameDel: json['lastNameDel'],
+      phoneDel: json['phoneDel'],
+      registerDateDel: DateTime.parse(json['registerDateDel']),
+      emailDel: json['emailDel'],
+      adrsDel: json['adrsDel'],
+      statusDel: json['statusDel'] == 0 ? false : true,
     );
   }
 
-  @override
+  /// ✅ Méthode pour convertir l'objet en JSON
   Map<String, dynamic> toJson() {
-    final data = super.toJson();
-    data.addAll({
-      "emailDel": emailDel,
-      "sexDel": sexDel,
-      "adrsDel": adrsDel,
-      "socSecNbrDel": socSecNbrDel,
-      "driveLicDel": driveLicDel,
-      "statusDel": statusDel,
-      "autorizedDel": authorizedDel,
-      "vehicleDel": vehicleDel,
-    });
-    return data;
+    return {
+      'idDel': idDel,
+      'firstNameDel': firstNameDel,
+      'lastNameDel': lastNameDel,
+      'phoneDel': phoneDel,
+      'registerDateDel': registerDateDel.toIso8601String(),
+      'emailDel': emailDel,
+      'adrsDel': adrsDel,
+      'statusDel': statusDel,
+    };
   }
+
+  Deliverer toEntity({required double rating, required int deliveryNbr, required Vehicle vehicle}) {
+    return Deliverer(
+      id: idDel,
+      firstName: firstNameDel,
+      lastName: lastNameDel,
+      phone: phoneDel,
+      registerDate: registerDateDel,
+      email: emailDel,
+      adrs: adrsDel,
+      status: statusDel,
+      rating: rating, 
+      deliveryNbr: deliveryNbr,
+      nbrOrderThisDay: null,
+      profitsThisDay: null,
+      vehicle: vehicle,
+      orderHistory: [],
+      currentOrder: null,
+      
+    );
+  }
+
+ 
+  
 }
+
