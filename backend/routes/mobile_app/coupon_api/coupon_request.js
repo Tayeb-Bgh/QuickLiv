@@ -1,22 +1,24 @@
+
 require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
 const db = require('../../../dbConnexion');
+const authenticate = require('../../auth/utils/verify_jwt');
 
 const router = express.Router();
 
 router.use(bodyParser.json());
 
 
-const client_id = 1; // Valeur statique pour l'ID client
+router.post('/createcoupon', authenticate, async (req, res) => {
 
-// Créer un nouveau coupon
-router.post('/create_coupon', async (req, res) => {
+  const client_id = req.user.id;
+
   const { reducRateCoupon,
     reducCodeCoupon,
     isUsedCoup, } = req.body;
 
-  // Vérification des données requises
+
   if (!reducRateCoupon || !reducCodeCoupon || isUsedCoup === undefined) {
     return res.status(400).json({
       success: false,
@@ -43,7 +45,7 @@ router.post('/create_coupon', async (req, res) => {
           });
         }
 
-        // Ajout d'une réponse en cas de succès
+
         return res.status(201).json({
           success: true,
           message: "Coupon créé avec succès",

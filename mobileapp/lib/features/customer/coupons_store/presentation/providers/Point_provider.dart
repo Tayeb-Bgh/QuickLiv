@@ -1,3 +1,4 @@
+import 'dart:async';
 
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -15,7 +16,17 @@ class PointNotifier extends StateNotifier<AsyncValue<int>> {
     this._getCustomerPointsUseCase,
     this._updateCustomerPointsUseCase,
   ) : super(const AsyncValue.loading()) {
-    _loadPoints(); // appel ici
+    startPeriodicRefresh();
+  }
+  
+  Future<void> startPeriodicRefresh() async {
+    
+    await refreshPoints();
+
+    // Puis configurer un rafraîchissement périodique toutes les 30 secondes
+    Timer.periodic(const Duration(seconds: 1), (_) {
+      refreshPoints();
+    });
   }
 
   Future<void> _loadPoints() async {
@@ -117,7 +128,7 @@ final customerPointsRepositoryProvider = Provider<CustomerPointsRepository>((
 
 final customerPointServiceProvider = Provider<CustomerPointService>((ref) {
   final dio = ref.watch(dioProvider);
-  return CustomerPointService(dio);
+  return CustomerPointService(dio, ref);
 });
 
 final dioProvider = Provider<Dio>((ref) {

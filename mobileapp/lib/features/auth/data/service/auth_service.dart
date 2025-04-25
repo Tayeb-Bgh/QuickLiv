@@ -39,6 +39,11 @@ class AuthService {
         "$url/auth/verify-otp",
         data: {'phoneNumber': phoneNumber, 'otp': otp},
       );
+      final token = response.data["token"];
+      final secureStorage = ref.read(secureStorageProvider);
+      await secureStorage.write(key: 'authToken', value: token);
+      ref.invalidate(jwtTokenProvider);
+
       return VerifyOtpResultModel(
         success: response.data["success"],
         role: response.data["role"],
@@ -53,7 +58,7 @@ class AuthService {
   Future<CustomerModel> getCustomerInfo({required String phoneNumber}) async {
     final url = await ApiConfig.getBaseUrl();
     final token = await ref.read(jwtTokenProvider.future);
-    
+
     try {
       final response = await dio.get(
         "$url/auth/customers/by-phone",

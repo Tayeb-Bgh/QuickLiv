@@ -10,9 +10,13 @@ class MyPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     Path path = Path();
 
+    
     path.moveTo(size.width, 0);
     path.lineTo(0, 0);
-    path.lineTo(0, size.height * 1.05);
+    path.lineTo(
+      0,
+      size.height * 1.05,
+    );
     path.cubicTo(
       size.width * 0.68,
       size.height * 0.5875,
@@ -25,7 +29,8 @@ class MyPainter extends CustomPainter {
     path.close();
 
     Paint paintFill = Paint()..style = PaintingStyle.fill;
-    paintFill.color = kPrimaryRed;
+    paintFill.color =
+        kPrimaryRed; 
     canvas.drawPath(path, paintFill);
   }
 
@@ -78,7 +83,7 @@ class CustomTopBar extends ConsumerWidget {
   }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context,WidgetRef ref) {
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
     final statusBarHeight = MediaQuery.of(context).padding.top;
@@ -99,22 +104,10 @@ class CustomTopBar extends ConsumerWidget {
         Positioned(
           right: width * 0.025,
           top: statusBarHeight + height * 0.015,
-          child: Row(
-            children: [
-              _buildIcon(context, "assets/images/order.svg"),
-              const SizedBox(width: 6),
-              _buildIcon(
-                context,
-                "assets/images/cart.svg",
-                width * 0.06,
-                width * 0.06,
-              ),
-              const SizedBox(width: 6),
-              GestureDetector(
+          child: GestureDetector(
                 onTap: () async {
                   final secureStorage = ref.watch(secureStorageProvider);
                   final token = await secureStorage.read(key: 'authToken');
-                  ref.invalidate(jwtTokenProvider);
 
                   if (token != null && token.isNotEmpty) {
                     showDialog(
@@ -133,7 +126,6 @@ class CustomTopBar extends ConsumerWidget {
                               TextButton(
                                 onPressed: () {
                                   secureStorage.delete(key: 'authToken');
-                                  ref.invalidate(jwtTokenProvider);
                                   Navigator.of(context).pop();
                                 },
                                 child: const Text('Se deconnecter'),
@@ -147,8 +139,7 @@ class CustomTopBar extends ConsumerWidget {
                 },
                 child: _buildIcon(context, "assets/images/user.svg"),
               ),
-            ],
-          ),
+            
         ),
       ],
     );

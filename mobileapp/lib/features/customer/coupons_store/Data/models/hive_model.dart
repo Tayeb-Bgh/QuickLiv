@@ -3,7 +3,7 @@
 import 'package:hive/hive.dart';
 part 'hive_model.g.dart';
 
-@HiveType(typeId: 0)
+@HiveType(typeId: 4)
 class CustomerPointsHiveModel extends HiveObject {
   @HiveField(0)
   int points;
@@ -11,7 +11,7 @@ class CustomerPointsHiveModel extends HiveObject {
   CustomerPointsHiveModel({required this.points});
 }
 
-@HiveType(typeId: 1)
+@HiveType(typeId: 5)
 class CouponHiveModel extends HiveObject {
   @HiveField(0)
   String reductionCode;
@@ -19,8 +19,5 @@ class CouponHiveModel extends HiveObject {
   @HiveField(1)
   int discountRate;
 
-  CouponHiveModel({
-    required this.reductionCode,
-    required this.discountRate,
-  });
+  CouponHiveModel({required this.reductionCode, required this.discountRate});
 }

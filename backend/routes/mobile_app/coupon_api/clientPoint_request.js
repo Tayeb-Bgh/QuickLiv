@@ -1,17 +1,19 @@
+
 require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
 const db = require('../../../dbConnexion');
+const authenticate = require('../../auth/utils/verify_jwt');
 
 const router = express.Router();
 
 router.use(bodyParser.json());
 
-const client_id = 1;
-router.get('/getClientPoint', async (req, res) => {
-  try {
 
-    // SQL query to retrieve customer points
+router.get('/getClientPoint', authenticate, async (req, res) => {
+
+  try {
+    const client_id = req.user.id;
     const query = "SELECT pointsCust FROM Customer WHERE idCust = ?";
 
     db.query(query, [client_id], (err, results) => {
@@ -31,7 +33,7 @@ router.get('/getClientPoint', async (req, res) => {
         });
       }
 
-      // Return customer points
+
       return res.status(200).json({
         success: true,
         message: 'Customer points retrieved successfully',
@@ -52,15 +54,13 @@ router.get('/getClientPoint', async (req, res) => {
 
 
 
-
-
-router.put('/updateClientPoint', async (req, res) => {
+router.put('/updateClientPoint', authenticate, async (req, res) => {
   try {
-
+    const client_id = req.user.id;;
 
     const { pointsCust } = req.body;
 
-    // Validation des données
+
     if (pointsCust === undefined) {
       return res.status(400).json({
         success: false,
@@ -74,8 +74,6 @@ router.put('/updateClientPoint', async (req, res) => {
         message: 'Points value must be a positive number'
       });
     }
-
-    // SQL query to update customer points
     const updateQuery = "UPDATE Customer SET pointsCust = ? WHERE idCust = ?";
 
     db.query(updateQuery, [pointsCust, client_id], (err, results) => {
@@ -95,7 +93,6 @@ router.put('/updateClientPoint', async (req, res) => {
         });
       }
 
-      // Return success response
       return res.status(200).json({
         success: true,
         message: 'Customer points updated successfully',

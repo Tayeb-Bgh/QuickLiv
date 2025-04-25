@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mobileapp/features/customer/coupons_store/Data/services/hive_service.dart';
-import 'package:mobileapp/features/customer/skeleton/presentation/skeleton.dart';
+import 'package:mobileapp/features/customer/skeleton/presentation/customer_skeleton.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -14,6 +14,7 @@ void main() async {
   );
   runApp(ProviderScope(child: MyApp()));
 }
+
 @override
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -22,7 +23,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: Skeleton(),
+      home: CustomerSkeleton(),
     );
   }
 }
