@@ -40,7 +40,6 @@ class _RestaurantsPageTestState extends ConsumerState<RestaurantsPageTest> {
     final bgColor = isDarkMode ? kPrimaryDark : kSecondaryWhite;
 
     final height = MediaQuery.of(context).size.height;
-    final width = MediaQuery.of(context).size.width;
 
     return ColoredBox(
       color: bgColor,
@@ -54,7 +53,6 @@ class _RestaurantsPageTestState extends ConsumerState<RestaurantsPageTest> {
           ),
           SliverToBoxAdapter(child: SizedBox(height: height * 0)),
 
-          // Sticky Header
           SliverPersistentHeader(
             pinned: true,
             delegate: _StickyRadioButtonsDelegate(
