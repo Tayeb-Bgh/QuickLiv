@@ -26,7 +26,7 @@ void showNotReadyStatusConfirmationDialog(BuildContext context, ref) {
             title: AutoSizeText(
               "Confirmer l'activation",
               style: const TextStyle(
-                color: kPrimaryGreen,
+                color: kPrimaryRed,
                 fontWeight: FontWeight.bold,
               ),
               minFontSize: 16,
@@ -37,7 +37,7 @@ void showNotReadyStatusConfirmationDialog(BuildContext context, ref) {
                     ? const SizedBox(
                       height: 50,
                       child: Center(
-                        child: CircularProgressIndicator(color: kPrimaryGreen),
+                        child: CircularProgressIndicator(color: kPrimaryRed),
                       ),
                     )
                     : AutoSizeText(
@@ -83,7 +83,7 @@ void showNotReadyStatusConfirmationDialog(BuildContext context, ref) {
                             },
                             style: ButtonStyle(
                               backgroundColor: WidgetStateProperty.all(
-                                kPrimaryGreen,
+                                kPrimaryRed,
                               ),
                               shape: WidgetStateProperty.all(
                                 const CircleBorder(),

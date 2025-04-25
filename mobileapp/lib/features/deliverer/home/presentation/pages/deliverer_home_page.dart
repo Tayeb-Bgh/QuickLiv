@@ -33,7 +33,15 @@ class DelivererHomePage extends ConsumerWidget {
                   ? const AvailableWidget()
                   : const NotAvailableWidget();
             },
-            loading: () => const CircularProgressIndicator(),
+            loading:
+                () => Expanded(
+                  child: Container(
+                    alignment:
+                        Alignment
+                            .center, // Centers the indicator within the available space
+                    child: const CircularProgressIndicator(),
+                  ),
+                ),
             error: (err, _) => Text('Erreur de statut: $err'),
           ),
 

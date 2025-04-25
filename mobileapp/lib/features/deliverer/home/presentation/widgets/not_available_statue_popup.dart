@@ -26,7 +26,7 @@ void showReadyStatusConfirmationDialog(BuildContext context, ref) {
             title: AutoSizeText(
               "Confirmer la désactivation",
               style: const TextStyle(
-                color: kPrimaryRed,
+                color: kPrimaryGreen,
                 fontWeight: FontWeight.bold,
               ),
               minFontSize: 16,
@@ -37,7 +37,7 @@ void showReadyStatusConfirmationDialog(BuildContext context, ref) {
                     ? const SizedBox(
                       height: 50,
                       child: Center(
-                        child: CircularProgressIndicator(color: kPrimaryRed),
+                        child: CircularProgressIndicator(color: kPrimaryGreen),
                       ),
                     )
                     : AutoSizeText(
@@ -81,7 +81,7 @@ void showReadyStatusConfirmationDialog(BuildContext context, ref) {
                             },
                             style: ButtonStyle(
                               backgroundColor: WidgetStateProperty.all(
-                                kPrimaryRed,
+                               kPrimaryGreen,
                               ),
                               shape: WidgetStateProperty.all(
                                 const CircleBorder(),
