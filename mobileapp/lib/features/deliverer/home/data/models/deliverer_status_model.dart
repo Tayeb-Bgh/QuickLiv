@@ -11,19 +11,17 @@ class DelivererStatusModel {
     required this.isOnline,
   });
   factory DelivererStatusModel.fromJson(Map<String, dynamic> json) {
-    final isOnline = json['isOnline'] == 1  ? true : false;
+    final isOnline = json['status'] == 1 ? true : false;
+    print('the is online is $isOnline');
+    print('the json is $json');
     return DelivererStatusModel(
       numberOfOrders: json['orders'] ?? 0,
       profit: (json['profit'] ?? 0).toDouble(),
-      isOnline: json['isOnline'] ?? isOnline,
+      isOnline:   isOnline,
     );
   }
   Map<String, dynamic> toJson() {
-    return {
-      'orders': numberOfOrders,
-      'profit': profit,
-      'isOnline': isOnline,
-    };
+    return {'orders': numberOfOrders, 'profit': profit, 'isOnline': isOnline};
   }
 
   DelivererStatusEntity toEntity() {

@@ -1,11 +1,13 @@
-import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mobileapp/features/deliverer/home/business/repositories/deliverer_set_stat_repo.dart';
 import 'package:mobileapp/features/deliverer/home/data/repositories/deliverer_set_stat_repo_impl.dart';
 import 'package:mobileapp/features/deliverer/home/data/service/deliverer_home_service.dart';
-import '../../business/usecases/put_deliverer_stat.dart';
+import 'package:mobileapp/features/deliverer/home/presentation/providers/deliverer_home_provider.dart';
+import 'package:mobileapp/features/deliverer/home/business/usecases/put_deliverer_stat.dart';
+import 'package:dio/dio.dart';
 
 final dioProvider = Provider((ref) => Dio());
+
 final delivererHomeService = Provider(
   (ref) => DelivererHomeService(ref.watch(dioProvider), ref),
 );
@@ -14,30 +16,42 @@ final delivererSetStatRepoProvider = Provider<DelivererSetStatRepo>((ref) {
   return DelivererSetStatRepoImpl(ref.watch(delivererHomeService));
 });
 
-class StatusNotifier extends StateNotifier<bool> {
-  final PutDelivererStat putDelivererStat;
+class StatusNotifier extends AsyncNotifier<bool> {
+  late final PutDelivererStat _putDelivererStat;
 
-  StatusNotifier(this.putDelivererStat) : super(false);
+  @override
+  Future<bool> build() async {
+    final repo = ref.watch(delivererSetStatRepoProvider);
+    _putDelivererStat = PutDelivererStat(repo);
+
+    try {
+      final stat = await ref.read(delivererStatFutureProvider.future);
+      final isOnline = stat.isOnline;
+
+      state = AsyncValue.data(isOnline);
+      print('the state is here is aits init $isOnline');
+      return isOnline;
+    } catch (e, st) {
+      state = AsyncValue.error(e, st);
+      return false;
+    }
+  }
+
   Future<void> updateStatus(bool newStatus) async {
-    if (state != newStatus) {
-      try {
-        print("ur old status is  :$state | ||| the new state is : $newStatus");
-        await putDelivererStat.execute(newStatus);
-        state = newStatus;
-        print("Status updated to: $newStatus");
-      } catch (e) {
-        rethrow;
-      }
-    } else {
-      print("Status is already $newStatus, no update needed.");
+    final current = state.value;
+    if (current == newStatus) return;
+
+    state = const AsyncValue.loading();
+    try {
+      await _putDelivererStat.execute(newStatus);
+      state = AsyncValue.data(newStatus);
+    } catch (e, st) {
+      state = AsyncValue.error(e, st);
     }
   }
 }
 
-final statusNotifierProvider = StateNotifierProvider<StatusNotifier, bool>((
-  ref,
-) {
-  final delivererSetStatRepo = ref.watch(delivererSetStatRepoProvider);
-  final putDelivererStat = PutDelivererStat(delivererSetStatRepo);
-  return StatusNotifier(putDelivererStat);
-});
+/// Use this in widgets
+final statusNotifierProvider = AsyncNotifierProvider<StatusNotifier, bool>(
+  StatusNotifier.new,
+);

@@ -13,7 +13,7 @@ void showReadyStatusConfirmationDialog(BuildContext context, ref) {
 
   showDialog(
     context: context,
-    barrierDismissible: false,  
+    barrierDismissible: false,
     builder: (BuildContext dialogContext) {
       return StatefulBuilder(
         builder: (context, setState) {
@@ -75,11 +75,9 @@ void showReadyStatusConfirmationDialog(BuildContext context, ref) {
 
                               await ref
                                   .read(statusNotifierProvider.notifier)
-                                  .updateStatus(true);
+                                  .updateStatus(false);
 
-                              Navigator.of(
-                                dialogContext,
-                              ).pop(); 
+                              Navigator.of(dialogContext).pop();
                             },
                             style: ButtonStyle(
                               backgroundColor: WidgetStateProperty.all(

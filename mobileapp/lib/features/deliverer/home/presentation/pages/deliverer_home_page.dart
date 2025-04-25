@@ -14,19 +14,30 @@ class DelivererHomePage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final statAsync = ref.watch(delivererStatFutureProvider);
-    final statusNotifier = ref.watch(statusNotifierProvider);
+    final statusAsync = ref.watch(statusNotifierProvider);
     final isDarkMode = ref.watch(darkModeProvider);
     final double screenWidth = MediaQuery.of(context).size.width;
     final double screenHeight = MediaQuery.of(context).size.height;
     final fontColor = isDarkMode ? kPrimaryWhite : kPrimaryBlack;
-
     final backgroundColor = isDarkMode ? kPrimaryBlack : kPrimaryWhite;
+
     return Container(
       padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.04),
       color: backgroundColor,
       child: Column(
         children: [
-          statusNotifier ? const AvailableWidget() : const NotAvailableWidget(),
+          statusAsync.when(
+            data: (isOnline) {
+              print(isOnline);
+              return isOnline
+                  ? const AvailableWidget()
+                  : const NotAvailableWidget();
+            },
+            loading: () => const CircularProgressIndicator(),
+            error: (err, _) => Text('Erreur de statut: $err'),
+          ),
+
+          const SizedBox(height: 16),
 
           Container(
             padding: EdgeInsets.symmetric(
@@ -54,7 +65,6 @@ class DelivererHomePage extends ConsumerWidget {
                   child: AutoSizeText(
                     'Village Agricole, Sidi Aich, Bejaia\n48° 51′ 24″ N, 2° 21′ 8″ E',
                     maxLines: 2,
-
                     style: TextStyle(fontSize: 13, color: fontColor),
                   ),
                 ),

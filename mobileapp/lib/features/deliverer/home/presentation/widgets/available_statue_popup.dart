@@ -75,7 +75,7 @@ void showNotReadyStatusConfirmationDialog(BuildContext context, ref) {
 
                               await ref
                                   .read(statusNotifierProvider.notifier)
-                                  .updateStatus(false);
+                                  .updateStatus(true);
 
                               Navigator.of(
                                 dialogContext,

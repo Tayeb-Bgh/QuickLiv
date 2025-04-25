@@ -5,6 +5,7 @@ import 'package:mobileapp/core/config/dark_mode_provider.dart';
 import 'package:mobileapp/core/constants/constants.dart';
 import 'package:mobileapp/features/deliverer/home/presentation/providers/status_provider.dart';
 import 'package:mobileapp/features/deliverer/home/presentation/widgets/available_statue_popup.dart';
+import 'package:mobileapp/features/deliverer/home/presentation/widgets/not_available_statue_popup.dart';
 
 class AvailableWidget extends ConsumerWidget {
   const AvailableWidget({super.key});
@@ -62,7 +63,7 @@ class AvailableWidget extends ConsumerWidget {
 
           GestureDetector(
             onTap: () {
-              showNotReadyStatusConfirmationDialog(context, ref);
+              showReadyStatusConfirmationDialog(context, ref);
             },
             child: CircleAvatar(
               radius: screenHeight * 0.06,
