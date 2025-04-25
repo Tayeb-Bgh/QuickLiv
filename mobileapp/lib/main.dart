@@ -13,7 +13,6 @@ import 'package:mobileapp/features/customer/skeleton/presentation/customer_skele
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await HiveStorageService.init();
   SystemChrome.setEnabledSystemUIMode(
     SystemUiMode.manual,
     overlays: [SystemUiOverlay.top],

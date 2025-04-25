@@ -27,11 +27,10 @@ class _CustomerSkeletonState extends ConsumerState<CustomerSkeleton> {
     "Favoris",
     "Coupons",
   ];
-  final List<Widget?> _pages = [
+  final List<Widget> _pages = [
     Container(color: kPrimaryWhite),
     RestaurantsPageTest(),
     GroceriesPageTest(),
-    Container(color: kPrimaryWhite),
     Container(color: kPrimaryWhite),
     CouponPage()
   ];
@@ -61,12 +60,7 @@ class _CustomerSkeletonState extends ConsumerState<CustomerSkeleton> {
       ),
       body: IndexedStack(
         index: _currentIndex,
-        children: List.generate(_pages.length, (index) {
-          if (index == 4 && _currentIndex == 4) {
-            return const CouponPage();
-          }
-          return _pages[index] ?? Container();
-        }),
+        children: _pages,
       ),
       bottomNavigationBar: CurvedNavigationBar(
         key: _bottomNavigationKey,
