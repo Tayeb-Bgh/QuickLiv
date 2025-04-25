@@ -10,13 +10,9 @@ class MyPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     Path path = Path();
 
-   
     path.moveTo(size.width, 0);
     path.lineTo(0, 0);
-    path.lineTo(
-      0,
-      size.height * 1.05,
-    ); 
+    path.lineTo(0, size.height * 1.05);
     path.cubicTo(
       size.width * 0.68,
       size.height * 0.5875,
@@ -28,10 +24,8 @@ class MyPainter extends CustomPainter {
     path.lineTo(size.width, 0);
     path.close();
 
-    
     Paint paintFill = Paint()..style = PaintingStyle.fill;
-    paintFill.color =
-        kPrimaryRed; 
+    paintFill.color = kPrimaryRed;
     canvas.drawPath(path, paintFill);
   }
 

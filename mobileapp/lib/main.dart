@@ -5,11 +5,15 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:mobileapp/core/hive_object/customer_hive_object.dart';
 import 'package:mobileapp/core/hive_object/deliverer_hive_object.dart';
 import 'package:mobileapp/core/hive_object/vehicle_hive_object.dart';
+import 'package:mobileapp/features/customer/coupons_store/Data/services/hive_service.dart';
 
 import 'package:mobileapp/features/customer/skeleton/presentation/customer_skeleton.dart';
 
-void main() async{
+
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  await HiveStorageService.init();
   SystemChrome.setEnabledSystemUIMode(
     SystemUiMode.manual,
     overlays: [SystemUiOverlay.top],
@@ -23,6 +27,7 @@ void main() async{
   runApp(ProviderScope(child: MyApp()));
 }
 
+@override
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 

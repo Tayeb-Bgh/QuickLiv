@@ -24,7 +24,7 @@ router.post('/login', async (req, res) => {
 
 
     db.query(query, [phoneNumber, phoneNumber], async (err, results) => {
-        if (err){ 
+        if (err) {
             console.error("Error executing query:", err);
             return res.status(500).json({ success: false, message: "Database error" });
         }
