@@ -1,20 +1,23 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mobileapp/core/config/dark_mode_provider.dart';
 import 'package:mobileapp/core/constants/constants.dart';
 import 'package:mobileapp/core/utils/utility_functions.dart';
 import 'package:mobileapp/features/customer/restaurant_opened/presentation/widgets/horizontal_radio_buttons.dart';
 import 'package:mobileapp/features/customer/restaurant_opened/presentation/widgets/restaurant_story_btn.dart';
 import 'package:mobileapp/features/customer/restaurants/business/entities/restaurant_entity.dart';
 
-class RestaurantBottomSheet extends StatelessWidget {
+class RestaurantBottomSheet extends ConsumerWidget {
   final Restaurant restaurant;
 
   const RestaurantBottomSheet({super.key, required this.restaurant});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context,WidgetRef ref) {
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
+    final isDarkMode = ref.watch(darkModeProvider);
 
     return DraggableScrollableSheet(
       initialChildSize: 0.75,
@@ -25,8 +28,8 @@ class RestaurantBottomSheet extends StatelessWidget {
         return Container(
           width: width,
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          decoration: const BoxDecoration(
-            color: kSecondaryWhite,
+          decoration:  BoxDecoration(
+            color: isDarkMode ? kPrimaryBlack : kSecondaryWhite,
             borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
           ),
           child: SingleChildScrollView(
@@ -38,7 +41,7 @@ class RestaurantBottomSheet extends StatelessWidget {
                   width: MediaQuery.of(context).size.width * 0.19,
                   height: 5,
                   decoration: BoxDecoration(
-                    color: kRegularGray,
+                    color: isDarkMode ? kDarkGray : kRegularGray,
                     borderRadius: BorderRadius.circular(10),
                   ),
                 ),
@@ -66,6 +69,7 @@ class RestaurantBottomSheet extends StatelessWidget {
                                       style: TextStyle(
                                         fontSize: width * 0.05,
                                         fontWeight: FontWeight.bold,
+                                        color: isDarkMode ? kLightGray : kPrimaryBlack,
                                       ),
                                       maxLines: 2,
                                     ),
@@ -77,19 +81,19 @@ class RestaurantBottomSheet extends StatelessWidget {
                                       Icon(
                                         Icons.phone,
                                         size: width * 0.06,
-                                        color: kPrimaryBlack,
+                                        color: isDarkMode ? kLightGray: kPrimaryBlack,
                                       ),
                                       SizedBox(width: width * 0.019),
                                       Icon(
                                         Icons.facebook,
                                         size: width * 0.06,
-                                        color: kPrimaryBlack,
+                                        color: isDarkMode ? kLightGray: kPrimaryBlack,
                                       ),
                                       SizedBox(width: width * 0.019),
                                       Icon(
                                         Icons.share,
                                         size: width * 0.06,
-                                        color: kPrimaryBlack,
+                                        color: isDarkMode ? kLightGray: kPrimaryBlack,
                                       ),
                                     ],
                                   ),
@@ -100,7 +104,7 @@ class RestaurantBottomSheet extends StatelessWidget {
                                 restaurant.description,
                                 maxLines: 2,
                                 overflow: TextOverflow.ellipsis,
-                                style: const TextStyle(color: kMediumGray),
+                                style: TextStyle(color: isDarkMode ? kRegularGray: kMediumGray),
                                 minFontSize: 10,
                                 maxFontSize: 15,
                               ),
@@ -114,7 +118,7 @@ class RestaurantBottomSheet extends StatelessWidget {
                                   ),
                                   const SizedBox(width: 4),
                                   Text(
-                                    "${restaurant.delivPrice.toStringAsFixed(2)} DA",
+                                    "${restaurant.delivPrice.toStringAsFixed(2)} DA",style: TextStyle(color: isDarkMode ? kLightGray : kPrimaryBlack),
                                   ),
                                   const SizedBox(width: 12),
                                   Icon(
@@ -123,7 +127,7 @@ class RestaurantBottomSheet extends StatelessWidget {
                                     color: kPrimaryRed,
                                   ),
                                   const SizedBox(width: 4),
-                                  Text("${parseTime(restaurant.delivTime)}"),
+                                  Text("${parseTime(restaurant.delivTime)}",style: TextStyle(color: isDarkMode ? kLightGray : kPrimaryBlack),),
                                   const SizedBox(width: 12),
                                   Icon(
                                     Icons.star,
@@ -131,7 +135,7 @@ class RestaurantBottomSheet extends StatelessWidget {
                                     color: kPrimaryRed,
                                   ),
                                   const SizedBox(width: 4),
-                                  Text(restaurant.rating.toStringAsFixed(1)),
+                                  Text(restaurant.rating.toStringAsFixed(1),style: TextStyle(color: isDarkMode ? kLightGray : kPrimaryBlack),),
                                 ],
                               ),
                             ],
@@ -142,40 +146,9 @@ class RestaurantBottomSheet extends StatelessWidget {
 
                     SizedBox(height: height * 0.015),
 
-                    // Filtres
-                    /* SizedBox(
-                      height: 40,
-                      child: ListView(
-                        scrollDirection: Axis.horizontal,
-                        children: const [
-                          FilterChip(
-                            label: Text("🍕 Pizza"),
-                            selected: false,
-                            onSelected: null,
-                          ),
-                          SizedBox(width: 8),
-                          FilterChip(
-                            label: Text("🌮 Tacos"),
-                            selected: false,
-                            onSelected: null,
-                          ),
-                          SizedBox(width: 8),
-                          FilterChip(
-                            label: Text("🍽 Plats"),
-                            selected: false,
-                            onSelected: null,
-                          ),
-                          SizedBox(width: 8),
-                          FilterChip(
-                            label: Text("🍟 Snacks"),
-                            selected: false,
-                            onSelected: null,
-                          ),
-                        ],
-                      ),
-                    ),
- */
                     HorizontalRadioButtons(restaurant.id),
+
+
                   ],
                 ),
               ],
