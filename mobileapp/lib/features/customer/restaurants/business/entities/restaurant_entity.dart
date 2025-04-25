@@ -25,4 +25,8 @@ class Restaurant {
     required this.liked,
     required this.distance,
   });
+  @override
+  String toString(){
+    return 'Restaurant{id: $id, name: $name, category: $category, description: $description, imgUrl: $imgUrl, vidUrl: $vidUrl, delivPrice: $delivPrice, delivTime: $delivTime, rating: $rating, liked: $liked, distance: $distance}';
+  }
 }

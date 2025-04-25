@@ -57,9 +57,15 @@ class RestaurantsListView extends ConsumerWidget {
                           final restau = restaurants[index];
                           return Container(
                             margin: EdgeInsets.only(right: 10),
-                            child: RestaurantCard(
-                              restaurant: restau,
-                              isFull: isFull,
+                            child: GestureDetector(
+                              onTap:
+                                  () => {
+                                    print("Decouvrez : ${restau.name}!"),
+                                  },
+                              child: RestaurantCard(
+                                restaurant: restau,
+                                isFull: isFull,
+                              ),
                             ),
                           );
                         },

@@ -142,8 +142,8 @@ class GroceryCard extends ConsumerWidget {
                         spacing: width * 0.01,
                         children: [
                           Icon(
-                            Icons.access_time,
-                            size: isFull ? width * 0.06 : width * 0.038,
+                            Icons.timer,
+                            size: isFull ? width * 0.055 : width * 0.035,
                             color: iconColor,
                           ),
 

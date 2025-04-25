@@ -139,7 +139,7 @@ class BestProductCard extends ConsumerWidget {
                   ),
                 ),
                 Spacer(),
-                Icon(Icons.access_time, size: 11, color: iconColor),
+                Icon(Icons.timer, size: 11, color: iconColor),
                 SizedBox(width: 1),
                 Text(
                   parseTime(product.delivDuration),

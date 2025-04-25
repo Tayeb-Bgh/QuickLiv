@@ -167,8 +167,8 @@ class ProductReducCard extends ConsumerWidget {
                   ),
                 ),
                 Spacer(),
-                Icon(Icons.access_time, size: 11, color: iconColor),
-                SizedBox(width: 1),
+                Icon(Icons.timer, size: 11, color: iconColor),
+                SizedBox(width: 1.9),
                 Text(
                   parseTime(product.delivDuration),
                   style: TextStyle(
