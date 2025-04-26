@@ -78,7 +78,7 @@ final polylineTwoPointsProvider =
             .toList();
       } catch (e) {
         print(e);
-        throw e;
+        rethrow;
       }
     });
 

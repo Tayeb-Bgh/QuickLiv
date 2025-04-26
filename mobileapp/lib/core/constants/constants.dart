@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 // Rouge
 const Color kPrimaryRed = Color(0xFFE13838);
+const Color KSecondaryRed = Color(0x66E13838);
 
 // Blanc
 const Color kPrimaryWhite = Color(0xFFFFFFFF);
@@ -27,5 +28,7 @@ const Color kPrimaryBlur = Color(0x4D000000); // 30% opacity
 // Vert
 const Color kPrimaryGreen = Color(0xFF34EB4F);
 const Color kSecondaryGreen = Color(0xFF47CF5B);
+const Color kLightGreen = Color(0x666ACB5D);
 
 const double kDefaultPadding = 0.035;
+

@@ -83,7 +83,7 @@ class _GoogleMapsPageState extends ConsumerState<GoogleMapsPage> {
                           "La distance entre les deux points est de : $distance m",
                         ),
                         Text(
-                          "La duree de trajet entre les deux points est de : ${duration/60} min",
+                          "La duree de trajet entre les deux points est de : ${duration / 60} min",
                         ),
                       ],
                     );

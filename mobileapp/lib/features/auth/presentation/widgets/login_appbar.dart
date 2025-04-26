@@ -9,7 +9,7 @@ class LoginAppBar extends StatelessWidget {
     final height = MediaQuery.of(context).size.height;
     return CustomPaint(
       painter: MyPainter1(),
-      child: Container(
+      child: SizedBox(
         height: height * 0.36,
         width: double.infinity,
         child: Center(

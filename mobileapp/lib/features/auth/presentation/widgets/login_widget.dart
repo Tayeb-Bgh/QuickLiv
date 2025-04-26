@@ -9,7 +9,7 @@ import 'package:mobileapp/features/auth/presentation/providers/auth_provider.dar
 
 class LoginWidget extends ConsumerStatefulWidget {
   const LoginWidget({super.key});
-
+                       
   @override
   ConsumerState<LoginWidget> createState() => _LoginWidgetState();
 }
@@ -32,7 +32,7 @@ class _LoginWidgetState extends ConsumerState<LoginWidget> {
       color: backgroundColor,
       child: Padding(
         padding: const EdgeInsets.only(left: 20, right: 20, bottom: 20),
-        child: Container(
+        child: SizedBox(
           height: height * 0.68,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
