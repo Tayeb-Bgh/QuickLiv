@@ -18,9 +18,8 @@ class PointNotifier extends StateNotifier<AsyncValue<int>> {
   ) : super(const AsyncValue.loading()) {
     startPeriodicRefresh();
   }
-  
+
   Future<void> startPeriodicRefresh() async {
-    
     await refreshPoints();
 
     // Puis configurer un rafraîchissement périodique toutes les 30 secondes
@@ -31,6 +30,7 @@ class PointNotifier extends StateNotifier<AsyncValue<int>> {
 
   Future<void> _loadPoints() async {
     try {
+      await HiveStorageService.registre();
       // D'abord, essayer de charger depuis Hive
       final cachedPoints = HiveStorageService.getPoints();
       if (cachedPoints != null) {
@@ -40,7 +40,6 @@ class PointNotifier extends StateNotifier<AsyncValue<int>> {
       // Ensuite, charger depuis l'API
       final pointsEntity = await _getCustomerPointsUseCase();
       final newPoints = pointsEntity.customerPoints;
-
       // Mettre à jour Hive et l'état
       await HiveStorageService.savePoints(newPoints);
       state = AsyncValue.data(newPoints);
@@ -62,7 +61,7 @@ class PointNotifier extends StateNotifier<AsyncValue<int>> {
 
       // API call
       await _updateCustomerPointsUseCase(newPoints);
-
+      await HiveStorageService.registre();
       // Mise à jour dans Hive
       await HiveStorageService.savePoints(newPoints);
     } catch (e, stackTrace) {
@@ -83,7 +82,7 @@ class PointNotifier extends StateNotifier<AsyncValue<int>> {
 
           // API call
           await _updateCustomerPointsUseCase(currentPoints - pointsToSubtract);
-
+          await HiveStorageService.registre();
           // Mise à jour dans Hive
           await HiveStorageService.savePoints(currentPoints - pointsToSubtract);
         } catch (e) {

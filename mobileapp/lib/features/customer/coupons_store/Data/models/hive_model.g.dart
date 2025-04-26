@@ -9,7 +9,7 @@ part of 'hive_model.dart';
 class CustomerPointsHiveModelAdapter
     extends TypeAdapter<CustomerPointsHiveModel> {
   @override
-  final int typeId = 8;
+  final int typeId = 10;
 
   @override
   CustomerPointsHiveModel read(BinaryReader reader) {
@@ -41,7 +41,7 @@ class CustomerPointsHiveModelAdapter
 
 class CouponHiveModelAdapter extends TypeAdapter<CouponHiveModel> {
   @override
-  final int typeId = 9;
+  final int typeId = 11;
 
   @override
   CouponHiveModel read(BinaryReader reader) {

@@ -5,6 +5,7 @@ import 'package:flutter_svg/svg.dart' show SvgPicture;
 import 'package:mobileapp/core/config/dark_mode_provider.dart';
 import 'package:mobileapp/core/constants/constants.dart';
 import 'package:mobileapp/core/utils/utility_functions.dart';
+import 'package:mobileapp/features/auth/presentation/providers/auth_provider.dart';
 import 'package:mobileapp/features/customer/coupons_store/business/entities/coupon_entitie.dart';
 import 'package:mobileapp/features/customer/coupons_store/presentation/providers/Coupon_provider.dart';
 import 'package:mobileapp/features/customer/coupons_store/presentation/providers/Point_provider.dart';
@@ -176,11 +177,13 @@ class Availablecoupon extends ConsumerWidget {
     int discountRate,
     bool isDarkMode,
   ) {
+    final tokenAsyncValue = ref.watch(jwtTokenProvider);
+    final isAuthenticated = tokenAsyncValue.value != null;
     return Stack(
       children: [
         SvgPicture.asset(assetPath, fit: BoxFit.contain, height: height),
 
-        if (currentPoint >= requiredPoint)
+        if (currentPoint >= requiredPoint && isAuthenticated)
           FrostedCoupon(
             pointsText: requiredPoint,
             onPressed: () async {
@@ -195,11 +198,22 @@ class Availablecoupon extends ConsumerWidget {
                 couponNotifier.reloadCouponsFromStorage();
               } catch (e) {
                 if (context.mounted) {
-                  Navigator.of(context).pop();
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('erreur lors de l\'achat du coupon'),
-                    ),
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Text('Erreur'),
+                        content: Text('Erreur lors de l\'achat du coupon.'),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: Text('OK'),
+                          ),
+                        ],
+                      );
+                    },
                   );
                 }
               }

@@ -51,51 +51,58 @@ class _CouponPageState extends ConsumerState<CouponPage> {
   }
 
   @override
+  @override
   Widget build(BuildContext context) {
     final couponsState = ref.watch(couponProvider);
     final isDarkMode = ref.watch(darkModeProvider);
     final tokenAsyncValue = ref.watch(jwtTokenProvider);
 
+    // Créer le contenu de la page des coupons
+    Widget buildCouponContent() {
+      if (couponsState.status == CouponStatus.error) {
+        return FailureWidget(
+          err: couponsState.errorMessage ?? "Une erreur est survenue",
+          onPressed: _refresh,
+          show: false,
+        );
+      }
+
+      return RefreshIndicator(
+        onRefresh: _refresh,
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: Column(
+              children: [
+                SizedBox(height: 40),
+                MyPoints(),
+                SizedBox(height: 10),
+                MyCoupon(),
+                SizedBox(height: 10),
+                Availablecoupon(),
+              ],
+            ),
+          ),
+        ),
+      );
+    }
+
     return Scaffold(
       backgroundColor: isDarkMode ? kPrimaryBlack : kSecondaryWhite,
       body: tokenAsyncValue.when(
         data: (token) {
-          if (token == null) {
-            if (!hasShownAuthDialog) {
-              hasShownAuthDialog = true;
-              WidgetsBinding.instance.addPostFrameCallback((_) {
-                _showAuthenticationDialog();
-              });
-            }
-            return Center(child: CircularProgressIndicator());
+          // Toujours afficher le contenu de la page
+          Widget content = buildCouponContent();
+
+          // Vérifier l'authentification et afficher la boîte de dialogue si nécessaire
+          if (token == null && !hasShownAuthDialog) {
+            hasShownAuthDialog = true;
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              _showAuthenticationDialog();
+            });
           }
 
-          if (couponsState.status == CouponStatus.error) {
-            return FailureWidget(
-              err: couponsState.errorMessage ?? "Une erreur est survenue",
-              onPressed: _refresh,
-              show: false,
-            );
-          }
-
-          return RefreshIndicator(
-            onRefresh: _refresh,
-            child: SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: Column(
-                  children: [
-                    SizedBox(height: 40),
-                    MyPoints(),
-                    SizedBox(height: 10),
-                    MyCoupon(),
-                    SizedBox(height: 10),
-                    Availablecoupon(),
-                  ],
-                ),
-              ),
-            ),
-          );
+          return content;
         },
         loading: () => Center(child: CircularProgressIndicator()),
         error:

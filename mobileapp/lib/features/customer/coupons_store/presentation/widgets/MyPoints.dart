@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mobileapp/core/config/dark_mode_provider.dart';
 import 'package:mobileapp/core/constants/constants.dart';
 import 'package:mobileapp/core/utils/utility_functions.dart';
+import 'package:mobileapp/features/auth/presentation/providers/auth_provider.dart';
 import 'package:mobileapp/features/customer/coupons_store/presentation/providers/Point_provider.dart';
 
 class MyPoints extends ConsumerWidget {
@@ -14,7 +15,11 @@ class MyPoints extends ConsumerWidget {
     final pointsState = ref.watch(pointProvider);
     final size = MediaQuery.of(context).size;
     final isDarkMode = ref.watch(darkModeProvider);
+    final tokenAsyncValue = ref.watch(jwtTokenProvider);
 
+    // Utiliser 0 points si l'utilisateur n'est pas authentifié ou si les points ne sont pas chargés
+    final int points =
+        tokenAsyncValue.value == null ? 0 : (pointsState.value ?? 0);
     // Colors based on dark mode
     final backgroundColor = isDarkMode ? kSecondaryDark : kSecondaryWhite;
     final borderColor = isDarkMode ? kSecondaryDark : kSecondaryWhite;
@@ -70,7 +75,7 @@ class MyPoints extends ConsumerWidget {
                     borderRadius: BorderRadius.circular(30),
                   ),
                   child: AutoSizeText(
-                    "${pointsState.value ?? 0} pts",
+                    "${points} pts",
                     style: TextStyle(
                       color: numberPointsColor,
                       fontWeight: FontWeight.w900,
@@ -96,10 +101,7 @@ class MyPoints extends ConsumerWidget {
             ),
             SizedBox(height: size.height * 0.018),
             TweenAnimationBuilder<double>(
-              tween: Tween<double>(
-                begin: 0,
-                end: calculateProgress(pointsState.value ?? 0),
-              ),
+              tween: Tween<double>(begin: 0, end: calculateProgress(points)),
               duration: const Duration(milliseconds: 800),
               builder: (context, value, child) {
                 final color = Color.lerp(kPrimaryRed, kPrimaryGreen, value);

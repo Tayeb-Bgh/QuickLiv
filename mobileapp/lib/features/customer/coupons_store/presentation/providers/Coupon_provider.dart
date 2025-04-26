@@ -40,7 +40,6 @@ class CouponState {
 
 class CouponNotifier extends StateNotifier<CouponState> {
   final CreateCoupon _createCoupon;
-
   CouponNotifier({required CreateCoupon createCoupon})
     : _createCoupon = createCoupon,
       super(CouponState()) {
@@ -56,6 +55,7 @@ class CouponNotifier extends StateNotifier<CouponState> {
 
   // Charger les coupons depuis Hive au démarrage
   Future<void> _loadCouponsFromStorage() async {
+   await HiveStorageService.registre();
     final savedCoupons = HiveStorageService.getCoupons();
     if (savedCoupons.isNotEmpty) {
       state = CouponState(status: CouponStatus.success, coupons: savedCoupons);
@@ -74,7 +74,7 @@ class CouponNotifier extends StateNotifier<CouponState> {
       await _createCoupon(newCoupon);
 
       final updatedCoupons = [...state.coupons, newCoupon];
-
+     await HiveStorageService.registre();
       // Sauvegarder dans Hive
       await HiveStorageService.saveCoupons(updatedCoupons);
 
@@ -96,7 +96,7 @@ class CouponNotifier extends StateNotifier<CouponState> {
         state.coupons
             .where((coupon) => coupon.discountRate != discountRate)
             .toList();
-
+   await HiveStorageService.registre();
     // Mettre à jour Hive
     await HiveStorageService.saveCoupons(updatedCoupons);
 

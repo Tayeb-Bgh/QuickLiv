@@ -32,11 +32,14 @@ class _CustomerSkeletonState extends ConsumerState<CustomerSkeleton> {
     RestaurantsPageTest(),
     GroceriesPageTest(),
     Container(color: kPrimaryWhite),
-    CouponPage()
+    Container(),
   ];
 
   void _setCurrentIndex(int index) {
     setState(() {
+      if (index == 4) {
+        _pages[4] = CouponPage();
+      }
       _currentIndex = index;
     });
   }
@@ -58,10 +61,7 @@ class _CustomerSkeletonState extends ConsumerState<CustomerSkeleton> {
           ),
         ),
       ),
-      body: IndexedStack(
-        index: _currentIndex,
-        children: _pages,
-      ),
+      body: IndexedStack(index: _currentIndex, children: _pages),
       bottomNavigationBar: CurvedNavigationBar(
         key: _bottomNavigationKey,
         index: _currentIndex,
