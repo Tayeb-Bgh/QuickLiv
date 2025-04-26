@@ -5,6 +5,7 @@ import 'package:mobileapp/core/config/dark_mode_provider.dart';
 import 'package:mobileapp/core/constants/constants.dart';
 import 'package:mobileapp/core/utils/utility_functions.dart';
 import 'package:mobileapp/features/customer/restaurant_opened/presentation/widgets/horizontal_radio_buttons.dart';
+import 'package:mobileapp/features/customer/restaurant_opened/presentation/widgets/product_list_widget.dart';
 import 'package:mobileapp/features/customer/restaurant_opened/presentation/widgets/restaurant_story_btn.dart';
 import 'package:mobileapp/features/customer/restaurants/business/entities/restaurant_entity.dart';
 
@@ -149,7 +150,7 @@ class RestaurantBottomSheet extends ConsumerWidget {
 
                     HorizontalRadioButtons(restaurant.id),
 
-
+                    ProductListWidget(restaurantId: restaurant.id),
                   ],
                 ),
               ],

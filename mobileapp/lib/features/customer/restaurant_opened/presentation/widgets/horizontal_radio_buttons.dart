@@ -3,8 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mobileapp/core/config/dark_mode_provider.dart';
 import 'package:mobileapp/core/constants/constants.dart';
 import 'package:mobileapp/core/utils/utility_functions.dart';
-import 'package:mobileapp/features/customer/restaurant_opened/presentation/providers/restaurant_opened_provider.dart';
-import 'package:mobileapp/features/customer/restaurants/presentation/providers/restaurants_provider.dart';
+import 'package:mobileapp/features/customer/restaurant_opened/presentation/providers/restaurant_opened_provider.dart' as restaurantOpenedProvider;
+
 
 class HorizontalRadioButtons extends ConsumerWidget {
   final int idRestaurant;
@@ -38,9 +38,9 @@ class HorizontalRadioButtons extends ConsumerWidget {
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
     final isDarkMode = ref.watch(darkModeProvider);
-    final selected = ref.watch(selectedCategoryProvider);
+    final selected = ref.watch(restaurantOpenedProvider.selectedCategoryProvider);
 
-    final asyncCategories = ref.watch(restaurantCategoriesProvider(idRestaurant));
+    final asyncCategories = ref.watch(restaurantOpenedProvider.restaurantCategoriesProvider(idRestaurant));
 
     return asyncCategories.when(
       data: (categories) {
@@ -57,8 +57,8 @@ class HorizontalRadioButtons extends ConsumerWidget {
 
               return GestureDetector(
                 onTap: () {
-                  final newSelection = isSelected ? null : category;
-                  ref.read(selectedCategoryProvider.notifier).state = newSelection;
+                  /* final newSelection = isSelected ? null : category;
+                  ref.read(selectedCategoryProvider.notifier).state = newSelection; */
                 },
                 child: AnimatedContainer(
                   duration: const Duration(milliseconds: 200),

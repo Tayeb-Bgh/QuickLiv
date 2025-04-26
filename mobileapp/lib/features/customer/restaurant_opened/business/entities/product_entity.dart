@@ -1,14 +1,16 @@
 class Product {
   final int id;
+  final String name;
   final String category;
   final String desc;
   final String imgUrl;
 
   final double price;
-  final double priceWithReduc;
+  final double? priceWithReduc;
 
   Product({
     required this.id,
+    required this.name,
     required this.category,
     required this.desc,
     required this.imgUrl,
@@ -17,6 +19,6 @@ class Product {
   });
 
   static double calculPriceWithReduc(double price, double reduc) {
-    return price * reduc;
+    return price - price * (reduc/100);
   }
 }

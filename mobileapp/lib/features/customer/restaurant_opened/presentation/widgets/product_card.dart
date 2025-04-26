@@ -65,7 +65,7 @@ class ProductCard extends ConsumerWidget {
                           ),
                         ),
 
-                        // Price and add button
+
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
