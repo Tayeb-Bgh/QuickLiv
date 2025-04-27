@@ -7,7 +7,7 @@ class GetDelivererInfoUsecase {
 
   GetDelivererInfoUsecase(this.repository);
 
-  Future<Deliverer> call({required String phoneNumber, required String token, required FlutterSecureStorage secureStorage}) {
-    return repository.getDelivererInfo(phoneNumber:phoneNumber);
+  Future<Deliverer> call({required String phoneNumber}) {
+    return repository.getDelivererInfo(phoneNumber: phoneNumber);
   }
 }
