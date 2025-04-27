@@ -114,5 +114,5 @@ class _StickyRadioButtonsDelegate extends SliverPersistentHeaderDelegate {
   double get minExtent => height * 0.0675;
 
   @override
-  bool shouldRebuild(_StickyRadioButtonsDelegate oldDelegate) => false;
+  bool shouldRebuild(_StickyRadioButtonsDelegate oldDelegate) => true;
 }

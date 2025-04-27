@@ -12,7 +12,6 @@ import 'package:mobileapp/features/customer/groceries/presentation/widgets/verti
 import '../providers/groceries_provider.dart';
 
 class GroceriesPageTest extends ConsumerStatefulWidget {
-  
   const GroceriesPageTest({super.key});
 
   @override
@@ -31,7 +30,9 @@ class _GroceriesPageTestState extends ConsumerState<GroceriesPageTest> {
   @override
   Widget build(BuildContext context) {
     final asyncGroceriesList = ref.watch(groceriesListProvider);
-    final asyncGroceriesByCategoryList = ref.watch(groceriesByCategoryListProvider);
+    final asyncGroceriesByCategoryList = ref.watch(
+      groceriesByCategoryListProvider,
+    );
     final asyncReductionsList = ref.watch(reductionsListProvider);
 
     final isDarkMode = ref.watch(darkModeProvider);
@@ -52,10 +53,12 @@ class _GroceriesPageTestState extends ConsumerState<GroceriesPageTest> {
           ),
           SliverToBoxAdapter(child: SizedBox(height: height * 0)),
 
-          // Sticky Header
           SliverPersistentHeader(
             pinned: true,
-            delegate: _StickyRadioButtonsDelegate(isDarkMode: isDarkMode,height: height),
+            delegate: _StickyRadioButtonsDelegate(
+              isDarkMode: isDarkMode,
+              height: height,
+            ),
           ),
 
           SliverToBoxAdapter(child: SizedBox(height: height * 0)),
@@ -84,22 +87,23 @@ class _GroceriesPageTestState extends ConsumerState<GroceriesPageTest> {
   }
 }
 
-
 class _StickyRadioButtonsDelegate extends SliverPersistentHeaderDelegate {
   final bool isDarkMode;
   final double height;
-  _StickyRadioButtonsDelegate({required this.isDarkMode,required this.height});
+
+  _StickyRadioButtonsDelegate({required this.isDarkMode, required this.height});
 
   @override
-  Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
-    
-    
+  Widget build(
+    BuildContext context,
+    double shrinkOffset,
+    bool overlapsContent,
+  ) {
     return ColoredBox(
-
-      color:  isDarkMode?  kPrimaryDark : kSecondaryWhite,
+      color: isDarkMode ? kPrimaryDark : kSecondaryWhite,
       child: Padding(
         padding: EdgeInsets.symmetric(vertical: height * 0.015),
-        child: HorizontalRadioButtons(),
+        child: const HorizontalRadioButtons(),
       ),
     );
   }
@@ -111,5 +115,7 @@ class _StickyRadioButtonsDelegate extends SliverPersistentHeaderDelegate {
   double get minExtent => height * 0.0675;
 
   @override
-  bool shouldRebuild(_StickyRadioButtonsDelegate oldDelegate) => false;
+  bool shouldRebuild(covariant _StickyRadioButtonsDelegate oldDelegate) {
+    return oldDelegate.isDarkMode != isDarkMode;
+  }
 }

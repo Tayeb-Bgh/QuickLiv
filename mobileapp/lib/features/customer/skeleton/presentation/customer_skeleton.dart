@@ -28,7 +28,7 @@ class _CustomerSkeletonState extends ConsumerState<CustomerSkeleton> {
   ];
 
   final List<Widget> _pages = [
-    Container(color: kPrimaryWhite),
+    Container(color: kPrimaryBlack),
     RestaurantsPageTest(),
     GroceriesPageTest(),
     Container(color: kPrimaryWhite),
