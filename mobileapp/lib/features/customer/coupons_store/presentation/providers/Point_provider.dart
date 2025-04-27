@@ -21,11 +21,8 @@ class PointNotifier extends StateNotifier<AsyncValue<int>> {
 
   Future<void> startPeriodicRefresh() async {
     await refreshPoints();
-
-    // Puis configurer un rafraîchissement périodique toutes les 30 secondes
-    Timer.periodic(const Duration(seconds: 1), (_) {
-      refreshPoints();
-    });
+    refreshPoints();
+    
   }
 
   Future<void> _loadPoints() async {
