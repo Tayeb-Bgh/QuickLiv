@@ -49,6 +49,9 @@ dependencies:
   flutter_secure_storage: ^9.2.4
   hive: ^2.2.3
   hive_flutter: ^1.1.0
+  flutter_switch_dark_light: ^0.0.4
+  light_dark_theme_toggle: ^1.1.2
+  intl: ^0.20.2
 
 
   

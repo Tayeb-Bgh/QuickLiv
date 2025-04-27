@@ -8,7 +8,7 @@ import 'package:mobileapp/core/hive_object/vehicle_hive_object.dart';
 
 import 'package:mobileapp/features/customer/skeleton/presentation/customer_skeleton.dart';
 
-void main() async{
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setEnabledSystemUIMode(
     SystemUiMode.manual,
@@ -18,7 +18,9 @@ void main() async{
   Hive.registerAdapter(CustomerHiveObjectAdapter());
   Hive.registerAdapter(VehicleHiveObjectAdapter());
   Hive.registerAdapter(DelivererHiveObjectAdapter());
-
+  await Hive.openBox<CustomerHiveObject>('customerBox');
+  await Hive.openBox<DelivererHiveObject>('delivererBox');
+  await Hive.openBox<VehicleHiveObject>('vehicleBox');
 
   runApp(ProviderScope(child: MyApp()));
 }

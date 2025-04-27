@@ -21,6 +21,22 @@ String parseTime(int seconds) {
       : "$firstTimeInterval-${finalTimeInterval}min";
 }
 
+String formatPhone(String input) {
+  List<int> spacePositions = [4, 6, 8];
+  StringBuffer buffer = StringBuffer();
+
+  int currentPosition = 0;
+  input = '0$input';
+  for (int i = 0; i < input.length; i++) {
+    if (spacePositions.contains(currentPosition)) {
+      buffer.write(' ');
+    }
+    buffer.write(input[i]);
+    currentPosition++;
+  }
+  return buffer.toString();
+}
+
 double toKilometers(double metersDistance) {
   return metersDistance / 1000;
 }

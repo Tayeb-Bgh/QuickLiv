@@ -1,22 +1,24 @@
+import 'dart:ui';
+
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mobileapp/core/config/dark_mode_provider.dart';
 import 'package:mobileapp/core/constants/constants.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mobileapp/features/auth/presentation/pages/login_page.dart';
 import 'package:mobileapp/features/auth/presentation/providers/auth_provider.dart';
+import 'package:mobileapp/features/customer/profile/presentation/pages/profile_popup_page.dart';
+import 'package:mobileapp/features/customer/profile/presentation/widgets/profile_popup.dart';
 
 class MyPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     Path path = Path();
 
-   
     path.moveTo(size.width, 0);
     path.lineTo(0, 0);
-    path.lineTo(
-      0,
-      size.height * 1.05,
-    ); 
+    path.lineTo(0, size.height * 1.05);
     path.cubicTo(
       size.width * 0.68,
       size.height * 0.5875,
@@ -28,10 +30,8 @@ class MyPainter extends CustomPainter {
     path.lineTo(size.width, 0);
     path.close();
 
-    
     Paint paintFill = Paint()..style = PaintingStyle.fill;
-    paintFill.color =
-        kPrimaryRed; 
+    paintFill.color = kPrimaryRed;
     canvas.drawPath(path, paintFill);
   }
 
@@ -50,35 +50,79 @@ class CustomTopBar extends ConsumerWidget {
     showDialog(
       context: context,
       builder:
-          (context) => AlertDialog(
-            title: const Text('Connexion requise'),
-            content: const Text(
-              'Veillez vous connecter pour accéder à plus de fonctionnalité et commander vos plats.',
+          (context) => Dialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
             ),
-            actions: [
-              // Bouton "Retourner explorer" - ferme simplement le popup
-              TextButton(
-                onPressed: () => Navigator.of(context).pop(),
-                child: const Text('Retourner explorer'),
+            child: Padding(
+              padding: const EdgeInsets.all(10),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Text(
+                    'Connexion requise',
+                    style: TextStyle(
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.red,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  AutoSizeText(
+                    'Veuillez vous connecter pour accéder\nplus de fonctionnalité et commander\nvos plats.',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 16),
+                    maxLines: 3,
+                  ),
+                  const SizedBox(height: 24),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: OutlinedButton(
+                          style: OutlinedButton.styleFrom(
+                            backgroundColor: Colors.grey[800],
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            padding: const EdgeInsets.symmetric(vertical: 14),
+                          ),
+                          onPressed: () => Navigator.of(context).pop(),
+                          child: const Text(
+                            'Retourner explorer',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: kPrimaryRed,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            padding: const EdgeInsets.symmetric(vertical: 14),
+                          ),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => LoginPage(),
+                              ),
+                            );
+                          },
+                          child: const Text(
+                            'Se connecter',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
-              // Bouton "Se connecter" - ferme le popup ET navigue vers LoginPage
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(backgroundColor: kPrimaryRed),
-                onPressed: () {
-                  // Fermer d'abord le popup
-                  Navigator.of(context).pop();
-                  // Puis naviguer vers la page de connexion
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => LoginPage()),
-                  );
-                },
-                child: const Text(
-                  'Se connecter',
-                  style: TextStyle(color: Colors.white),
-                ),
-              ),
-            ],
+            ),
           ),
     );
   }
@@ -122,40 +166,19 @@ class CustomTopBar extends ConsumerWidget {
                   final token = await secureStorage.read(key: 'authToken');
 
                   if (token != null && token.isNotEmpty) {
-                    showDialog(
-                      context: context,
-                      builder:
-                          (context) => AlertDialog(
-                            title: const Text('Déjà connecté'),
-                            content: const Text(
-                              'Vous êtes déjà connecté à votre compte.',
-                            ),
-                            actions: [
-                              TextButton(
-                                onPressed: () => Navigator.of(context).pop(),
-                                child: const Text('Fermer'),
-                              ),
-                              TextButton(
-                                onPressed: () {
-                                  secureStorage.delete(key: 'authToken');
-                                  Navigator.of(context).pop();
-                                },
-                                child: const Text('Se deconnecter'),
-                              ),
-                            ],
-                          ),
-                    );
+                    showProfilePopupPage(context);
                   } else {
                     _showAuthPopup(context);
                   }
                 },
+
                 child: _buildIcon(context, "assets/images/user.svg"),
               ),
             ],
           ),
         ),
       ],
-    );  
+    );
   }
 
   Widget _buildIcon(
