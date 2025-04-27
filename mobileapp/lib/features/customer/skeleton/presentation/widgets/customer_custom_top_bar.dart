@@ -4,6 +4,7 @@ import 'package:mobileapp/core/constants/constants.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mobileapp/features/auth/presentation/pages/login_page.dart';
 import 'package:mobileapp/features/auth/presentation/providers/auth_provider.dart';
+import 'package:mobileapp/features/customer/orders_history/presentation/pages/my_Orders_Page.dart';
 
 class MyPainter extends CustomPainter {
   @override
@@ -107,7 +108,16 @@ class CustomTopBar extends ConsumerWidget {
           top: statusBarHeight + height * 0.015,
           child: Row(
             children: [
-              _buildIcon(context, "assets/images/order.svg"),
+              GestureDetector(
+  onTap: () {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => MyOrdersPage()), // <-- ta page de destination
+    );
+  },
+  child: _buildIcon(context, "assets/images/order.svg"),
+),
+
               const SizedBox(width: 6),
               _buildIcon(
                 context,
