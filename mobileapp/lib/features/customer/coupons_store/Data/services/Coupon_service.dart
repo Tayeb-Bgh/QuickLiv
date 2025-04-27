@@ -15,11 +15,8 @@ class CouponService {
       final url = await ApiConfig.getBaseUrl();
       final token = await ref.read(jwtTokenProvider.future);
 
-      print(dio.options.baseUrl);
-      print("Sending POST to: ${dio.options.baseUrl}/createcoupon");
-
       await dio.post(
-        '$url/createcoupon',
+        '$url/coupon/create-coupon',
         data: {
           'reducRateCoupon': coupon.discountRate,
           'reducCodeCoupon': coupon.reductionCode,

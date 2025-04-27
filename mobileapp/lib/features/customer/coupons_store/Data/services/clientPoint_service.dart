@@ -16,7 +16,7 @@ class CustomerPointService {
       // Get token from your provider
 
       final response = await dio.get(
-        '$url/api/getClientPoint',
+        '$url/coupon/get-client-point',
         options: Options(headers: {'authorization': 'Bearer $token'}),
       );
 
@@ -41,7 +41,7 @@ class CustomerPointService {
       ); // Get token from your provider
 
       final response = await dio.put(
-        '$url/api/updateClientPoint',
+        '$url/coupon/update-client-point',
         data: {'pointsCust': customerPoints},
         options: Options(headers: {'authorization': 'Bearer $token'}),
       );

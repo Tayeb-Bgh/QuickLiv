@@ -7,9 +7,6 @@ class ApiConfig {
     if (kReleaseMode) {
       return 'https://quickbi3backend-u8l71xbz.b4a.run/api';
     }
-    if (kIsWeb) {
-      return 'http://localhost:3000'; // URL appropriée pour le web
-    }
 
     if (Platform.isAndroid || Platform.isIOS) {
       final deviceInfo = DeviceInfoPlugin();
