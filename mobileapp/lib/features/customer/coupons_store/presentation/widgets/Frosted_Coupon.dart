@@ -20,10 +20,10 @@ class FrostedCoupon extends StatelessWidget {
     final size = MediaQuery.of(context).size;
 
     return Positioned(
-      top: size.height * (isLargeCoupon ? 0.012 : 0.0075),
+      top: size.height * (isLargeCoupon ? 0.012 : 0.0076),
       bottom: size.height * (isLargeCoupon ? 0.01 : 0.0075),
       left: size.width * (isLargeCoupon ? 0.050 : 0.03),
-      right: size.width * (isLargeCoupon ? 0.050 : 0.05),
+      right: size.width * (isLargeCoupon ? 0.050 : 0.04),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(12),
         child: BackdropFilter(

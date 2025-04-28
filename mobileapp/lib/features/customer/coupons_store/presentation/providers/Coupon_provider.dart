@@ -8,22 +8,22 @@ import 'package:mobileapp/features/customer/coupons_store/business/entities/coup
 import 'package:mobileapp/features/customer/coupons_store/business/usercases/Coupon_user_case.dart';
 import 'package:mobileapp/features/example/presentation/providers/user_provider.dart';
 
-// Provider pour le repository
 final couponRepositoryProvider = Provider((ref) {
   final dio = ref.watch(dioProvider);
   final couponService = CouponService(dio, ref);
   return CouponRepositoryImpl(couponService);
 });
 
-// Provider pour le notifier principal
 final couponProvider = StateNotifierProvider<CouponNotifier, CouponState>((
   ref,
 ) {
   final couponRepository = ref.watch(couponRepositoryProvider);
-  return CouponNotifier(createCoupon: CreateCoupon(couponRepository));
+  return CouponNotifier(
+    createCoupon: CreateCoupon(couponRepository),
+    getClientCoupons: GetClientCoupons(couponRepository),
+  );
 });
 
-// État minimal pour gérer uniquement la création de coupon
 enum CouponStatus { initial, loading, success, error }
 
 class CouponState {
@@ -40,16 +40,36 @@ class CouponState {
 
 class CouponNotifier extends StateNotifier<CouponState> {
   final CreateCoupon _createCoupon;
-  CouponNotifier({required CreateCoupon createCoupon})
-    : _createCoupon = createCoupon,
-      super(CouponState()) {
+  final GetClientCoupons _getClientCoupons;
+
+  CouponNotifier({
+    required CreateCoupon createCoupon,
+    required GetClientCoupons getClientCoupons,
+  }) : _createCoupon = createCoupon,
+       _getClientCoupons = getClientCoupons,
+       super(CouponState()) {
     _loadCouponsFromStorage();
   }
+
   Future<void> fetchCoupons() async {
-    await _loadCouponsFromStorage();
+    try {
+      state = CouponState(status: CouponStatus.loading, coupons: state.coupons);
+
+      final coupons = await _getClientCoupons();
+
+      state = CouponState(status: CouponStatus.success, coupons: coupons);
+
+      await HiveStorageService.registre();
+      await HiveStorageService.saveCoupons(coupons);
+    } catch (e) {
+      state = CouponState(
+        status: CouponStatus.error,
+        errorMessage: 'Erreur lors de la récupération des coupons: $e',
+        coupons: state.coupons,
+      );
+    }
   }
 
-  // Charger les coupons depuis Hive au démarrage
   Future<void> _loadCouponsFromStorage() async {
     await HiveStorageService.registre();
     final savedCoupons = HiveStorageService.getCoupons();
@@ -71,7 +91,7 @@ class CouponNotifier extends StateNotifier<CouponState> {
 
       final updatedCoupons = [...state.coupons, newCoupon];
       await HiveStorageService.registre();
-      // Sauvegarder dans Hive
+
       await HiveStorageService.saveCoupons(updatedCoupons);
 
       state = CouponState(
@@ -93,7 +113,7 @@ class CouponNotifier extends StateNotifier<CouponState> {
             .where((coupon) => coupon.discountRate != discountRate)
             .toList();
     await HiveStorageService.registre();
-    // Mettre à jour Hive
+
     await HiveStorageService.saveCoupons(updatedCoupons);
 
     state = CouponState(status: state.status, coupons: updatedCoupons);
@@ -103,7 +123,6 @@ class CouponNotifier extends StateNotifier<CouponState> {
     state = CouponState(status: CouponStatus.initial, coupons: state.coupons);
   }
 
-  // Méthode pour forcer un rechargement des coupons depuis le stockage local
   void reloadCouponsFromStorage() {
     _loadCouponsFromStorage();
   }

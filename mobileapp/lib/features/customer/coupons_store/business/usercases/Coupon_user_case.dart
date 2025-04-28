@@ -10,3 +10,12 @@ class CreateCoupon {
     await repository.createCoupon(coupon);
   }
 }
+class GetClientCoupons {
+  final CouponRepository repository;
+
+  GetClientCoupons(this.repository);
+
+  Future<List<CouponEntity>> call() async {
+    return await repository.getClientCoupons();
+  }
+}

@@ -2,4 +2,5 @@ import 'package:mobileapp/features/customer/coupons_store/business/entities/coup
 
 abstract class CouponRepository {
   Future<void> createCoupon(CouponEntity coupon);
+  Future<List<CouponEntity>> getClientCoupons();
 }

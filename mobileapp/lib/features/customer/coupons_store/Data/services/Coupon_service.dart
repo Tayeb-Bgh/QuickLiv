@@ -25,8 +25,30 @@ class CouponService {
         options: Options(headers: {'authorization': 'Bearer $token'}),
       );
     } catch (e) {
-      print('Error when setting coupon: $e');
       throw Exception('Failed to set coupon: $e');
+    }
+  }
+
+  Future<List<CouponModel>> getUnusedCoupons() async {
+    try {
+      final url = await ApiConfig.getBaseUrl();
+      final token = await ref.read(jwtTokenProvider.future);
+
+      final response = await dio.get(
+        '$url/coupon/get-unused-coupon',
+        options: Options(headers: {'authorization': 'Bearer $token'}),
+      );
+
+      if (response.statusCode == 200 && response.data['success']) {
+        final couponsData = response.data['coupon'] as List;
+
+        return couponsData
+            .map((couponJson) => CouponModel.fromJson(couponJson))
+            .toList();
+      }
+      return [];
+    } catch (e) {
+      return [];
     }
   }
 }

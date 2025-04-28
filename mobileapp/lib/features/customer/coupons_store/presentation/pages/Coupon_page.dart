@@ -57,7 +57,6 @@ class _CouponPageState extends ConsumerState<CouponPage> {
     final isDarkMode = ref.watch(darkModeProvider);
     final tokenAsyncValue = ref.watch(jwtTokenProvider);
 
-    // Créer le contenu de la page des coupons
     Widget buildCouponContent() {
       if (couponsState.status == CouponStatus.error) {
         return FailureWidget(
@@ -91,10 +90,8 @@ class _CouponPageState extends ConsumerState<CouponPage> {
       backgroundColor: isDarkMode ? kPrimaryBlack : kSecondaryWhite,
       body: tokenAsyncValue.when(
         data: (token) {
-          // Toujours afficher le contenu de la page
           Widget content = buildCouponContent();
 
-          // Vérifier l'authentification et afficher la boîte de dialogue si nécessaire
           if (token == null && !hasShownAuthDialog) {
             hasShownAuthDialog = true;
             WidgetsBinding.instance.addPostFrameCallback((_) {

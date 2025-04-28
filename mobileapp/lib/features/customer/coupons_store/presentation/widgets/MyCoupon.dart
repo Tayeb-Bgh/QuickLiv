@@ -16,7 +16,7 @@ class MyCoupon extends ConsumerWidget {
     final isDarkMode = ref.watch(darkModeProvider);
     final tokenAsyncValue = ref.watch(jwtTokenProvider);
     final coupons = tokenAsyncValue.value == null ? [] : couponsState.coupons;
-    // Colors based on dark mode
+
     final backgroundColor = isDarkMode ? kSecondaryDark : kSecondaryWhite;
     final borderColor = isDarkMode ? kSecondaryDark : kSecondaryWhite;
     final textColor = isDarkMode ? kLightGray : kPrimaryBlack;

@@ -11,7 +11,7 @@ class CouponModel {
     return CouponModel(
       discountRate: entity.discountRate,
       reductionCode: entity.reductionCode,
-      isUsed: true,
+      isUsed: false,
     );
   }
 
@@ -25,11 +25,11 @@ class CouponModel {
   factory CouponModel.fromJson(Map<String, dynamic> json) {
     return CouponModel(
       discountRate: json['reducRateCoupon'],
-      isUsed: json['isUsedCoup'],
+      isUsed: (json['isUsedCoup'] ?? 0) == 1,
       reductionCode: json['reducCodeCoupon'],
     );
   }
-  
+
   Map<String, dynamic> toJson() {
     return {
       'reducRateCoupon': discountRate,

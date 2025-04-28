@@ -17,10 +17,9 @@ class MyPoints extends ConsumerWidget {
     final isDarkMode = ref.watch(darkModeProvider);
     final tokenAsyncValue = ref.watch(jwtTokenProvider);
 
-    // Utiliser 0 points si l'utilisateur n'est pas authentifié ou si les points ne sont pas chargés
     final int points =
         tokenAsyncValue.value == null ? 0 : (pointsState.value ?? 0);
-    // Colors based on dark mode
+
     final backgroundColor = isDarkMode ? kSecondaryDark : kSecondaryWhite;
     final borderColor = isDarkMode ? kSecondaryDark : kSecondaryWhite;
     final textColor = isDarkMode ? kLightGray : kPrimaryBlack;

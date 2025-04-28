@@ -34,7 +34,7 @@ router.post('/create-coupon', authenticate, async (req, res) => {
   try {
     db.query(
       query,
-      [reducRateCoupon, reducCodeCoupon, isUsedCoup, client_id],
+      [reducRateCoupon, reducCodeCoupon, 0, client_id],
       (err, results) => {
         if (err) {
           console.error("Erreur lors de la création du coupon:", err);
@@ -155,6 +155,48 @@ router.put('/update-client-point', authenticate, async (req, res) => {
     return res.status(500).json({
       success: false,
       message: 'Internal server error',
+      error: error.message
+    });
+  }
+});
+
+router.get('/get-unused-coupon', authenticate, async (req, res) => {
+  const client_id = req.user.id;
+
+  const query = `
+    SELECT * FROM Coupon 
+    WHERE idCustCoupon = ? AND isUsedCoup = 0 
+  `;
+
+  try {
+    db.query(query, [client_id], (err, results) => {
+      if (err) {
+        console.error("Erreur lors de la récupération du coupon:", err);
+        return res.status(500).json({
+          success: false,
+          message: "Erreur lors de la récupération du coupon",
+          error: err.message
+        });
+      }
+
+      if (results.length === 0) {
+        return res.status(404).json({
+          success: false,
+          message: "Aucun coupon non utilisé trouvé pour ce client"
+        });
+      }
+
+      return res.status(200).json({
+        success: true,
+        message: "Coupon non utilisé récupéré avec succès",
+        coupon: results
+      });
+    });
+  } catch (error) {
+    console.error('Erreur lors de la récupération du coupon:', error);
+    res.status(500).json({
+      success: false,
+      message: "Erreur lors de la récupération du coupon",
       error: error.message
     });
   }
