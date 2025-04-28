@@ -36,10 +36,10 @@ class RestaurantsStoriesList extends ConsumerWidget {
                     physics: const AlwaysScrollableScrollPhysics(),
                     scrollDirection: Axis.horizontal,
                     itemCount: restaurants.length,
-
+    
                     itemBuilder: (context, index) {
                       final restau = restaurants[index];
-
+    
                       return Padding(
                         padding: EdgeInsets.only(
                           right: width * 0.025,

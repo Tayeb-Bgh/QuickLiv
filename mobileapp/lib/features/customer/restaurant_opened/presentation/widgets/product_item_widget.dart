@@ -7,7 +7,7 @@ import 'package:mobileapp/features/customer/restaurant_opened/business/entities/
 class ProductListItem extends ConsumerWidget {
   final Product product;
 
-  const ProductListItem({Key? key, required this.product}) : super(key: key);
+  const ProductListItem({super.key, required this.product});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

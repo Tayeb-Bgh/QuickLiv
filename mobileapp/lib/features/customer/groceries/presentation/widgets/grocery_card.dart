@@ -25,7 +25,7 @@ class GroceryCard extends ConsumerWidget {
     final Color footerTextColor = isDarkMode ? kLightGray : kMediumGray;
     final Color iconColor = kPrimaryRed;
 
-    return Container(
+    return SizedBox(
       height: isFull ? height * 0.33 : height * 0.31,
       width: isFull ? width * 0.9 : width * 0.6,
       child: Column(

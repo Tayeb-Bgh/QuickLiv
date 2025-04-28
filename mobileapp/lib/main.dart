@@ -5,7 +5,6 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:mobileapp/core/hive_object/customer_hive_object.dart';
 import 'package:mobileapp/core/hive_object/deliverer_hive_object.dart';
 import 'package:mobileapp/core/hive_object/vehicle_hive_object.dart';
-import 'package:mobileapp/features/auth/presentation/pages/login_page.dart';
 import 'package:mobileapp/features/customer/skeleton/presentation/customer_skeleton.dart';
 
 void main() async {
@@ -30,7 +29,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: CustomerSkeleton(),
     );

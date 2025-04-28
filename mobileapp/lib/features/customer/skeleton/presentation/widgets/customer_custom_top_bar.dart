@@ -1,15 +1,12 @@
-import 'dart:ui';
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mobileapp/core/config/dark_mode_provider.dart';
 import 'package:mobileapp/core/constants/constants.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mobileapp/features/auth/presentation/pages/login_page.dart';
 import 'package:mobileapp/features/auth/presentation/providers/auth_provider.dart';
 import 'package:mobileapp/features/customer/profile/presentation/pages/profile_popup_page.dart';
-import 'package:mobileapp/features/customer/profile/presentation/widgets/profile_popup.dart';
 
 class MyPainter extends CustomPainter {
   @override

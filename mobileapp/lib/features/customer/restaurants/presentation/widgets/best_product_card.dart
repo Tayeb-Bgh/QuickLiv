@@ -114,7 +114,7 @@ class BestProductCard extends ConsumerWidget {
           Padding(
             padding: EdgeInsets.only(left: width * 0.015),
             child: Text(
-              '${product.description}',
+              product.description,
               style: TextStyle(
                 decorationThickness:
                     1, // Augmentez cette valeur pour un trait plus épais
