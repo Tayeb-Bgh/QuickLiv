@@ -6,6 +6,7 @@ import 'package:mobileapp/core/config/dark_mode_provider.dart';
 import 'package:mobileapp/features/customer/restaurants/presentation/pages/restaurants_page.dart';
 import 'package:mobileapp/features/customer/skeleton/presentation/widgets/customer_custom_top_bar.dart';
 import 'package:mobileapp/features/customer/groceries/presentation/pages/groceries_page.dart';
+import 'package:mobileapp/features/customer/coupons_store/presentation/pages/Coupon_page.dart';
 import 'package:mobileapp/core/constants/constants.dart';
 
 class CustomerSkeleton extends ConsumerStatefulWidget {
@@ -26,17 +27,19 @@ class _CustomerSkeletonState extends ConsumerState<CustomerSkeleton> {
     "Favoris",
     "Coupons",
   ];
-
   final List<Widget> _pages = [
     Container(color: kPrimaryBlack),
     RestaurantsPageTest(),
     GroceriesPageTest(),
     Container(color: kPrimaryWhite),
-    Container(color: kPrimaryWhite),
+    Container(),
   ];
 
   void _setCurrentIndex(int index) {
     setState(() {
+      if (index == 4) {
+        _pages[4] = CouponPage();
+      }
       _currentIndex = index;
     });
   }
@@ -46,7 +49,6 @@ class _CustomerSkeletonState extends ConsumerState<CustomerSkeleton> {
     final height = MediaQuery.of(context).size.height;
     final statusBarHeight = MediaQuery.of(context).padding.top;
     final isDarkMode = ref.watch(darkModeProvider);
-
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(statusBarHeight + height * 0.033),

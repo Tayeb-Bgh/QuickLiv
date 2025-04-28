@@ -9,6 +9,7 @@ const generateJWT = require('./utils/generate_jwt');
 const generateOTP = require('./utils/generate_otp');
 const authenticate = require('./utils/verify_jwt');
 
+
 require('dotenv').config({ path: __dirname + '/../../.env' });
 
 const router = express();
@@ -24,7 +25,7 @@ router.post('/login', async (req, res) => {
 
 
     db.query(query, [phoneNumber, phoneNumber], async (err, results) => {
-        if (err){ 
+        if (err) {
             console.error("Error executing query:", err);
             return res.status(500).json({ success: false, message: "Database error" });
         }
@@ -60,19 +61,14 @@ router.post('/verify-otp', (req, res) => {
     const { phoneNumber, otp } = req.body;
     const validOtp = otpCache.get(phoneNumber);
 
-
-    if (!validOtp) {
-        return res.status(410).json({ success: false });
-    }
-
     if (validOtp == otp) {
         otpCache.del(phoneNumber);
         db.query(query, [phoneNumber, phoneNumber], async (err, results) => {
             if (err) throw err;
 
             if (results.length > 0) {
-                const token = generateJWT({id: results[0]["id"], role: results[0]["role"],phone: phoneNumber});
-    
+                const token = generateJWT({ id: results[0]["id"], role: results[0]["role"], phone: phoneNumber });
+
                 if (results[0]["role"] == "customer") {
                     return res.json({ success: true, role: "customer", token: token });
                 } else if (results[0]["role"] == "deliverer") {
@@ -80,18 +76,18 @@ router.post('/verify-otp', (req, res) => {
                 }
 
             } else {
-                return res.status(500).json({ success: false, role: "null" });
+                return res.status(500).json({ success: false, role: "null", });
             }
         });
-        
+
     } else {
-        return res.status(400).json({ success: false, role: "null" });
+        return res.status(400).json({ success: false, role: "null", });
     }
 });
 
-router.get('/customers/by-phone',authenticate, (req, res) => {
+router.get('/customers/by-phone', authenticate, (req, res) => {
     const query = "SELECT idCust, firstNameCust, lastNameCust, registerDateCust, pointsCust, isSubmittedDelivererCust,isSubmittedPartnerCust FROM Customer WHERE phoneCust = ?";
-    const { phoneNumber } = req.body;
+    const phoneNumber = req.query.phoneNumber;
 
     db.query(query, [phoneNumber], (err, results) => {
         if (err) throw err;
@@ -114,7 +110,7 @@ router.get('/customers/by-phone',authenticate, (req, res) => {
     })
 });
 
-router.get('/deliverers/by-phone',authenticate, (req, res) => {
+router.get('/deliverers/by-phone', authenticate, (req, res) => {
     const query = "SELECT idDel, firstNameDel, lastNameDel, registerDateDel, emailDel, adrsDel, statusDel FROM Deliverer WHERE phoneDel = ?";
     const { phoneNumber } = req.body;
 
@@ -140,7 +136,7 @@ router.get('/deliverers/by-phone',authenticate, (req, res) => {
 }
 );
 
-router.get('/deliverer/vehicle/by-deliverer-id',authenticate, (req, res) => {
+router.get('/deliverer/vehicle/by-deliverer-id', authenticate, (req, res) => {
     const query = `SELECT idVehc, typeVehc, brandVehc, modelVehc, colorVehc, insuranceExprVehc, registerNbrVehc,yearVehc FROM Vehicle WHERE idVehc IN(
                         SELECT vehicleDel FROM Deliverer WHERE idDel = ?
                 ) `;
@@ -170,8 +166,8 @@ router.get('/deliverer/vehicle/by-deliverer-id',authenticate, (req, res) => {
     });
 });
 
-router.get('/deliverer/rating',authenticate, (req, res) => {
-     const query = `
+router.get('/deliverer/rating', authenticate, (req, res) => {
+    const query = `
         SELECT AVG(ratingDelOrd) as rating FROM CustomerOrder o JOIN Delivery d ON o.idOrd = d.idOrd 
         WHERE idDel = ? AND ratingDelOrd IS NOT NULL
     `;
@@ -192,13 +188,13 @@ router.get('/deliverer/rating',authenticate, (req, res) => {
 
 });
 
-router.get('/deliverer/delivery-number',authenticate, (req, res) => {
+router.get('/deliverer/delivery-number', authenticate, (req, res) => {
     const query = `
         SELECT COUNT(*) as deliveryNbr FROM Delivery d JOIN CustomerOrder o ON d.idOrd = o.idOrd WHERE idDel = ? AND statusOrd = ?
     `;
     const { idDel } = req.body;
 
-    db.query(query, [idDel,4], (err, results) => {
+    db.query(query, [idDel, 4], (err, results) => {
         if (err) {
             console.error("Error executing query:", err);
             return res.status(500).json({ success: false, message: "Database error" });

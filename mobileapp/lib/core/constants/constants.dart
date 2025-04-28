@@ -32,3 +32,23 @@ const Color kLightGreen = Color(0x666ACB5D);
 
 const double kDefaultPadding = 0.035;
 
+//autres
+const int kRequiredPoints30 = 250;
+const int kRequiredPoints60 = 750;
+const int kRequiredPoints100 = 1000;
+const List<String> predefinedCodes = [
+  'PROMO',
+  'PIZZA',
+  'FRUITS',
+  'LEGUME',
+  'VIANDE',
+  'BOISSON',
+  'DESSERT',
+  'FROMAGE',
+];
+
+const double priceCoupon30 = 1000;
+const double priceCoupon60 = 1000;
+const double priceCoupon100 = 1000;
+
+const String descriptionCoupon = "Bénificie d'une livraison gratuite";
