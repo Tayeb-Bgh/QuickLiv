@@ -25,6 +25,8 @@ class BestProductsListView extends ConsumerWidget {
     final isDarkMode = ref.watch(darkModeProvider);
 
     final Color titleColor = isDarkMode ? kSecondaryWhite : kPrimaryRed;
+    final Color btnBgColor = isDarkMode ? kSecondaryWhite : kPrimaryRed;
+    final Color btnIconColor = isDarkMode ? kPrimaryBlack : kPrimaryWhite;
 
     return ColoredBox(
       color: isDarkMode ? kPrimaryDark : kSecondaryWhite,
@@ -34,14 +36,40 @@ class BestProductsListView extends ConsumerWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              title,
-              textAlign: TextAlign.left,
-              style: TextStyle(
-                color: titleColor,
-                fontWeight: FontWeight.bold,
-                fontSize: width * 0.060,
-              ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(
+                  title,
+                  textAlign: TextAlign.left,
+
+                  style: TextStyle(
+                    color: titleColor,
+                    fontWeight: FontWeight.bold,
+                    fontSize: width * 0.060,
+                  ),
+                ),
+                IconButton(
+                  padding: EdgeInsets.zero,
+                  constraints: const BoxConstraints(),
+                  onPressed: () {},
+                  icon: Container(
+                    padding: const EdgeInsets.all(6),
+                    decoration: BoxDecoration(
+                      color: btnBgColor,
+                      shape:
+                          BoxShape
+                              .circle, // ou BorderRadius.circular(...) si tu préfères
+                    ),
+                    child: Icon(
+                      Icons.arrow_forward,
+                      color: btnIconColor,
+                      size: 16,
+                    ),
+                  ),
+                ),
+              ],
             ),
             SizedBox(height: height * 0.006),
             bestProducts.when(

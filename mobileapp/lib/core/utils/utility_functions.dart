@@ -27,6 +27,9 @@ double toKilometers(double metersDistance) {
 
 double calculateDelivPrice(double kilometersDistance) {
   // ! IL FAUT PASSER LA DISTANCE EN KILOMOTRES DONCT D'UTILISER CETTE FONCTION APPELEZ toKilometers()
+
+  print("DEBUG distance : $kilometersDistance kilomètres");
+
   return kilometersDistance * 125;
 }
 

@@ -101,6 +101,7 @@ class GroceriesRepositoryImpl implements GroceriesRepository {
         );
 
         final double distanceInKilometers = toKilometers(distanceInMeters);
+
         return grocery.toEntity(
           false,
           distanceInKilometers,

@@ -22,7 +22,10 @@ class BestProductCard extends ConsumerWidget {
     final Color footerTitleColor = isDarkMode ? kSecondaryWhite : kPrimaryBlack;
     final Color reducTxtColor = isDarkMode ? kLightGray : kDarkGray;
     final Color bannerTxtColor = kPrimaryWhite;
-    final Color iconColor = kPrimaryRed;
+    final Color bannerColor = kPrimaryRed;
+    final Color priceTxtColor = kPrimaryRed;
+    final Color iconColor = isDarkMode ? kSecondaryWhite : kPrimaryRed;
+    final Color iconBgColor = isDarkMode ? kSecondaryDark : kSecondaryWhite;
 
     return Container(
       width: width * 0.39,
@@ -64,7 +67,7 @@ class BestProductCard extends ConsumerWidget {
                   child: Container(
                     padding: const EdgeInsets.all(4),
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: iconBgColor,
                       shape: BoxShape.circle,
                       border: Border.all(color: iconColor, width: 2),
                     ),
@@ -82,8 +85,8 @@ class BestProductCard extends ConsumerWidget {
                     vertical: 2,
                   ),
                   decoration: BoxDecoration(
-                    color: iconColor,
-                    borderRadius: BorderRadius.circular(5),
+                    color: bannerColor,
+                    borderRadius: BorderRadius.circular(15),
                   ),
                   child: Text(
                     product.nameBusns,
@@ -134,12 +137,12 @@ class BestProductCard extends ConsumerWidget {
                   '${product.price} DZD',
                   style: TextStyle(
                     fontSize: width * 0.035,
-                    color: iconColor,
+                    color: priceTxtColor,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
                 Spacer(),
-                Icon(Icons.access_time, size: 11, color: iconColor),
+                Icon(Icons.access_time, size: 11, color: bannerColor),
                 SizedBox(width: 1),
                 Text(
                   parseTime(product.delivDuration),

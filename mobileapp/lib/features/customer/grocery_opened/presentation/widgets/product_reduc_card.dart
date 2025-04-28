@@ -22,9 +22,7 @@ class ProductReducCard extends ConsumerWidget {
     final Color footerTitleColor = isDarkMode ? kSecondaryWhite : kPrimaryBlack;
     final Color reducTxtColor = isDarkMode ? kLightGray : kDarkGray;
     final Color bannerTxtColor = kPrimaryWhite;
-    final Color iconColor = isDarkMode ? kSecondaryWhite : kPrimaryRed;
-    final Color bannerBgColor = kPrimaryRed;
-    final Color buttonBgColor = isDarkMode ? kSecondaryDark : kSecondaryWhite;
+    final Color iconColor = kPrimaryRed;
 
     return Container(
       width: width * 0.39,
@@ -33,14 +31,14 @@ class ProductReducCard extends ConsumerWidget {
         color: footerBgColor,
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
-          BoxShadow(
-            color: kPrimaryBlur,
-            blurRadius: 1,
-            offset: const Offset(0, 4),
-          ),
-        ],
+                  BoxShadow(
+                    color: kPrimaryBlur,
+                    blurRadius: 1,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
       ),
-
+      
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -66,7 +64,7 @@ class ProductReducCard extends ConsumerWidget {
                   child: Container(
                     padding: const EdgeInsets.all(4),
                     decoration: BoxDecoration(
-                      color: buttonBgColor,
+                      color: Colors.white,
                       shape: BoxShape.circle,
                       border: Border.all(color: iconColor, width: 2),
                     ),
@@ -84,8 +82,8 @@ class ProductReducCard extends ConsumerWidget {
                     vertical: 2,
                   ),
                   decoration: BoxDecoration(
-                    color: bannerBgColor,
-                    borderRadius: BorderRadius.circular(15),
+                    color: iconColor,
+                    borderRadius: BorderRadius.circular(5),
                   ),
                   child: Text(
                     product.nameBusns,
@@ -107,7 +105,7 @@ class ProductReducCard extends ConsumerWidget {
                     vertical: 2,
                   ),
                   decoration: BoxDecoration(
-                    color: bannerBgColor,
+                    color: iconColor,
                     borderRadius: const BorderRadius.only(
                       topRight: Radius.circular(8),
                       bottomLeft: Radius.circular(8),
@@ -139,10 +137,7 @@ class ProductReducCard extends ConsumerWidget {
             ),
           ),
           Padding(
-            padding: EdgeInsets.symmetric(
-              horizontal: width * 0.065,
-              vertical: 0,
-            ),
+            padding: EdgeInsets.symmetric(horizontal: width * 0.065 , vertical: 0),
             child: Row(
               children: [
                 Text(
@@ -167,12 +162,12 @@ class ProductReducCard extends ConsumerWidget {
                   '${product.priceWithReduc} DZD',
                   style: TextStyle(
                     fontSize: width * 0.035,
-                    color: bannerBgColor,
+                    color: iconColor,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
                 Spacer(),
-                Icon(Icons.access_time, size: 11, color: bannerBgColor),
+                Icon(Icons.access_time, size: 11, color: iconColor),
                 SizedBox(width: 1),
                 Text(
                   parseTime(product.delivDuration),
@@ -180,6 +175,7 @@ class ProductReducCard extends ConsumerWidget {
                     fontSize: width * 0.024,
                     color: footerTxtColor,
                     fontWeight: FontWeight.bold,
+                    
                   ),
                 ),
               ],

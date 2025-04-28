@@ -5,6 +5,7 @@ const iaImplementRouter = require("./routes/mobile_app/ai_api/ai_request")
 const authRouter = require("./routes/auth/auth")
 const groceriesRouter = require("./routes/mobile_app/groceries/groceries")
 const restaurantsRouter = require("./routes/mobile_app/restaurants/restaurants")
+const groceryOpenedRouter = require("./routes/mobile_app/grocery_opened/grocery_opened")
 
 
 const app = express();
@@ -19,6 +20,7 @@ app.use("/api/ai",iaImplementRouter);
 app.use("/api/auth",authRouter)
 app.use("/api/groceries",groceriesRouter);
 app.use("/api/restaurants",restaurantsRouter);
+app.use("/api/grocery-opened",groceryOpenedRouter);
 
 
 
