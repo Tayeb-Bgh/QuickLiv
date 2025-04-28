@@ -5,7 +5,6 @@ import 'package:flutter_svg/svg.dart' show SvgPicture;
 import 'package:mobileapp/core/config/dark_mode_provider.dart';
 import 'package:mobileapp/core/constants/constants.dart';
 import 'package:mobileapp/core/utils/utility_functions.dart';
-import 'package:mobileapp/features/auth/presentation/providers/auth_provider.dart';
 import 'package:mobileapp/features/customer/coupons_store/presentation/providers/Coupon_provider.dart';
 import 'package:mobileapp/features/customer/coupons_store/presentation/providers/Point_provider.dart';
 import 'package:mobileapp/features/customer/coupons_store/presentation/widgets/Frosted_Coupon.dart';
@@ -19,7 +18,6 @@ class Availablecoupon extends ConsumerWidget {
     final size = MediaQuery.of(context).size;
     final isDarkMode = ref.watch(darkModeProvider);
 
-    // Colors based on dark mode
     final backgroundColor = isDarkMode ? kSecondaryDark : kSecondaryWhite;
     final borderColor = isDarkMode ? kSecondaryDark : kLightGray;
     final textColor = isDarkMode ? kLightGray : kPrimaryBlack;
@@ -28,8 +26,8 @@ class Availablecoupon extends ConsumerWidget {
 
     return Container(
       width: screenWidth * 0.92,
-      height: 315,
       padding: EdgeInsets.all(10),
+      margin: EdgeInsets.only(bottom: 10),
       decoration: BoxDecoration(
         color: backgroundColor,
         border: Border.all(color: borderColor, width: 1.0),
@@ -62,11 +60,9 @@ class Availablecoupon extends ConsumerWidget {
 
           Column(
             children: [
-              // Les deux petits coupons en haut
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  // Place réservée pour le coupon 30
                   Expanded(
                     child: _buildCouponCard(
                       context,
@@ -81,10 +77,13 @@ class Availablecoupon extends ConsumerWidget {
                       priceCoupon30,
                       30,
                       isDarkMode,
+                      ref.watch(isActiveCoupon30),
+                      isActiveCoupon30,
+                      loadingCoupon30Provider,
                     ),
                   ),
                   SizedBox(width: size.width * 0.03),
-                  // Place réservée pour le coupon 60
+
                   Expanded(
                     child: _buildCouponCard(
                       context,
@@ -99,12 +98,15 @@ class Availablecoupon extends ConsumerWidget {
                       priceCoupon60,
                       60,
                       isDarkMode,
+                      ref.watch(isActiveCoupon60),
+                      isActiveCoupon60,
+                      loadingCoupon60Provider,
                     ),
                   ),
                 ],
               ),
               SizedBox(height: size.height * 0.016),
-              // Grand coupon en bas
+
               Center(
                 child: _buildCouponCard(
                   context,
@@ -119,6 +121,9 @@ class Availablecoupon extends ConsumerWidget {
                   priceCoupon100,
                   100,
                   isDarkMode,
+                  ref.watch(isActiveCoupon100),
+                  isActiveCoupon100,
+                  loadingCoupon100Provider,
                 ),
               ),
             ],
@@ -139,51 +144,83 @@ class Availablecoupon extends ConsumerWidget {
     double price,
     int discountRate,
     bool isDarkMode,
+    bool isActive,
+    StateProvider<bool> availableProvier,
+    StateProvider<bool> loadingProvider,
   ) {
-    final tokenAsyncValue = ref.watch(jwtTokenProvider);
-    final isAuthenticated = tokenAsyncValue.value != null;
-    return Stack(
-      children: [
-        SvgPicture.asset(assetPath, fit: BoxFit.contain, height: height),
+    final width = MediaQuery.of(context).size.width;
+    final littleCouponWidth = width * 0.4;
+    final bigCouponWidth = width * 0.8;
+    final isLoading = ref.watch(loadingProvider);
 
-        if (currentPoint >= requiredPoint && isAuthenticated)
+    return GestureDetector(
+      onTap: () {
+        ref.read(availableProvier.notifier).state =
+            !ref.watch(availableProvier);
+      },
+      child: Stack(
+        children: [
+          SvgPicture.asset(
+            assetPath,
+            width: isLarge ? bigCouponWidth : littleCouponWidth,
+          ),
+
           FrostedCoupon(
+            isActive: isActive,
             pointsText: requiredPoint,
+            isLoading: isLoading,
             onPressed: () async {
+              ref.read(loadingProvider.notifier).state = true;
+
               try {
                 final couponNotifier = ref.read(couponProvider.notifier);
                 final reductionCode = generateRandomCode(predefinedCodes);
                 await couponNotifier.createCoupon(reductionCode, discountRate);
-
+                ref.read(couponProvider.notifier).fetchCoupons();
                 final pointNotifier = ref.read(pointProvider.notifier);
                 await pointNotifier.subtractPoints(requiredPoint);
                 await pointNotifier.refreshPoints();
                 couponNotifier.reloadCouponsFromStorage();
-              } catch (e) {
+
+                ref.read(loadingProvider.notifier).state = false;
+
                 if (context.mounted) {
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        title: Text('Erreur'),
-                        content: Text('Erreur lors de l\'achat du coupon.'),
-                        actions: [
-                          TextButton(
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                            child: Text('OK'),
-                          ),
-                        ],
-                      );
-                    },
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Achat du coupon réussi !'),
+                      backgroundColor: Colors.green,
+                      behavior: SnackBarBehavior.floating,
+                      margin: EdgeInsets.all(16),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      duration: Duration(seconds: 2),
+                    ),
+                  );
+                }
+              } catch (e) {
+                ref.read(loadingProvider.notifier).state = false;
+
+                if (currentPoint < requiredPoint) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Vous ne posséder pas assez du points '),
+                      backgroundColor: Colors.red,
+                      behavior: SnackBarBehavior.floating,
+                      margin: EdgeInsets.all(16),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      duration: Duration(seconds: 2),
+                    ),
                   );
                 }
               }
             },
             isLargeCoupon: isLarge,
           ),
-      ],
+        ],
+      ),
     );
   }
 }

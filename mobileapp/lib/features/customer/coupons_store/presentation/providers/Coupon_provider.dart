@@ -127,3 +127,19 @@ class CouponNotifier extends StateNotifier<CouponState> {
     _loadCouponsFromStorage();
   }
 }
+
+final isActiveCoupon30 = StateProvider<bool>((ref) {
+  return false;
+});
+
+final isActiveCoupon60 = StateProvider<bool>((ref) {
+  return false;
+});
+
+final isActiveCoupon100 = StateProvider<bool>((ref) {
+  return false;
+});
+
+final loadingCoupon30Provider = StateProvider<bool>((ref) => false);
+final loadingCoupon60Provider = StateProvider<bool>((ref) => false);
+final loadingCoupon100Provider = StateProvider<bool>((ref) => false);
