@@ -9,7 +9,6 @@ import 'package:mobileapp/features/auth/presentation/pages/login_page.dart';
 import 'package:mobileapp/features/customer/grocery_opened/presentation/pages/grocery_opened_page.dart';
 
 import 'package:mobileapp/features/customer/skeleton/presentation/customer_skeleton.dart';
-import 'package:mobileapp/features/deliverer/home/presentation/pages/deliverer_home_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
