@@ -1,23 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:mobileapp/core/constants/constants.dart';
+import 'package:mobileapp/features/customer/groceries/business/entities/grocery_entity.dart';
+import 'package:mobileapp/features/customer/restaurant_opened/presentation/pages/restaurant_opened_page.dart';
+import 'package:mobileapp/features/customer/restaurants/business/entities/restaurant_entity.dart';
 import 'package:story_view/story_view.dart';
 
 class StoryPage extends StatelessWidget {
   final StoryController controller = StoryController();
-  final String storeName;
-  final String storevidUrl;
-  final String storeImageUrl;
-  StoryPage({
-    super.key,
-    required this.storeName,
-    required this.storevidUrl,
-    required this.storeImageUrl,
-  });
-
+  final Restaurant? restaurant;
+  final Grocery? grocery;
+  StoryPage({super.key, this.restaurant, this.grocery});
   @override
   Widget build(BuildContext context) {
     List<StoryItem> storyItems = [
-      StoryItem.pageVideo(storevidUrl, controller: controller),
+      StoryItem.pageVideo(
+        restaurant != null
+            ? (grocery?.vidUrl ?? '')
+            : (restaurant?.vidUrl ?? ''),
+        controller: controller,
+      ),
     ];
 
     final double width = MediaQuery.of(context).size.width;
@@ -46,10 +47,18 @@ class StoryPage extends StatelessWidget {
             left: width * 0.05,
             child: Row(
               children: [
-                CircleAvatar(backgroundImage: NetworkImage(storeImageUrl)),
+                CircleAvatar(
+                  backgroundImage: NetworkImage(
+                    restaurant != null
+                        ? (grocery?.imgUrl ?? '')
+                        : (restaurant?.imgUrl ?? ''),
+                  ),
+                ),
                 SizedBox(width: width * 0.02),
                 Text(
-                  storeName,
+                  restaurant != null
+                      ? (grocery?.name ?? '')
+                      : (restaurant?.name ?? ''),
                   style: TextStyle(color: Colors.white, fontSize: 20),
                 ),
               ],
@@ -75,7 +84,23 @@ class StoryPage extends StatelessWidget {
                   ),
                   minimumSize: Size(width * 0.6, height * 0.05),
                 ),
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.pop(context);
+                  if (restaurant != null) {
+                    showModalBottomSheet(
+                      context: context,
+                      shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.vertical(
+                          top: Radius.circular(20),
+                        ),
+                      ),
+                      isScrollControlled: true,
+                      builder: (_) => RestaurantBottomSheet(restaurant: restaurant!),
+                    );
+                  } else if (grocery != null) {
+                 
+                  }
+                },
                 child: Text(
                   "Decouvrir le Menu",
                   style: TextStyle(

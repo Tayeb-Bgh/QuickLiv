@@ -23,9 +23,7 @@ class RestaurantStoryBtn extends ConsumerWidget {
           MaterialPageRoute(
             builder:
                 (context) => StoryPage(
-                  storeImageUrl: restaurant.imgUrl,
-                  storeName: restaurant.name,
-                  storevidUrl: restaurant.vidUrl,
+               restaurant: restaurant,
                 ),
           ),
         );

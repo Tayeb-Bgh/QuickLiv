@@ -20,17 +20,10 @@ class BusinessStoryBtn extends ConsumerWidget {
     final height = MediaQuery.of(context).size.height;
 
     return GestureDetector(
-      onDoubleTap: () {
+      onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(
-            builder:
-                (context) => StoryPage(
-                  storeName: grocery.name,
-                  storevidUrl: grocery.vidUrl,
-                  storeImageUrl: grocery.imgUrl,
-                ),
-          ),
+          MaterialPageRoute(builder: (context) => StoryPage(grocery: grocery)),
         );
       },
       child: Column(

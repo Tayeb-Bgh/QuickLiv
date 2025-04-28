@@ -20,17 +20,11 @@ class RestaurantStoryBtn extends ConsumerWidget {
     final height = MediaQuery.of(context).size.height;
 
     return GestureDetector(
-      
       onTap: () {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder:
-                (context) => StoryPage(
-                  storeImageUrl: restaurant.imgUrl,
-                  storeName: restaurant.name,
-                  storevidUrl: restaurant.vidUrl,
-                ),
+            builder: (context) => StoryPage(restaurant: restaurant),
           ),
         );
       },
