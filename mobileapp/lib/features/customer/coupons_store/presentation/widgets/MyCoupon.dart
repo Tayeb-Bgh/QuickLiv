@@ -84,17 +84,23 @@ class MyCoupon extends ConsumerWidget {
                                 builder: (context) {
                                   if (discount == 30) {
                                     return SvgPicture.asset(
-                                      'assets/images/Coupon_30.svg',
+                                      isDarkMode
+                                          ? 'assets/images/coupon_30_dark.svg'
+                                          : 'assets/images/coupon_30_light.svg',
                                       fit: BoxFit.contain,
                                     );
                                   } else if (discount == 60) {
                                     return SvgPicture.asset(
-                                      'assets/images/Coupon_60.svg',
+                                      isDarkMode
+                                          ? 'assets/images/coupon_60_Dark.svg'
+                                          : 'assets/images/coupon_60_light.svg',
                                       fit: BoxFit.contain,
                                     );
                                   } else if (discount == 100) {
                                     return SvgPicture.asset(
-                                      'assets/images/Coupon_100.svg',
+                                      isDarkMode
+                                          ? 'assets/images/coupon_100_Dark.svg'
+                                          : 'assets/images/coupon_100_light.svg',
                                       fit: BoxFit.contain,
                                     );
                                   } else {

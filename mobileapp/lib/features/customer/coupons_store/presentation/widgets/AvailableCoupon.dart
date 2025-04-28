@@ -6,7 +6,6 @@ import 'package:mobileapp/core/config/dark_mode_provider.dart';
 import 'package:mobileapp/core/constants/constants.dart';
 import 'package:mobileapp/core/utils/utility_functions.dart';
 import 'package:mobileapp/features/auth/presentation/providers/auth_provider.dart';
-import 'package:mobileapp/features/customer/coupons_store/business/entities/coupon_entitie.dart';
 import 'package:mobileapp/features/customer/coupons_store/presentation/providers/Coupon_provider.dart';
 import 'package:mobileapp/features/customer/coupons_store/presentation/providers/Point_provider.dart';
 import 'package:mobileapp/features/customer/coupons_store/presentation/widgets/Frosted_Coupon.dart';
@@ -16,9 +15,7 @@ class Availablecoupon extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final pointsState = ref.watch(pointProvider);
-    final createdCoupons = ref.watch(
-      couponProvider.select((state) => state.coupons),
-    ); // Liste des coupons créés
+
     final size = MediaQuery.of(context).size;
     final isDarkMode = ref.watch(darkModeProvider);
 
@@ -26,14 +23,6 @@ class Availablecoupon extends ConsumerWidget {
     final backgroundColor = isDarkMode ? kSecondaryDark : kSecondaryWhite;
     final borderColor = isDarkMode ? kSecondaryDark : kLightGray;
     final textColor = isDarkMode ? kLightGray : kPrimaryBlack;
-    final emptyTextColor = isDarkMode ? kLightGray : Colors.grey;
-
-    final bool coupon30Purchased = _isCouponPurchased(createdCoupons, 30);
-    final bool coupon60Purchased = _isCouponPurchased(createdCoupons, 60);
-    final bool coupon100Purchased = _isCouponPurchased(createdCoupons, 100);
-
-    final bool allCouponsPurchased =
-        coupon30Purchased && coupon60Purchased && coupon100Purchased;
 
     final screenWidth = size.width;
 
@@ -71,98 +60,72 @@ class Availablecoupon extends ConsumerWidget {
 
           SizedBox(height: 10),
 
-          if (allCouponsPurchased)
-            Expanded(
-              child: Center(
-                child: AutoSizeText(
-                  'Vous avez consommé tous vos coupons',
-                  style: TextStyle(
-                    color: emptyTextColor,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
+          Column(
+            children: [
+              // Les deux petits coupons en haut
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  // Place réservée pour le coupon 30
+                  Expanded(
+                    child: _buildCouponCard(
+                      context,
+                      isDarkMode
+                          ? 'assets/images/coupon_30_dark.svg'
+                          : 'assets/images/coupon_30_light.svg',
+                      pointsState.value ?? 0,
+                      kRequiredPoints30,
+                      size.height * 0.10,
+                      ref,
+                      false,
+                      priceCoupon30,
+                      30,
+                      isDarkMode,
+                    ),
                   ),
-                  maxLines: 1,
-                  minFontSize: 1,
+                  SizedBox(width: size.width * 0.03),
+                  // Place réservée pour le coupon 60
+                  Expanded(
+                    child: _buildCouponCard(
+                      context,
+                      isDarkMode
+                          ? 'assets/images/coupon_60_Dark.svg'
+                          : 'assets/images/coupon_60_light.svg',
+                      pointsState.value ?? 0,
+                      kRequiredPoints60,
+                      size.height * 0.10,
+                      ref,
+                      false,
+                      priceCoupon60,
+                      60,
+                      isDarkMode,
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: size.height * 0.016),
+              // Grand coupon en bas
+              Center(
+                child: _buildCouponCard(
+                  context,
+                  isDarkMode
+                      ? 'assets/images/coupon_100_Dark.svg'
+                      : 'assets/images/coupon_100_light.svg',
+                  pointsState.value ?? 0,
+                  kRequiredPoints100,
+                  size.height * 0.147,
+                  ref,
+                  true,
+                  priceCoupon100,
+                  100,
+                  isDarkMode,
                 ),
               ),
-            )
-          else
-            Column(
-              children: [
-                // Les deux petits coupons en haut
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    // Place réservée pour le coupon 30
-                    Expanded(
-                      child:
-                          !coupon30Purchased
-                              ? _buildCouponCard(
-                                context,
-                                'assets/images/coupon_30.svg',
-                                pointsState.value ?? 0,
-                                kRequiredPoints30,
-                                size.height * 0.10,
-                                ref,
-                                false,
-                                priceCoupon30,
-                                30,
-                                isDarkMode,
-                              )
-                              : SizedBox(), // Conteneur vide de la même taille
-                    ),
-                    SizedBox(width: size.width * 0.03),
-                    // Place réservée pour le coupon 60
-                    Expanded(
-                      child:
-                          !coupon60Purchased
-                              ? _buildCouponCard(
-                                context,
-                                'assets/images/coupon_60.svg',
-                                pointsState.value ?? 0,
-                                kRequiredPoints60,
-                                size.height * 0.10,
-                                ref,
-                                false,
-                                priceCoupon60,
-                                60,
-                                isDarkMode,
-                              )
-                              : SizedBox(),
-                    ),
-                  ],
-                ),
-                SizedBox(height: size.height * 0.016),
-                // Grand coupon en bas
-                Center(
-                  child:
-                      !coupon100Purchased
-                          ? _buildCouponCard(
-                            context,
-                            'assets/images/coupon_100.svg',
-                            pointsState.value ?? 0,
-                            kRequiredPoints100,
-                            size.height * 0.147,
-                            ref,
-                            true,
-                            priceCoupon100,
-                            100,
-                            isDarkMode,
-                          )
-                          : SizedBox(),
-                ),
-              ],
-            ),
+            ],
+          ),
         ],
       ),
     );
-  }
-
-  static bool _isCouponPurchased(
-    List<CouponEntity> createdCoupons,
-    int discountRate,
-  ) {
-    return createdCoupons.any((coupon) => coupon.discountRate == discountRate);
   }
 
   static Widget _buildCouponCard(
