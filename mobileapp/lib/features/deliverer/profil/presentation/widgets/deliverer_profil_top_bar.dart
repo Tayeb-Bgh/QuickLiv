@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mobileapp/core/constants/constants.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:mobileapp/features/auth/presentation/pages/login_page.dart';
 import 'package:mobileapp/features/auth/presentation/providers/auth_provider.dart';
-import 'package:mobileapp/features/deliverer/profil/presentation/pages/profil_page.dart';
 
 class MyPainter2 extends CustomPainter {
   @override
@@ -98,9 +95,7 @@ class DelivererProfilTopBar extends ConsumerWidget {
   }
 
   Widget _buildIcon(
-    BuildContext context, [
-    double? heightIcon,
-  ]) {
+    BuildContext context) {
     final width = MediaQuery.of(context).size.width;
     return SizedBox(
       width: width * 0.088,

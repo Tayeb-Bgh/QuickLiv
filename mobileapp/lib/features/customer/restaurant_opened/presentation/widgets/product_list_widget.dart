@@ -5,14 +5,12 @@ import 'package:mobileapp/core/constants/constants.dart';
 import 'package:mobileapp/core/utils/utility_functions.dart';
 import 'package:mobileapp/features/customer/restaurant_opened/business/entities/product_entity.dart';
 import 'package:mobileapp/features/customer/restaurant_opened/presentation/providers/restaurant_opened_provider.dart';
-import 'package:mobileapp/features/customer/restaurant_opened/presentation/widgets/product_card.dart';
 import 'package:mobileapp/features/customer/restaurant_opened/presentation/widgets/product_item_widget.dart';
 
 class ProductListWidget extends ConsumerWidget {
   final int restaurantId;
 
-  const ProductListWidget({Key? key, required this.restaurantId})
-      : super(key: key);
+  const ProductListWidget({super.key, required this.restaurantId});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -51,7 +49,7 @@ class ProductListWidget extends ConsumerWidget {
                     ),
                   ),
                   // List of products
-                  ...entry.value.map((product) => ProductListItem(product: product)).toList(), // <<< UTILISATION
+                  ...entry.value.map((product) => ProductListItem(product: product)), // <<< UTILISATION
                 ],
               );
             }).toList(),

@@ -53,6 +53,10 @@ dependencies:
   flutter_switch_dark_light: ^0.0.4
   light_dark_theme_toggle: ^1.1.2
   intl: ^0.20.2
+  story_view: ^0.16.5
+  video_player: ^2.9.5
+  chewie: ^1.11.3
+  cached_network_image: ^3.4.1
 
 
   

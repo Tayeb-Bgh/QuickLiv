@@ -129,7 +129,7 @@ class RestaurantBottomSheet extends ConsumerWidget {
                                     color: kPrimaryRed,
                                   ),
                                   const SizedBox(width: 4),
-                                  Text("${parseTime(restaurant.delivTime)}",style: TextStyle(color: isDarkMode ? kLightGray : kPrimaryBlack),),
+                                  Text(parseTime(restaurant.delivTime),style: TextStyle(color: isDarkMode ? kLightGray : kPrimaryBlack),),
                                   const SizedBox(width: 12),
                                   Icon(
                                     Icons.star,

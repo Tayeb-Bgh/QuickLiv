@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:mobileapp/core/constants/constants.dart';
-import 'package:mobileapp/core/hive_object/deliverer_hive_object.dart';
 import 'package:mobileapp/core/hive_object/vehicle_hive_object.dart';
 import 'package:intl/intl.dart';
 
@@ -81,7 +80,7 @@ class VehicleInfoCard extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        savedVehicle?.registerNbr ?? 'N/A',
+                        savedVehicle.registerNbr ?? 'N/A',
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
                     ],
@@ -107,7 +106,7 @@ class VehicleInfoCard extends StatelessWidget {
                       Text(
                         DateFormat(
                           'yyyy-MM-dd',
-                        ).format(savedVehicle!.insuranceExpr),
+                        ).format(savedVehicle.insuranceExpr),
                       ),
                     ],
                   ),

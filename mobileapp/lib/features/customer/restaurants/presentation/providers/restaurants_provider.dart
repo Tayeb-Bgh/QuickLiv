@@ -100,7 +100,8 @@ final getBestProductsProvider = Provider<GetBestProducts>((ref) {
 final bestProductsListProvider = FutureProvider<List<Product>>((ref) async {
   final restaurants = await ref.watch(restaurantsListProvider.future);
 
-  for (final restaurant in restaurants)
+  for (final restaurant in restaurants) {
     print("${restaurant.id}   ${restaurant.name}    ${restaurant.category}");
+  }
   return await ref.watch(getBestProductsProvider).call(restaurants);
 });

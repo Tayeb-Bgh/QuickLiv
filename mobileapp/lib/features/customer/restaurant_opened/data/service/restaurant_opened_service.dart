@@ -149,7 +149,7 @@ class RestaurantOpenedService {
     final List<Map<String, dynamic>> data = List<Map<String, dynamic>>.from(
       response.data,
     );
-    print("data repondu : " +data[0].toString());
+    print("data repondu : ${data[0]}");
     final List<ProductModel> products = data.map((item) => ProductModel.fromJson(item)).toList();
     print(products[0].toStringg());
     return products;
