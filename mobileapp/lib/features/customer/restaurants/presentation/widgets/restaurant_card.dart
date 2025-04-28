@@ -67,7 +67,7 @@ class RestaurantCard extends ConsumerWidget {
                         restaurant.liked
                             ? Icons.favorite
                             : Icons.favorite_border,
-                        color: restaurant.liked ? kPrimaryRed : kMediumGray,
+                        color: restaurant.liked ? kPrimaryRed : kLightGray,
                         size: isFull ? 33 : 28,
                       ),
                     ),

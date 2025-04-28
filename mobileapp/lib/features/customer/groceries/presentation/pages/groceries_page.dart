@@ -39,7 +39,6 @@ class _GroceriesPageTestState extends ConsumerState<GroceriesPageTest> {
     final bgColor = isDarkMode ? kPrimaryDark : kSecondaryWhite;
 
     final height = MediaQuery.of(context).size.height;
-    final width = MediaQuery.of(context).size.width;
 
     return ColoredBox(
       color: bgColor,
@@ -90,7 +89,6 @@ class _GroceriesPageTestState extends ConsumerState<GroceriesPageTest> {
 class _StickyRadioButtonsDelegate extends SliverPersistentHeaderDelegate {
   final bool isDarkMode;
   final double height;
-
   _StickyRadioButtonsDelegate({required this.isDarkMode, required this.height});
 
   @override

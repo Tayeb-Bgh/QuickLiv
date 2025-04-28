@@ -22,6 +22,8 @@ class VerticalRestaurantsListView extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final isDarkMode = ref.watch(darkModeProvider);
     final titleColor = isDarkMode ? kSecondaryWhite : kPrimaryRed;
+    final Color btnBgColor = isDarkMode ? kSecondaryWhite : kPrimaryRed;
+    final Color btnIconColor = isDarkMode ? kPrimaryBlack : kPrimaryWhite;
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -30,15 +32,43 @@ class VerticalRestaurantsListView extends ConsumerWidget {
             (restaurants) => Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  ref.watch(selectedCategoryProvider) != null
-                      ? "Nos ${ref.watch(selectedCategoryProvider)}s"
-                      : "Nos Magasins",
-                  style: TextStyle(
-                    color: titleColor,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 24,
-                  ),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      ref.watch(selectedCategoryProvider) != null
+                          ? "Nos ${ref.watch(selectedCategoryProvider)}s"
+                          : "Nos Magasins",
+                      style: TextStyle(
+                        color: titleColor,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 24,
+                      ),
+                    ),
+                    IconButton(
+                      padding: EdgeInsets.zero,
+                      constraints: const BoxConstraints(),
+                      onPressed: () {},
+                      icon: Container(
+                        padding: const EdgeInsets.all(6),
+                        decoration: BoxDecoration(
+                          color: btnBgColor,
+                          shape:
+                              BoxShape
+                                  .circle, // ou BorderRadius.circular(...) si tu préfères
+                        ),
+                        child: Transform.rotate(
+                          angle: 3.14 / 2,
+                          child: Icon(
+                            Icons.arrow_forward,
+                            color: btnIconColor,
+                            size: 16,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
                 const SizedBox(height: 10),
                 // Liste non scrollable, intégrée dans scroll global

@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mobileapp/core/constants/constants.dart';
+import 'package:mobileapp/features/customer/groceries/business/entities/product_with_reduc_entity.dart';
 import 'package:mobileapp/core/utils/utility_functions.dart';
 import 'package:mobileapp/core/config/dark_mode_provider.dart';
-import 'package:mobileapp/features/customer/restaurants/business/entities/product_entity.dart';
 
-class BestProductCard extends ConsumerWidget {
-  final Product product;
+class ProductReducCard extends ConsumerWidget {
+  final ProductWithReduc product;
 
-  const BestProductCard({super.key, required this.product});
+  const ProductReducCard({super.key, required this.product});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -22,10 +22,7 @@ class BestProductCard extends ConsumerWidget {
     final Color footerTitleColor = isDarkMode ? kSecondaryWhite : kPrimaryBlack;
     final Color reducTxtColor = isDarkMode ? kLightGray : kDarkGray;
     final Color bannerTxtColor = kPrimaryWhite;
-    final Color bannerColor = kPrimaryRed;
-    final Color priceTxtColor = kPrimaryRed;
-    final Color iconColor = isDarkMode ? kSecondaryWhite : kPrimaryRed;
-    final Color iconBgColor = isDarkMode ? kSecondaryDark : kSecondaryWhite;
+    final Color iconColor = kPrimaryRed;
 
     return Container(
       width: width * 0.39,
@@ -34,14 +31,14 @@ class BestProductCard extends ConsumerWidget {
         color: footerBgColor,
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
-          BoxShadow(
-            color: kPrimaryBlur,
-            blurRadius: 1,
-            offset: const Offset(0, 4),
-          ),
-        ],
+                  BoxShadow(
+                    color: kPrimaryBlur,
+                    blurRadius: 1,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
       ),
-
+      
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -67,7 +64,7 @@ class BestProductCard extends ConsumerWidget {
                   child: Container(
                     padding: const EdgeInsets.all(4),
                     decoration: BoxDecoration(
-                      color: iconBgColor,
+                      color: Colors.white,
                       shape: BoxShape.circle,
                       border: Border.all(color: iconColor, width: 2),
                     ),
@@ -85,8 +82,8 @@ class BestProductCard extends ConsumerWidget {
                     vertical: 2,
                   ),
                   decoration: BoxDecoration(
-                    color: bannerColor,
-                    borderRadius: BorderRadius.circular(15),
+                    color: iconColor,
+                    borderRadius: BorderRadius.circular(5),
                   ),
                   child: Text(
                     product.nameBusns,
@@ -96,6 +93,31 @@ class BestProductCard extends ConsumerWidget {
                       fontWeight: FontWeight.bold,
                     ),
                     overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ),
+              Positioned(
+                top: 0,
+                right: 0,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 4,
+                    vertical: 2,
+                  ),
+                  decoration: BoxDecoration(
+                    color: iconColor,
+                    borderRadius: const BorderRadius.only(
+                      topRight: Radius.circular(8),
+                      bottomLeft: Radius.circular(8),
+                    ),
+                  ),
+                  child: Text(
+                    "-${product.reducRate}%",
+                    style: TextStyle(
+                      fontSize: 10,
+                      color: bannerTxtColor,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               ),
@@ -115,34 +137,37 @@ class BestProductCard extends ConsumerWidget {
             ),
           ),
           Padding(
-            padding: EdgeInsets.only(left: width * 0.015),
-            child: Text(
-              '${product.description}',
-              style: TextStyle(
-                decorationThickness:
-                    1, // Augmentez cette valeur pour un trait plus épais
-                decorationColor: reducTxtColor,
-                fontSize: width * 0.029,
-                color: reducTxtColor,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-          ),
-
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 8, vertical: 0),
+            padding: EdgeInsets.symmetric(horizontal: width * 0.065 , vertical: 0),
             child: Row(
               children: [
                 Text(
                   '${product.price} DZD',
                   style: TextStyle(
+                    decoration: TextDecoration.lineThrough,
+                    decorationThickness:
+                        1, // Augmentez cette valeur pour un trait plus épais
+                    decorationColor: reducTxtColor,
+                    fontSize: width * 0.029,
+                    color: reducTxtColor,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 8, vertical: 0),
+            child: Row(
+              children: [
+                Text(
+                  '${product.priceWithReduc} DZD',
+                  style: TextStyle(
                     fontSize: width * 0.035,
-                    color: priceTxtColor,
+                    color: iconColor,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
                 Spacer(),
-                Icon(Icons.timer, size: 11, color: iconColor),
+                Icon(Icons.access_time, size: 11, color: iconColor),
                 SizedBox(width: 1),
                 Text(
                   parseTime(product.delivDuration),
@@ -150,6 +175,7 @@ class BestProductCard extends ConsumerWidget {
                     fontSize: width * 0.024,
                     color: footerTxtColor,
                     fontWeight: FontWeight.bold,
+                    
                   ),
                 ),
               ],
