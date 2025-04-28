@@ -11,29 +11,29 @@ router.use(bodyParser.json());
 
 
 router.post('/create-coupon', authenticate, async (req, res) => {
-
   const client_id = req.user.id;
-
-  const { reducRateCoupon,
+  const {
+    reducRateCoupon,
     reducCodeCoupon,
-    isUsedCoup, } = req.body;
+    isUsedCoup
+  } = req.body;
 
-
-  if (!reducRateCoupon || !reducCodeCoupon || isUsedCoup === undefined) {
+  if (!reducRateCoupon || !reducCodeCoupon) {
     return res.status(400).json({
       success: false,
       message: "Le code et le taux de réduction sont requis"
     });
   }
 
-  const query = `
-    INSERT INTO Coupon (reducRateCoupon, reducCodeCoupon, isUsedCoup, idCustCoupon) 
-    VALUES (?, ?, ?, ?)
-  `;
-
   try {
+
+    const insertQuery = `
+      INSERT INTO Coupon (reducRateCoupon, reducCodeCoupon, isUsedCoup, idCustCoupon)
+      VALUES (?, ?, ?, ?)
+    `;
+
     db.query(
-      query,
+      insertQuery,
       [reducRateCoupon, reducCodeCoupon, 0, client_id],
       (err, results) => {
         if (err) {
@@ -45,11 +45,45 @@ router.post('/create-coupon', authenticate, async (req, res) => {
           });
         }
 
+        const couponId = results.insertId;
+        console.log("Coupon créé avec ID:", couponId);
 
-        return res.status(201).json({
-          success: true,
-          message: "Coupon créé avec succès",
-          couponId: results.insertId
+
+        const updatedCode = `${reducCodeCoupon}${couponId}`;
+
+        const updateQuery = `
+          UPDATE Coupon
+          SET reducCodeCoupon = ?
+          WHERE idCoupon = ?
+        `;
+
+        db.query(updateQuery, [updatedCode, couponId], (updateErr, updateResults) => {
+          if (updateErr) {
+            console.error("Erreur lors de la mise à jour du code de coupon:", updateErr);
+            return res.status(500).json({
+              success: false,
+              message: "Le coupon a été créé mais le code n'a pas pu être mis à jour",
+              error: updateErr.message
+            });
+          }
+
+
+
+
+          db.query("SELECT * FROM Coupon WHERE idCoupon = ?", [couponId], (verifyErr, verifyResults) => {
+            if (verifyErr) {
+              console.error("Erreur lors de la vérification:", verifyErr);
+            } else {
+              console.log("Données après mise à jour:", verifyResults);
+            }
+
+            return res.status(201).json({
+              success: true,
+              message: "Coupon créé avec succès",
+              couponId: couponId,
+              couponCode: updatedCode
+            });
+          });
         });
       }
     );
