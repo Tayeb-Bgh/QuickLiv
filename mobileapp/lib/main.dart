@@ -18,6 +18,7 @@ void main() async {
   Hive.registerAdapter(CustomerHiveObjectAdapter());
   Hive.registerAdapter(VehicleHiveObjectAdapter());
   Hive.registerAdapter(DelivererHiveObjectAdapter());
+
   await Hive.openBox<CustomerHiveObject>('customerBox');
   await Hive.openBox<DelivererHiveObject>('delivererBox');
   await Hive.openBox<VehicleHiveObject>('vehicleBox');

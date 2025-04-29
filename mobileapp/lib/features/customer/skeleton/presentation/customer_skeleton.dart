@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mobileapp/core/config/dark_mode_provider.dart';
+import 'package:mobileapp/features/customer/coupons_store/presentation/pages/Coupon_page.dart';
 import 'package:mobileapp/features/customer/restaurants/presentation/pages/restaurants_page.dart';
 import 'package:mobileapp/features/customer/skeleton/presentation/widgets/customer_custom_top_bar.dart';
 import 'package:mobileapp/features/customer/groceries/presentation/pages/groceries_page.dart';
@@ -32,7 +33,7 @@ class _CustomerSkeletonState extends ConsumerState<CustomerSkeleton> {
     RestaurantsPageTest(),
     GroceriesPageTest(),
     Container(color: kPrimaryWhite),
-    Container(color: kPrimaryWhite),
+    CouponPage()
   ];
 
   void _setCurrentIndex(int index) {
