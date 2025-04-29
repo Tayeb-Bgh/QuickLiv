@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mobileapp/core/config/dark_mode_provider.dart';
+import 'package:mobileapp/features/auth/presentation/providers/auth_provider.dart';
 import 'package:mobileapp/features/customer/coupons_store/presentation/pages/Coupon_page.dart';
 import 'package:mobileapp/features/customer/restaurants/presentation/pages/restaurants_page.dart';
+import 'package:mobileapp/features/customer/skeleton/presentation/widgets/auth_required_widget.dart';
 import 'package:mobileapp/features/customer/skeleton/presentation/widgets/customer_custom_top_bar.dart';
 import 'package:mobileapp/features/customer/groceries/presentation/pages/groceries_page.dart';
 import 'package:mobileapp/core/constants/constants.dart';
@@ -30,16 +32,66 @@ class _CustomerSkeletonState extends ConsumerState<CustomerSkeleton> {
 
   final List<Widget> _pages = [
     Container(color: kPrimaryBlack),
-    RestaurantsPageTest(),
-    GroceriesPageTest(),
-    Container(color: kPrimaryWhite),
-    CouponPage()
+    Container(color: kPrimaryBlack),
+    Container(color: kPrimaryBlack),
+    Container(color: kPrimaryBlack),
+    Container(color: kPrimaryBlack),
   ];
 
-  void _setCurrentIndex(int index) {
-    setState(() {
-      _currentIndex = index;
-    });
+  
+  void _setCurrentIndex(int index) async {
+    if (index == 0) {
+      setState(() {
+        _pages[0] = Container(color: kPrimaryBlack);
+        _currentIndex = index;
+      });
+    } else if (index == 1) {
+      setState(() {
+        _pages[1] = RestaurantsPageTest();
+        _currentIndex = index;
+      });
+    } else if (index == 2) {
+      setState(() {
+        _pages[2] = GroceriesPageTest();
+        _currentIndex = index;
+      });
+    } else if (index == 3) {
+      final secureStorage = ref.read(secureStorageProvider);
+      final token = await secureStorage.read(key: 'authToken');
+
+      if (token == null) {
+         setState(() {
+          _pages[3] = const AuthRequiredWidget();
+          _currentIndex = index;
+        });
+        
+        
+      } else {
+        setState(() {
+          _pages[3] = Container(color: kPrimaryBlack);
+          _currentIndex = index;
+        });
+        return;
+      }
+    } else if (index == 4) {
+      final secureStorage = ref.read(secureStorageProvider);
+      final token = await secureStorage.read(key: 'authToken');
+
+      if (token == null) {
+         setState(() {
+          _pages[4] = const AuthRequiredWidget();
+          _currentIndex = index;
+        });
+        
+        
+      } else {
+        setState(() {
+          _pages[4] = CouponPage();
+          _currentIndex = index;
+        });
+        return;
+      }
+    }
   }
 
   @override
