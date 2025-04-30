@@ -7,6 +7,8 @@ import 'package:mobileapp/core/hive_object/deliverer_hive_object.dart';
 import 'package:mobileapp/core/hive_object/vehicle_hive_object.dart';
 
 import 'package:mobileapp/features/customer/skeleton/presentation/customer_skeleton.dart';
+import 'package:mobileapp/features/gesProfil/DevCommercant/presentation/pages/be_trader_skeleton.dart';
+import 'package:mobileapp/features/gesProfil/DevLivreur/presentation/pages/be_deliverer_skeleton.dart';
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
@@ -16,7 +18,7 @@ void main() async{
   );
   await Hive.initFlutter();
   Hive.registerAdapter(CustomerHiveObjectAdapter());
-  Hive.registerAdapter(VehicleHiveObjectAdapter());
+  Hive.registerAdapter(VehicleHiveObjectAdapter()); 
   Hive.registerAdapter(DelivererHiveObjectAdapter());
 
 
@@ -30,7 +32,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: CustomerSkeleton(),
+      home:BeTraderSkeleton(),
     );
   }
 }
