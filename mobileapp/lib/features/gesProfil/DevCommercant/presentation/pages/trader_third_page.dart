@@ -376,6 +376,9 @@ class _DelivererThirdPageState extends ConsumerState<TraderThirdPage> {
     Color buttonColor,
     String? documentPath,
   ) {
+
+    bool isDocumentSelected = documentPath != null && documentPath.isNotEmpty;
+
     return Padding(
       padding: const EdgeInsets.only(bottom: 15),
       child: Column(
@@ -399,18 +402,24 @@ class _DelivererThirdPageState extends ConsumerState<TraderThirdPage> {
             ],
           ),
           SizedBox(
+            width: 100,
             height: 30,
             child: ElevatedButton(
               onPressed: () => _pickFile(field),
               style: ElevatedButton.styleFrom(
-                backgroundColor: buttonColor,
+                backgroundColor:
+                    isDocumentSelected
+                        ? const Color.fromARGB(255, 253, 77, 77)
+                        : buttonColor,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(5),
                 ),
                 padding: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
               ),
               child: AutoSizeText(
-                '+ Joindre',
+                isDocumentSelected
+                    ? 'Modifier'
+                    : '+ Joindre',
                 style: TextStyle(
                   fontSize: 13,
                   color: textColor,
@@ -424,7 +433,6 @@ class _DelivererThirdPageState extends ConsumerState<TraderThirdPage> {
     );
   }
 
-  // Méthode pour afficher l'image sélectionnée sous les boutons
   Widget _buildImagePreview(String label, String? imagePath) {
     final isDarkMode = ref.watch(darkModeProvider);
     final Color textColor = isDarkMode ? Colors.white : Colors.black;

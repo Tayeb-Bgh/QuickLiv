@@ -45,6 +45,20 @@ class _DelivererSecondPageState extends ConsumerState<DelivererSecondPage> {
     formData.updateField('type', _selectedValue ?? '');
   }
 
+  @override
+  void initState() {
+    super.initState();
+    final formData = ref.read(formDataProvider);
+    marqueController.text = formData['marque'] ?? '';
+    modelController.text = formData['model'] ?? '';
+    anneeController.text = formData['annee'] ?? '';
+    couleurController.text = formData['couleur'] ?? '';
+    matriculeController.text = formData['matricule'] ?? '';
+    chassisController.text = formData['numChassis'] ?? '';
+    assuranceController.text = formData['assurance'] ?? '';
+    _selectedValue = formData['type'];
+  }
+
   final Validatedeliverer validator = Validatedeliverer();
 
   String? _marqueError;

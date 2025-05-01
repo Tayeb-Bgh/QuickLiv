@@ -19,7 +19,6 @@ class TraderSecondPage extends ConsumerStatefulWidget {
 }
 
 class _DelivererSecondPageState extends ConsumerState<TraderSecondPage> {
-  String? _selectedValue;
   String? _type;
 
   final TextEditingController nomController = TextEditingController();
@@ -39,6 +38,18 @@ class _DelivererSecondPageState extends ConsumerState<TraderSecondPage> {
     formData.updateField('email', emailController.text);
     formData.updateField('numRegCommerce', numRegCommerceController.text);
     formData.updateField('type', _type ?? '');
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    final formData = ref.read(formDataProvider);
+    nomController.text = formData['nomCommerce'] ?? '';
+    adresseController.text = formData['adresseCommerce'] ?? '';
+    telController.text = formData['telephoneCommerce'] ?? '';
+    emailController.text = formData['email'] ?? '';
+    numRegCommerceController.text = formData['numRegCommerce'] ?? '';
+    _type = formData['type'];
   }
 
   String? _nomError;
@@ -292,7 +303,7 @@ class _DelivererSecondPageState extends ConsumerState<TraderSecondPage> {
                         setState(() {
                           _type = value;
                         });
-                        _updateFormData();
+                         _updateFormData();
                       },
                       context,
                       textColor,

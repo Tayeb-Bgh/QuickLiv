@@ -44,34 +44,33 @@ class _DelivererThirdPageState extends ConsumerState<DelivererThirdPage> {
     _carteGrise = formData['carteGrise'];
   }
 
-void _updateFormData() {
-  final formData = ref.read(formDataProvider.notifier);
+  void _updateFormData() {
+    final formData = ref.read(formDataProvider.notifier);
 
-  formData.updateField('photoIdentite', _photoIdentite ?? ''); 
-  formData.updateField('photoVehicule', _photoVehicule ?? '');
-  formData.updateField('permisConduire', _permisConduire ?? '');
-  formData.updateField('carteGrise', _carteGrise ?? '');
-}
-
-Future<void> _pickFile(String field) async {
-  String? filePath = await _filePickerUseCase.pickFile();
-
-  if (filePath != null) {
-    setState(() {
-      if (field == 'PhotoIdentite') {
-        _photoIdentite = filePath;
-      } else if (field == 'PhotoVehicule') {
-        _photoVehicule = filePath;
-      } else if (field == 'PermisConduire') {
-        _permisConduire = filePath;
-      } else if (field == 'CarteGrise') {
-        _carteGrise = filePath;
-      }
-      _updateFormData();
-    });
+    formData.updateField('photoIdentite', _photoIdentite ?? '');
+    formData.updateField('photoVehicule', _photoVehicule ?? '');
+    formData.updateField('permisConduire', _permisConduire ?? '');
+    formData.updateField('carteGrise', _carteGrise ?? '');
   }
-}
 
+  Future<void> _pickFile(String field) async {
+    String? filePath = await _filePickerUseCase.pickFile();
+
+    if (filePath != null) {
+      setState(() {
+        if (field == 'PhotoIdentite') {
+          _photoIdentite = filePath;
+        } else if (field == 'PhotoVehicule') {
+          _photoVehicule = filePath;
+        } else if (field == 'PermisConduire') {
+          _permisConduire = filePath;
+        } else if (field == 'CarteGrise') {
+          _carteGrise = filePath;
+        }
+        _updateFormData();
+      });
+    }
+  }
 
   bool _areDocumentsValid() {
     return _validator.validateDocuments(
@@ -364,6 +363,9 @@ Future<void> _pickFile(String field) async {
     Color buttonColor,
     String? documentPath,
   ) {
+
+    bool isDocumentSelected = documentPath != null && documentPath.isNotEmpty;
+
     return Padding(
       padding: const EdgeInsets.only(bottom: 15),
       child: Column(
@@ -387,18 +389,24 @@ Future<void> _pickFile(String field) async {
             ],
           ),
           SizedBox(
+            width: 100,
             height: 30,
             child: ElevatedButton(
               onPressed: () => _pickFile(field),
               style: ElevatedButton.styleFrom(
-                backgroundColor: buttonColor,
+                backgroundColor:
+                    isDocumentSelected
+                        ? const Color.fromARGB(255, 253, 77, 77)
+                        : buttonColor,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(5),
                 ),
                 padding: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
               ),
               child: AutoSizeText(
-                '+ Joindre',
+                isDocumentSelected
+                    ? 'Modifier'
+                    : '+ Joindre',
                 style: TextStyle(
                   fontSize: 13,
                   color: textColor,
