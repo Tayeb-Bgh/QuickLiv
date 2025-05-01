@@ -6,7 +6,7 @@ import 'package:mobileapp/core/hive_object/customer_hive_object.dart';
 import 'package:mobileapp/core/hive_object/deliverer_hive_object.dart';
 import 'package:mobileapp/core/hive_object/vehicle_hive_object.dart';
 import 'package:mobileapp/features/customer/skeleton/presentation/customer_skeleton.dart';
-import 'package:mobileapp/features/gesProfil/DevLivreur/presentation/pages/be_deliverer_skeleton.dart';
+import 'package:mobileapp/features/customer/gesProfil/DevLivreur/presentation/pages/be_deliverer_skeleton.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mobileapp/core/config/dark_mode_provider.dart';
 import 'package:mobileapp/core/constants/constants.dart';
 import 'package:mobileapp/features/auth/presentation/providers/auth_provider.dart';
+import 'package:mobileapp/features/customer/gesProfil/DevCommercant/presentation/pages/be_trader_skeleton.dart';
+import 'package:mobileapp/features/customer/gesProfil/DevLivreur/presentation/pages/be_deliverer_skeleton.dart';
 import 'package:mobileapp/features/customer/profile/presentation/widgets/log_out.dart';
 import 'package:mobileapp/features/customer/profile/presentation/widgets/profil_card.dart';
 import 'package:mobileapp/features/customer/profile/presentation/widgets/profile_top_bar.dart';
@@ -148,20 +150,33 @@ class _ProfilePopupState extends ConsumerState<ProfilePopup> {
               borderRadius: BorderRadius.circular(8),
             ),
 
-            child: Row(
-              spacing: width * 0.02,
-              children: [
-                SizedBox(width: width * 0.02),
-                Icon(icon, size: width * 0.06, color: iconColor),
-                Text(
-                  text,
-                  style: TextStyle(
-                    fontSize: width * 0.04,
-                    fontWeight: FontWeight.bold,
-                    color: textColor,
+            child: InkWell(
+              splashColor: kLightGreen,
+              onTap: () {
+                if (text == 'Devenir Livreur') {
+                  Navigator.push(context, MaterialPageRoute(builder:(context) => BeDelivererSkeleton()));
+                } else if (text == 'Devenier Partenaire') {
+                  Navigator.push(context, MaterialPageRoute(builder:(context) => BeTraderSkeleton()));
+                } else if (text == 'A propos de nous') {
+                  print('A propos de nous pressed');
+                }
+                
+              },
+              child: Row(
+                spacing: width * 0.02,
+                children: [
+                  SizedBox(width: width * 0.02),
+                  Icon(icon, size: width * 0.06, color: iconColor),
+                  Text(
+                    text,
+                    style: TextStyle(
+                      fontSize: width * 0.04,
+                      fontWeight: FontWeight.bold,
+                      color: textColor,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
