@@ -1,5 +1,6 @@
 const express = require('express');
 const db = require('../../../dbConnexion');
+const authenticate = require('../../auth/utils/verify_jwt');
 const router = express.Router();
 
 router.post('/createdeliverer', (req, res) => {
@@ -9,7 +10,6 @@ router.post('/createdeliverer', (req, res) => {
     photoIdent, photoVehic, permis, carteGrise
   } = req.body;
 
-  // Normalisation du sexe et du type de véhicule
   const normalizedSexe = sexe === "Homme" ? "M" : "F";
   const normalizedType = type === "Vehicule" ? "CAR" : "SCOOTER";
   console.log(`DEBUG: Normalized Type: ${normalizedType}`);
@@ -25,7 +25,6 @@ router.post('/createdeliverer', (req, res) => {
   const annee2 = annee + "-01-01";
   console.log(`DEBUG: Année utilisée: ${annee2}`);
 
-  // Affichage des valeurs qui vont être insérées dans la table Vehicle
   const vehicleValues = [
     matricule, numChassis, normalizedType, photoVehic, carteGrise, marque, model, couleur, annee2, assurance
   ];
@@ -68,6 +67,35 @@ router.post('/createdeliverer', (req, res) => {
       res.status(201).json({ message: 'Livreur créé avec succès', delivererId: delivererResult.insertId });
     });
   });
+});
+
+
+router.put('/update-client-submited', authenticate, async (req, res) => {
+  try {
+    const client_id = req.user.id;
+
+    const updateQuery = "UPDATE Customer SET isSubmittedDelivererCust = 1 WHERE idCust = ?";
+
+    db.query(updateQuery, [client_id], (err, result) => {
+      if (err) {
+        console.error('Erreur lors de la mise à jour:', err);
+        return res.status(500).json({
+          success: false,
+          message: 'Erreur interne du serveur',
+          error: err.message,
+        });
+      }
+
+      res.status(200).json({ success: true, message: 'Statut mis à jour avec succès' });
+    });
+  } catch (error) {
+    console.error('Erreur serveur:', error);
+    return res.status(500).json({
+      success: false,
+      message: 'Erreur interne du serveur',
+      error: error.message,
+    });
+  }
 });
 
 module.exports = router;

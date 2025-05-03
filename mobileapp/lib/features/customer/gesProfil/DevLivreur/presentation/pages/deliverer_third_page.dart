@@ -1,4 +1,5 @@
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mobileapp/features/customer/gesProfil/DevLivreur/business/entities/deliverer.dart';
@@ -10,6 +11,7 @@ import 'dart:io';
 
 import 'package:mobileapp/features/customer/gesProfil/DevLivreur/business/usercases/validate_deliverer_usecase.dart';
 import 'package:mobileapp/features/customer/gesProfil/DevLivreur/presentation/providers/form_data_provider.dart';
+import 'package:mobileapp/features/customer/gesProfil/DevLivreur/presentation/widgets/confirmation_dialog.dart';
 
 class DelivererThirdPage extends ConsumerStatefulWidget {
   const DelivererThirdPage({
@@ -79,6 +81,61 @@ class _DelivererThirdPageState extends ConsumerState<DelivererThirdPage> {
       permisConduire: _permisConduire,
       carteGrise: _carteGrise,
     );
+  }
+
+  void _onConfirm() async {
+    if (_areDocumentsValid()) {
+      final formData = ref.watch(formDataProvider);
+      final deliverer = Deliverer(
+        nom: formData['nom'] ?? '',
+        prenom: formData['prenom'] ?? '',
+        dateNais: formData['naissance'] ?? '',
+        adresse: formData['adresse'] ?? '',
+        telephone: formData['telephone'] ?? '',
+        email: formData['email'] ?? '',
+        numSecuriteSociale: formData['numSecuriteSociale'] ?? '',
+        numPermis: formData['numPermis'] ?? '',
+        sexe: formData['sexe'] ?? '',
+        marque: formData['marque'] ?? '',
+        model: formData['model'] ?? '',
+        annee: formData['annee'] ?? '',
+        couleur: formData['couleur'] ?? '',
+        matricule: formData['matricule'] ?? '',
+        numChassis: formData['numChassis'] ?? '',
+        assurance: formData['assurance'] ?? '',
+        type: formData['type'] ?? '',
+        photoIdent: _photoIdentite ?? '',
+        photoVehic: _photoVehicule ?? '',
+        permis: _permisConduire ?? '',
+        carteGrise: _carteGrise ?? '',
+      );
+
+      final usecase = SaveDelivererUsecase(
+        repository: DelivererRepositoryImpl(Dio(), ref),
+      );
+
+      try {
+        // Enregistrer le livreur
+        await usecase.execute(deliverer);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Livreur enregistré avec succès!')),
+        );
+
+        final delivererRepository = DelivererRepositoryImpl(Dio(), ref);
+        await delivererRepository.updateSubmitedClient();
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Statut client mis à jour avec succès!')),
+        );
+
+        widget.onNext();
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Erreur lors de l\'enregistrement')),
+        );
+        print('Erreur: $e');
+      }
+    }
   }
 
   @override
@@ -271,58 +328,16 @@ class _DelivererThirdPageState extends ConsumerState<DelivererThirdPage> {
                     SizedBox(
                       width: width * 0.4,
                       child: ElevatedButton(
-                        onPressed: () async {
+                        onPressed: () {
                           if (_areDocumentsValid()) {
-                            final formData = ref.watch(formDataProvider);
-                            final deliverer = Deliverer(
-                              nom: formData['nom'] ?? '',
-                              prenom: formData['prenom'] ?? '',
-                              dateNais: formData['naissance'] ?? '',
-                              adresse: formData['adresse'] ?? '',
-                              telephone: formData['telephone'] ?? '',
-                              email: formData['email'] ?? '',
-                              numSecuriteSociale:
-                                  formData['numSecuriteSociale'] ?? '',
-                              numPermis: formData['numPermis'] ?? '',
-                              sexe: formData['sexe'] ?? '',
-                              marque: formData['marque'] ?? '',
-                              model: formData['model'] ?? '',
-                              annee: formData['annee'] ?? '',
-                              couleur: formData['couleur'] ?? '',
-                              matricule: formData['matricule'] ?? '',
-                              numChassis: formData['numChassis'] ?? '',
-                              assurance: formData['assurance'] ?? '',
-                              type: formData['type'] ?? '',
-                              photoIdent: _photoIdentite ?? '',
-                              photoVehic: _photoVehicule ?? '',
-                              permis: _permisConduire ?? '',
-                              carteGrise: _carteGrise ?? '',
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return ConfirmationDialog(
+                                  onConfirm: _onConfirm,
+                                );
+                              },
                             );
-
-                            final usecase = SaveDelivererUsecase(
-                              repository: DelivererRepositoryImpl(),
-                            );
-
-                            try {
-                              await usecase.execute(deliverer);
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text(
-                                    'Livreur enregistré avec succès!',
-                                  ),
-                                ),
-                              );
-
-                              widget.onNext();
-                            } catch (e) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text(
-                                    'Erreur lors de l\'enregistrement',
-                                  ),
-                                ),
-                              );
-                            }
                           }
                         },
 
@@ -363,7 +378,6 @@ class _DelivererThirdPageState extends ConsumerState<DelivererThirdPage> {
     Color buttonColor,
     String? documentPath,
   ) {
-
     bool isDocumentSelected = documentPath != null && documentPath.isNotEmpty;
 
     return Padding(
@@ -404,9 +418,7 @@ class _DelivererThirdPageState extends ConsumerState<DelivererThirdPage> {
                 padding: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
               ),
               child: AutoSizeText(
-                isDocumentSelected
-                    ? 'Modifier'
-                    : '+ Joindre',
+                isDocumentSelected ? 'Modifier' : '+ Joindre',
                 style: TextStyle(
                   fontSize: 13,
                   color: textColor,
@@ -420,7 +432,6 @@ class _DelivererThirdPageState extends ConsumerState<DelivererThirdPage> {
     );
   }
 
-  // Méthode pour afficher l'image sélectionnée sous les boutons
   Widget _buildImagePreview(String label, String? imagePath) {
     final isDarkMode = ref.watch(darkModeProvider);
     final Color textColor = isDarkMode ? Colors.white : Colors.black;

@@ -1,4 +1,5 @@
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mobileapp/features/customer/gesProfil/DevCommercant/business/entities/trader.dart';
@@ -11,6 +12,7 @@ import 'package:mobileapp/core/config/dark_mode_provider.dart';
 import 'dart:io';
 
 import 'package:mobileapp/features/customer/gesProfil/DevCommercant/presentation/providers/from_data_provider.dart';
+import 'package:mobileapp/features/customer/gesProfil/DevCommercant/presentation/widgets/confirmation_dialog.dart';
 
 class TraderThirdPage extends ConsumerStatefulWidget {
   const TraderThirdPage({
@@ -49,13 +51,13 @@ class _DelivererThirdPageState extends ConsumerState<TraderThirdPage> {
   }
 
   void _updateFormData() {
-  final formData = ref.read(formDataProvider.notifier);
+    final formData = ref.read(formDataProvider.notifier);
 
-  formData.updateField('pieceIdentit', _pieceIdentit ?? ''); 
-  formData.updateField('regCommerce', _regCommerce ?? '');
-  formData.updateField('paieImpots', _paieImpots ?? '');
-  formData.updateField('autoSanitaire', _autoSanitaire ?? '');
-}
+    formData.updateField('pieceIdentit', _pieceIdentit ?? '');
+    formData.updateField('regCommerce', _regCommerce ?? '');
+    formData.updateField('paieImpots', _paieImpots ?? '');
+    formData.updateField('autoSanitaire', _autoSanitaire ?? '');
+  }
 
   Future<void> _pickFile(String field) async {
     String? filePath = await _filePickerUseCase.pickFile();
@@ -86,6 +88,57 @@ class _DelivererThirdPageState extends ConsumerState<TraderThirdPage> {
       paieImpots: _paieImpots,
       autoSanitaire: _autoSanitaire,
     );
+  }
+
+  void _onConfirm() async {
+    if (_areDocumentsValid()) {
+      final formData = ref.watch(formDataProvider);
+      final trader = Trader(
+        nom: formData['nom'] ?? '',
+        prenom: formData['prenom'] ?? '',
+        dateNais: formData['naissance'] ?? '',
+        adresse: formData['adresse'] ?? '',
+        telephone: formData['telephone'] ?? '',
+        numIdentite: formData['numIdentite'] ?? '',
+        sexe: formData['sexe'] ?? '',
+        nomCommerce: formData['nomCommerce'] ?? '',
+        adresseCommerce: formData['adresseCommerce'] ?? '',
+        telephoneCommerce: formData['telephoneCommerce'] ?? '',
+        email: formData['email'] ?? '',
+        numRegCommerce: formData['numRegCommerce'] ?? '',
+        type: formData['type'] ?? '',
+        pieceIdentit: _pieceIdentit ?? '',
+        regCommerce: _regCommerce ?? '',
+        paieImpots: _paieImpots ?? '',
+        autoSanitaire: _autoSanitaire ?? '',
+      );
+
+      final usecase = SaveTraderUsercase(
+        repository: TraderRepositoryImpl(Dio(), ref),
+      );
+
+      try {
+        // Enregistrer le livreur
+        await usecase.execute(trader);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Livreur enregistré avec succès!')),
+        );
+
+        final delivererRepository = TraderRepositoryImpl(Dio(), ref);
+        await delivererRepository.updateSubmitedClient();
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Statut client mis à jour avec succès!')),
+        );
+
+        widget.onNext();
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Erreur lors de l\'enregistrement')),
+        );
+        print('Erreur: $e');
+      }
+    }
   }
 
   @override
@@ -282,63 +335,18 @@ class _DelivererThirdPageState extends ConsumerState<TraderThirdPage> {
                     SizedBox(
                       width: width * 0.4,
                       child: ElevatedButton(
-                        onPressed: () async {
+                        onPressed: () {
                           if (_areDocumentsValid()) {
-                            final formData = ref.watch(formDataProvider);
-                            final trader = Trader(
-                              nom: formData['nom'] ?? '',
-                              prenom: formData['prenom'] ?? '',
-                              dateNais: formData['naissance'] ?? '',
-                              adresse: formData['adresse'] ?? '',
-                              telephone: formData['telephone'] ?? '',
-                              numIdentite: formData['numIdentite'] ?? '',
-                              sexe: formData['sexe'] ?? '',
-                              nomCommerce: formData['nomCommerce'] ?? '',
-                              adresseCommerce:
-                                  formData['adresseCommerce'] ?? '',
-                              telephoneCommerce:
-                                  formData['telephoneCommerce'] ?? '',
-                              email: formData['email'] ?? '',
-                              numRegCommerce: formData['numRegCommerce'] ?? '',
-                              type: formData['type'] ?? '',
-                              pieceIdentit: _pieceIdentit ?? '',
-                              regCommerce: _regCommerce ?? '',
-                              paieImpots: _paieImpots ?? '',
-                              autoSanitaire: _autoSanitaire ?? '',
-                            );
-                            final usecase = SaveTraderUsercase(
-                              repository: TraderRepositoryImpl(),
-                            );
-
-                            try {
-                              await usecase.execute(trader);
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text(
-                                    'Commerce enregistré avec succès!',
-                                  ),
-                                ),
-                              );
-                              widget.onNext();
-                            } catch (e) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text(
-                                    'Erreur lors de l\'enregistrement',
-                                  ),
-                                ),
-                              );
-                            }
-                          } else {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(
-                                  "Veuillez télécharger tous les documents.",
-                                ),
-                              ),
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return ConfirmationDialog(
+                                  onConfirm: _onConfirm,
+                                );
+                              },
                             );
                           }
-                        }, // Désactive le bouton si les documents ne sont pas validés
+                        },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.redAccent,
                           shape: RoundedRectangleBorder(
@@ -376,7 +384,6 @@ class _DelivererThirdPageState extends ConsumerState<TraderThirdPage> {
     Color buttonColor,
     String? documentPath,
   ) {
-
     bool isDocumentSelected = documentPath != null && documentPath.isNotEmpty;
 
     return Padding(
@@ -417,9 +424,7 @@ class _DelivererThirdPageState extends ConsumerState<TraderThirdPage> {
                 padding: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
               ),
               child: AutoSizeText(
-                isDocumentSelected
-                    ? 'Modifier'
-                    : '+ Joindre',
+                isDocumentSelected ? 'Modifier' : '+ Joindre',
                 style: TextStyle(
                   fontSize: 13,
                   color: textColor,
@@ -438,7 +443,7 @@ class _DelivererThirdPageState extends ConsumerState<TraderThirdPage> {
     final Color textColor = isDarkMode ? Colors.white : Colors.black;
 
     if (imagePath == null || imagePath.isEmpty) {
-      return SizedBox.shrink(); 
+      return SizedBox.shrink();
     }
 
     return Padding(

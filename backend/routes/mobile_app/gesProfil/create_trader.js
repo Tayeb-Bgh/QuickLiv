@@ -1,5 +1,6 @@
 const express = require('express');
 const db = require('../../../dbConnexion');
+const authenticate = require('../../auth/utils/verify_jwt');
 const router = express.Router();
 
 router.post('/createTrader', (req, res) => {
@@ -60,5 +61,34 @@ router.post('/createTrader', (req, res) => {
         res.status(201).json({ message: 'Entreprise créée avec succès', businessId: businessResult.insertId });
     });
 });
+
+router.put('/update-client', authenticate, async (req, res) => {
+    try {
+      const client_id = req.user.id;
+  
+      const updateQuery = "UPDATE Customer SET isSubmittedPartnerCust = 1 WHERE idCust = ?";
+  
+      db.query(updateQuery, [client_id], (err, result) => {
+        if (err) {
+          console.error('Erreur lors de la mise à jour:', err);
+          return res.status(500).json({
+            success: false,
+            message: 'Erreur interne du serveur',
+            error: err.message,
+          });
+        }
+  
+        res.status(200).json({ success: true, message: 'Statut mis à jour avec succès' });
+      });
+    } catch (error) {
+      console.error('Erreur serveur:', error);
+      return res.status(500).json({
+        success: false,
+        message: 'Erreur interne du serveur',
+        error: error.message,
+      });
+    }
+  });
+
 
 module.exports = router;

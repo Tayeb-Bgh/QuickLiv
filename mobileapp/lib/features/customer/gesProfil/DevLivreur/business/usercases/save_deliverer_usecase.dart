@@ -8,9 +8,9 @@ class SaveDelivererUsecase {
 
   Future<void> execute(Deliverer deliverer) async {
     try {
-      await repository.saveDeliverer(deliverer);
+      await repository.saveDeliverer(deliverer);  // Enregistre le livreur
+      await repository.updateSubmitedClient();   // Met à jour le statut du client
     } catch (e) {
-
       print('Erreur lors de la sauvegarde du livreur : $e');
       throw Exception('Échec de l\'enregistrement du livreur');
     }

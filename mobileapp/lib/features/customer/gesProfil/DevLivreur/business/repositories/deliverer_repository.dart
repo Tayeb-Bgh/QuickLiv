@@ -2,4 +2,5 @@ import 'package:mobileapp/features/customer/gesProfil/DevLivreur/business/entiti
 
 abstract class DelivererRepository {
   Future<void> saveDeliverer(Deliverer deliverer);
+  Future<void> updateSubmitedClient();
 }

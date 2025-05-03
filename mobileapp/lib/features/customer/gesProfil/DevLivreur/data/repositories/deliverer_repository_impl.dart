@@ -1,11 +1,19 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:mobileapp/features/auth/presentation/providers/auth_provider.dart';
 import 'package:mobileapp/features/customer/gesProfil/DevLivreur/business/entities/deliverer.dart';
 import 'package:mobileapp/features/customer/gesProfil/DevLivreur/business/repositories/deliverer_repository.dart';
 import 'package:mobileapp/features/customer/gesProfil/DevLivreur/data/models/deliverer_model.dart';
 import 'package:mobileapp/core/config/backend_api_config.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:dio/dio.dart';
 
 class DelivererRepositoryImpl implements DelivererRepository {
+  final Dio dio;
+  final WidgetRef ref;
+
+  DelivererRepositoryImpl(this.dio, this.ref);
+
   @override
   Future<void> saveDeliverer(Deliverer deliverer) async {
     final String url = await ApiConfig.getBaseUrl();
@@ -48,14 +56,35 @@ class DelivererRepositoryImpl implements DelivererRepository {
       if (response.statusCode == 201) {
         print('Deliverer créé avec succès');
       } else {
-        print(
-          'Erreur: ${response.statusCode} - ${response.body}',
-        );
+        print('Erreur: ${response.statusCode} - ${response.body}');
         throw Exception('Échec de l\'enregistrement du livreur');
       }
     } catch (e) {
       print('Erreur lors de l\'enregistrement du livreur : $e');
       throw Exception('Erreur lors de l\'enregistrement du livreur');
+    }
+  }
+
+  @override
+  Future<void> updateSubmitedClient() async {
+    try {
+      final url = await ApiConfig.getBaseUrl();
+      final token = await ref.read(jwtTokenProvider.future);
+
+      final response = await dio.put(
+        '$url/gesProfil/update-client-submited',
+        data: {'isSubmittedDelivererCust': 1},
+        options: Options(headers: {'Authorization': 'Bearer $token'}),
+      );
+
+      if (response.data['success'] != true) {
+        throw Exception(
+          response.data['message'] ?? 'Failed to update client status',
+        );
+      }
+    } catch (e) {
+      print('Error when updating client: $e');
+      throw Exception('Failed to update client status: $e');
     }
   }
 }
