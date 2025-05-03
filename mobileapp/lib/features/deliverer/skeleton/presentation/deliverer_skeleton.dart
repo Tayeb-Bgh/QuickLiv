@@ -1,6 +1,7 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:mobileapp/core/config/dark_mode_provider.dart';
+import 'package:mobileapp/features/deliverer/history/presentation/pages/deliveries_history.dart';
 import 'package:mobileapp/features/deliverer/home/presentation/pages/deliverer_home_page.dart';
 import 'package:mobileapp/features/deliverer/skeleton/presentation/widgets/deliverer_custom_top_bar.dart';
 import 'package:mobileapp/core/constants/constants.dart';
@@ -22,7 +23,7 @@ class _DelivererSkeletonState extends ConsumerState<DelivererSkeleton> {
   final List<Widget> _pages = [
     DelivererHomePage(),
     Container(color: kPrimaryWhite),
-    Container(color: kPrimaryWhite),
+    DeliveriesHistory(),
   ];
 
   void _setCurrentIndex(int index) {

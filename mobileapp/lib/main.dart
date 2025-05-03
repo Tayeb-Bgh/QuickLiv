@@ -7,7 +7,7 @@ import 'package:mobileapp/core/hive_object/deliverer_hive_object.dart';
 import 'package:mobileapp/core/hive_object/vehicle_hive_object.dart';
 import 'package:mobileapp/features/customer/coupons_store/Data/models/hive_model.dart';
 
-import 'package:mobileapp/features/customer/skeleton/presentation/customer_skeleton.dart';
+import 'package:mobileapp/features/deliverer/skeleton/presentation/deliverer_skeleton.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -40,7 +40,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
 
-      home: CustomerSkeleton(),
+      home: DelivererSkeleton(),
     );
   }
 }
