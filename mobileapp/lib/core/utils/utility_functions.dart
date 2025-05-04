@@ -51,7 +51,9 @@ double calculateDelivPrice(double kilometersDistance) {
   return kilometersDistance * 125;
 }
 
-double getPriceWithReduction(double price, double reduction) {
+double getPriceWithReduction(double price, double? reduction) {
+  if (reduction == null) return price;
+
   return price - price * reduction / 100;
 }
 
@@ -61,7 +63,6 @@ String capitalize(String text) {
   }
   return text[0].toUpperCase() + text.substring(1);
 }
-
 
 String generateRandomCode(List<String> predefinedCodes) {
   final random = Random();

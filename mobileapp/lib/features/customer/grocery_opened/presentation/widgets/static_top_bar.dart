@@ -20,7 +20,7 @@ class StaticTopBar extends ConsumerWidget {
     final width = MediaQuery.of(context).size.width;
     final additionalInformationsWidth = width * 0.3;
     final mainInformationsWidth = width * 0.5;
-    final topBarHeight = height * 0.2;
+    final topBarHeight = height * 0.22;
 
     return SliverToBoxAdapter(
       child: Stack(

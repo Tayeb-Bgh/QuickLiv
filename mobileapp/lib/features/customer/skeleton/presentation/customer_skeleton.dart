@@ -4,6 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mobileapp/core/config/dark_mode_provider.dart';
 import 'package:mobileapp/features/customer/coupons_store/presentation/pages/Coupon_page.dart';
+import 'package:mobileapp/features/customer/research/presentation/pages/seach_page.dart';
+import 'package:mobileapp/features/customer/research/presentation/providers/research_provider.dart';
 import 'package:mobileapp/features/customer/restaurants/presentation/pages/restaurants_page.dart';
 import 'package:mobileapp/features/customer/skeleton/presentation/widgets/customer_custom_top_bar.dart';
 import 'package:mobileapp/features/customer/groceries/presentation/pages/groceries_page.dart';
@@ -33,7 +35,7 @@ class _CustomerSkeletonState extends ConsumerState<CustomerSkeleton> {
     RestaurantsPageTest(),
     GroceriesPageTest(),
     Container(color: kPrimaryWhite),
-    CouponPage()
+    CouponPage(),
   ];
 
   void _setCurrentIndex(int index) {
@@ -49,6 +51,30 @@ class _CustomerSkeletonState extends ConsumerState<CustomerSkeleton> {
     final isDarkMode = ref.watch(darkModeProvider);
 
     return Scaffold(
+      floatingActionButton:
+          (_currentIndex == 1 || _currentIndex == 2)
+              ? FloatingActionButton(
+                onPressed: () {
+                  ref.read(selectedTypeProvider.notifier).state =
+                      _currentIndex == 1 ? "Restaurants" : "Courses";
+
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => SearchPage()),
+                  );
+                },
+                backgroundColor: kPrimaryRed,
+                child: const Icon(
+                  Icons.search,
+                  color: Colors.white, // Setting the icon color to white
+                ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(
+                    50,
+                  ), // Making the button circular
+                ),
+              )
+              : const SizedBox.shrink(),
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(statusBarHeight + height * 0.033),
         child: Container(
