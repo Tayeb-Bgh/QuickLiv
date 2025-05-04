@@ -53,7 +53,7 @@ class AuthService {
   Future<CustomerModel> getCustomerInfo({required String phoneNumber}) async {
     final url = await ApiConfig.getBaseUrl();
     final token = await ref.read(jwtTokenProvider.future);
-    
+
     try {
       final response = await dio.get(
         "$url/auth/customers/by-phone",

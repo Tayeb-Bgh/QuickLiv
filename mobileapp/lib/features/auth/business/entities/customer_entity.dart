@@ -12,17 +12,29 @@ class Customer {
   final int points;
   final bool isSubmittedDeliverer;
   final bool isSubmittedPartner;
-  
+
   final List<Cart> carts;
   final List<Business> favorites;
   final List<OrderHistory> ordersHistory;
   final List<Coupon> coupons;
 
-  Customer({required this.id, required this.firstName, required this.lastName, required this.phone, required this.registerDate, required this.points, required this.isSubmittedDeliverer, required this.isSubmittedPartner, required this.carts, required this.favorites, required this.ordersHistory, required this.coupons});
-  
+  Customer({
+    required this.id,
+    required this.firstName,
+    required this.lastName,
+    required this.phone,
+    required this.registerDate,
+    required this.points,
+    required this.isSubmittedDeliverer,
+    required this.isSubmittedPartner,
+    required this.carts,
+    required this.favorites,
+    required this.ordersHistory,
+    required this.coupons,
+  });
+
   @override
   String toString() {
     return 'Customer{id: $id, firstName: $firstName, lastName: $lastName, phone: $phone, registerDate: $registerDate, points: $points, isSubmittedDeliverer: $isSubmittedDeliverer, isSubmittedPartner: $isSubmittedPartner, carts: $carts, favorites: $favorites, ordersHistory: $ordersHistory, coupons: $coupons}';
   }
-  
 }
