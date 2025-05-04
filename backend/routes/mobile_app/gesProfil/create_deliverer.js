@@ -98,4 +98,31 @@ router.put('/update-client-submited', authenticate, async (req, res) => {
   }
 });
 
+
+router.get('/get-client-status', authenticate, async (req, res) => {
+  try {
+    const client_id = req.user.id; 
+    const query = "SELECT isSubmittedDelivererCust FROM Customer WHERE idCust = ?";
+
+    db.query(query, [client_id], (err, result) => {
+      if (err) {
+        console.error('Erreur lors de la récupération du statut du client:', err);
+        return res.status(500).json({ message: 'Erreur lors de la récupération du statut.' });
+      }
+
+      if (result.length > 0) {
+        const isSubmittedDelivererCust = result[0].isSubmittedDelivererCust;
+        res.status(200).json({ isSubmittedDelivererCust });
+      } else {
+        res.status(404).json({ message: 'Client non trouvé.' });
+      }
+    });
+  } catch (error) {
+    console.error('Erreur serveur:', error);
+    return res.status(500).json({ message: 'Erreur interne du serveur', error: error.message });
+  }
+});
+
+
+
 module.exports = router;

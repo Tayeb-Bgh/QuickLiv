@@ -1,14 +1,18 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mobileapp/core/config/backend_api_config.dart';
 import 'package:mobileapp/core/config/dark_mode_provider.dart';
 import 'package:mobileapp/core/constants/constants.dart';
 import 'package:mobileapp/features/auth/presentation/providers/auth_provider.dart';
 import 'package:mobileapp/features/customer/gesProfil/DevCommercant/presentation/pages/be_trader_skeleton.dart';
 import 'package:mobileapp/features/customer/gesProfil/DevLivreur/presentation/pages/be_deliverer_skeleton.dart';
 import 'package:mobileapp/features/customer/profile/presentation/widgets/log_out.dart';
+import 'package:mobileapp/features/customer/profile/presentation/widgets/message_diaalog.dart';
 import 'package:mobileapp/features/customer/profile/presentation/widgets/profil_card.dart';
 import 'package:mobileapp/features/customer/profile/presentation/widgets/profile_top_bar.dart';
 import 'package:light_dark_theme_toggle/light_dark_theme_toggle.dart';
+import 'package:http/http.dart' as http;
 
 class ProfilePopup extends ConsumerStatefulWidget {
   const ProfilePopup({super.key});
@@ -18,6 +22,66 @@ class ProfilePopup extends ConsumerStatefulWidget {
 }
 
 class _ProfilePopupState extends ConsumerState<ProfilePopup> {
+  Future<void> checkDelivererStatus() async {
+    final token = await ref.read(jwtTokenProvider.future);
+    final url = await ApiConfig.getBaseUrl();
+
+    try {
+      final response = await http.get(
+        Uri.parse('$url/gesProfil/get-client-status'),
+        headers: {'Authorization': 'Bearer $token'},
+      );
+
+      final responseData = jsonDecode(response.body);
+
+      if (responseData['isSubmittedDelivererCust'] == 1) {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return MessageDialog();
+          },
+        );
+      } else {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => BeDelivererSkeleton()),
+        );
+      }
+    } catch (e) {
+      print('Erreur lors de la récupération du statut : $e');
+    }
+  }
+
+  Future<void> checkDelivererStatus2() async {
+    final token = await ref.read(jwtTokenProvider.future);
+    final url = await ApiConfig.getBaseUrl();
+
+    try {
+      final response = await http.get(
+        Uri.parse('$url/gesProfil/get-client-partner-status'),
+        headers: {'Authorization': 'Bearer $token'},
+      );
+
+      final responseData = jsonDecode(response.body);
+
+      if (responseData['isSubmittedPartnerCust'] == 1) {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return MessageDialog();
+          },
+        );
+      } else {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => BeTraderSkeleton()),
+        );
+      }
+    } catch (e) {
+      print('Erreur lors de la récupération du statut : $e');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
@@ -25,7 +89,7 @@ class _ProfilePopupState extends ConsumerState<ProfilePopup> {
     final isDarkMode = ref.watch(darkModeProvider);
     final backgroumdColor = isDarkMode ? kPrimaryDark : kPrimaryWhite;
     final iconColor = isDarkMode ? kDarkGray : kSecondaryWhite;
-    final secureStorage = ref.read(secureStorageProvider);
+
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.only(
@@ -42,7 +106,6 @@ class _ProfilePopupState extends ConsumerState<ProfilePopup> {
                 size: Size(double.infinity, height * 0.38),
                 painter: ProfileTopBar(isDarkMode: isDarkMode),
               ),
-
               Positioned(
                 top: width * 0.17,
                 left: 20,
@@ -149,18 +212,16 @@ class _ProfilePopupState extends ConsumerState<ProfilePopup> {
               color: backgroundColor,
               borderRadius: BorderRadius.circular(8),
             ),
-
             child: InkWell(
               splashColor: kLightGreen,
               onTap: () {
                 if (text == 'Devenir Livreur') {
-                  Navigator.push(context, MaterialPageRoute(builder:(context) => BeDelivererSkeleton()));
+                  checkDelivererStatus(); // Appeler la fonction pour vérifier le statut
                 } else if (text == 'Devenier Partenaire') {
-                  Navigator.push(context, MaterialPageRoute(builder:(context) => BeTraderSkeleton()));
+                  checkDelivererStatus2();
                 } else if (text == 'A propos de nous') {
                   print('A propos de nous pressed');
                 }
-                
               },
               child: Row(
                 spacing: width * 0.02,
