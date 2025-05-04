@@ -1,13 +1,21 @@
 class Product {
-  final int id;
+  final int idProd;
+  final int idBusns;
   final String name;
-  final String price;
-  final String priceWithReduc;
+  final String imgUrl;
+  final double price;
+  final double? reducRate;
+  final bool unit;
+  final int? qttyStock;
 
   Product({
-    required this.id,
+    required this.idProd,
+    required this.idBusns,
     required this.name,
+    required this.imgUrl,
     required this.price,
-    required this.priceWithReduc,
+    required this.unit,
+    this.reducRate,
+    this.qttyStock,
   });
 }

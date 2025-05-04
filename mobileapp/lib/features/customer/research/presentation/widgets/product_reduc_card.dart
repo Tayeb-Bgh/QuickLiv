@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mobileapp/core/config/dark_mode_provider.dart';
 import 'package:mobileapp/core/constants/constants.dart';
+import 'package:mobileapp/core/utils/utility_functions.dart';
 import 'package:mobileapp/features/customer/research/business/entities/product_entity.dart';
 
-class ProductCard extends ConsumerWidget {
+class ProductReducCard extends ConsumerWidget {
   final Product product;
 
-  const ProductCard({super.key, required this.product});
+  const ProductReducCard({super.key, required this.product});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -18,13 +19,13 @@ class ProductCard extends ConsumerWidget {
 
     final Color footerBgColor = isDarkMode ? kSecondaryDark : kPrimaryWhite;
     final Color footerTitleColor = isDarkMode ? kSecondaryWhite : kPrimaryBlack;
-    final Color priceTxtColor = kPrimaryRed;
-    final Color iconColor = isDarkMode ? kSecondaryWhite : kPrimaryRed;
-    final Color buttonBgColor = isDarkMode ? kSecondaryDark : kSecondaryWhite;
+    final Color reducTxtColor = isDarkMode ? kLightGray : kDarkGray;
+    final Color bannerTxtColor = kPrimaryWhite;
+    final Color iconColor = kPrimaryRed;
 
     return Container(
       width: width * 0.3,
-      height: height * 0.32,
+      height: height * 0.36,
       decoration: BoxDecoration(
         color: footerBgColor,
         borderRadius: BorderRadius.circular(5),
@@ -49,7 +50,7 @@ class ProductCard extends ConsumerWidget {
                 ),
                 child: Image.network(
                   product.imgUrl,
-                  width: width * 0.34,
+                  width: width * 0.3,
                   height: height * 0.1,
                   fit: BoxFit.cover,
                 ),
@@ -62,11 +63,36 @@ class ProductCard extends ConsumerWidget {
                   child: Container(
                     padding: EdgeInsets.all(4),
                     decoration: BoxDecoration(
-                      color: buttonBgColor,
+                      color: Colors.white,
                       shape: BoxShape.circle,
                       border: Border.all(color: iconColor, width: 2),
                     ),
                     child: Icon(Icons.add, color: iconColor, size: 20),
+                  ),
+                ),
+              ),
+              Positioned(
+                top: 0,
+                right: 0,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 4,
+                    vertical: 3,
+                  ),
+                  decoration: BoxDecoration(
+                    color: iconColor,
+                    borderRadius: const BorderRadius.only(
+                      topRight: Radius.circular(5),
+                      bottomLeft: Radius.circular(5),
+                    ),
+                  ),
+                  child: Text(
+                    "-${product.reducRate}%",
+                    style: TextStyle(
+                      fontSize: 10,
+                      color: bannerTxtColor,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               ),
@@ -85,16 +111,29 @@ class ProductCard extends ConsumerWidget {
               overflow: TextOverflow.ellipsis,
             ),
           ),
-
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 8, vertical: 0),
-            child: Text(
-              '${product.price} DZD',
-              style: TextStyle(
-                fontSize: width * 0.035,
-                color: priceTxtColor,
-                fontWeight: FontWeight.bold,
-              ),
+          SizedBox(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Text(
+                  '${product.price} DZD',
+                  style: TextStyle(
+                    decoration: TextDecoration.lineThrough,
+                    decorationThickness: 1,
+                    decorationColor: reducTxtColor,
+                    fontSize: width * 0.02,
+                    color: reducTxtColor,
+                  ),
+                ),
+                Text(
+                  '${getPriceWithReduction(product.price, product.reducRate ?? 0)} DZD',
+                  style: TextStyle(
+                    fontSize: width * 0.035,
+                    color: iconColor,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
             ),
           ),
         ],

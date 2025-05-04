@@ -39,11 +39,10 @@ class MainInformations extends ConsumerWidget {
             ),
             margin: EdgeInsets.only(right: 5),
             child: ClipOval(
-              
               child: Image.network(
                 grocery!.imgUrl,
-                width: width * 0.38,
-                height: width * 0.38,
+                width: width * 0.35,
+                height: width * 0.35,
                 fit: BoxFit.cover,
               ),
             ),

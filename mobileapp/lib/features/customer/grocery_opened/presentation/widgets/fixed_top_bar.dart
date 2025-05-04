@@ -22,7 +22,6 @@ class FixedTopBar extends ConsumerWidget {
     final Color searchTxtColor = isDarkMode ? kSecondaryWhite : kPrimaryBlack;
     final Color searchHintTxtColor = isDarkMode ? kLightGray : kDarkGray;
     final search = ref.read(searchTextProvider);
-    final infoBarHeight = MediaQuery.of(context).padding.top;
 
     return SliverPersistentHeader(
       pinned: true,
@@ -34,7 +33,7 @@ class FixedTopBar extends ConsumerWidget {
             Container(
               color: appBarBgColor,
               padding: EdgeInsets.only(
-                top: height * 0.04,
+                top: height * 0.03,
                 bottom: height * 0.01,
               ),
               child: Center(
