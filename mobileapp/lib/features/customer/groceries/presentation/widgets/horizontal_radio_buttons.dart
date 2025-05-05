@@ -6,7 +6,7 @@ import 'package:mobileapp/features/customer/groceries/presentation/providers/gro
 
 class HorizontalRadioButtons extends ConsumerWidget {
   const HorizontalRadioButtons({super.key});
-
+                  
   void _showFilterDialog(BuildContext context, WidgetRef ref) {
     final selected = ref.watch(selectedCategoryProvider);
     final isDarkMode = ref.watch(darkModeProvider);
@@ -14,7 +14,7 @@ class HorizontalRadioButtons extends ConsumerWidget {
       {'label': 'Superétte', 'icon': Icons.store},
       {'label': "Supermarché", 'icon': Icons.store},
       {'label': 'Boucherie', 'icon': Icons.set_meal},
-      {'label': "Fruits & Légumes", 'icon': Icons.local_grocery_store},
+      {'lavbel': "Fruits & Légumes", 'icon': Icons.local_grocery_store},
       {'label': "Boulangerie", 'icon': Icons.breakfast_dining},
       {'label': "Poissonnerie", 'icon': Icons.set_meal},
       {'label': "Fromagerie", 'icon': Icons.lunch_dining},

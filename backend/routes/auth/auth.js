@@ -71,7 +71,7 @@ router.post('/verify-otp', (req, res) => {
             if (err) throw err;
 
             if (results.length > 0) {
-                const token = generateJWT(results[0]["id"], results[0]["role"], phoneNumber);
+                const token = generateJWT({id:results[0]["id"], role: results[0]["role"],phone: phoneNumber});
 
                 if (results[0]["role"] == "customer") {
                     return res.json({ success: true, role: "customer", token: token });

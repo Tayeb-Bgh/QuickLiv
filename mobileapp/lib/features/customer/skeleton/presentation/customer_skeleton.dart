@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mobileapp/core/config/dark_mode_provider.dart';
+import 'package:mobileapp/features/customer/favourites/presentation/pages/favourites_page.dart';
 import 'package:mobileapp/features/customer/skeleton/presentation/widgets/customer_custom_top_bar.dart';
 import 'package:mobileapp/features/customer/groceries/presentation/pages/groceries_page.dart';
 import 'package:mobileapp/core/constants/constants.dart';
@@ -29,8 +30,8 @@ class _CustomerSkeletonState extends ConsumerState<CustomerSkeleton> {
   final List<Widget> _pages = [
     Container(color: kPrimaryWhite),
     Container(color: kPrimaryWhite),
-    GroceriesPageTest(),
     Container(color: kPrimaryWhite),
+    FavouritesPageTest(),
     Container(color: kPrimaryWhite),
   ];
 
