@@ -1,22 +1,34 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mobileapp/features/deliverer/history/presentation/widgets/buttons_row.dart';
 import 'package:mobileapp/features/deliverer/history/presentation/widgets/history_commad.dart';
+import 'package:mobileapp/features/deliverer/history/presentation/providers/deliverer_history_provider.dart';
+import 'package:mobileapp/features/deliverer/history/presentation/providers/filter_provider.dart'; 
 
-class DeliveriesHistory extends StatefulWidget {
+class DeliveriesHistory extends ConsumerStatefulWidget {
   const DeliveriesHistory({super.key});
 
   @override
-  State<DeliveriesHistory> createState() => _DeliveriesHistoryState();
+  ConsumerState<DeliveriesHistory> createState() => _DeliveriesHistoryState();
 }
 
-class _DeliveriesHistoryState extends State<DeliveriesHistory> {
-  final int _selectedSegment = 0;
+class _DeliveriesHistoryState extends ConsumerState<DeliveriesHistory> {
+  @override
+  void initState() {
+    super.initState();
+
+    Future.microtask(() {
+      ref.read(completeOrdersProvider.notifier).fetchCompleteOrders();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
-
+    final completeOrdersState = ref.watch(completeOrdersProvider);
+    final filteredOrders = ref.watch(
+      filteredOrdersProvider,
+    );
     return Padding(
       padding: const EdgeInsets.all(16),
       child: Column(
@@ -25,113 +37,62 @@ class _DeliveriesHistoryState extends State<DeliveriesHistory> {
           HorizontalRadioButtons(),
           SizedBox(
             height: height * 0.67,
-            child: ListView(
-              shrinkWrap: true,
-              padding: const EdgeInsets.only(top: 10),
-              physics: BouncingScrollPhysics(),
-              children: [
-                HistoryCommand(
-                  date: '2024-10-25',
-                  heure: '14:30',
-                  imgUrl: 'https://example.com/image.jpg',
-                  items: [
-                    OrderItem2(name: 'Item 2', quantity: 1, price: 20.0),
-                    OrderItem2(name: 'Item 2', quantity: 1, price: 20.0),
-                    OrderItem2(name: 'Item 2', quantity: 1, price: 20.0),
-                  ],
-                  locaComm: 'Paris',
-                  location: 'test in blabla',
-                  orderNumber: '123456',
-                  status: 'Livrée',
-                  paymentMethod: 'en ligne',
-                  personName: 'BENKEROU Dussan',
-                  price: '20.00',
-                  restaurantName: 'Restaurant Name',
-                  totalPrice: '15000.00',
-                ),
-                HistoryCommand(
-                  date: '2024-10-25',
-                  heure: '14:30',
-                  imgUrl: 'https://example.com/image.jpg',
-                  items: [
-                    OrderItem2(name: 'Item 2', quantity: 1, price: 20.0),
-                    OrderItem2(name: 'Item 2', quantity: 1, price: 20.0),
-                    OrderItem2(name: 'Item 2', quantity: 1, price: 20.0),
-                  ],
-                  locaComm: 'Paris',
-                  location: 'test in blabla',
-                  orderNumber: '123456',
-                  status: 'Livrée',
-                  paymentMethod: 'en ligne',
-                  personName: 'BENKEROU Dussan',
-                  price: '20.00',
-                  restaurantName: 'Restaurant Name',
-                  totalPrice: '15000.00',
-                ),
-                HistoryCommand(
-                  date: '2024-10-25',
-                  heure: '14:30',
-                  imgUrl: 'https://example.com/image.jpg',
-                  items: [
-                    OrderItem2(name: 'Item 2', quantity: 1, price: 20.0),
-                    OrderItem2(name: 'Item 2', quantity: 1, price: 20.0),
-                    OrderItem2(name: 'Item 2', quantity: 1, price: 20.0),
-                  ],
-                  locaComm: 'Paris',
-                  location: 'test in blabla',
-                  orderNumber: '123456',
-                  status: 'Livrée',
-                  paymentMethod: 'en ligne',
-                  personName: 'BENKEROU Dussan',
-                  price: '20.00',
-                  restaurantName: 'Restaurant Name',
-                  totalPrice: '15000.00',
-                ),
-                HistoryCommand(
-                  date: '2024-10-25',
-                  heure: '14:30',
-                  imgUrl: 'https://example.com/image.jpg',
-                  items: [
-                    OrderItem2(name: 'Item 2', quantity: 1, price: 20.0),
-                    OrderItem2(name: 'Item 2', quantity: 1, price: 20.0),
-                    OrderItem2(name: 'Item 2', quantity: 1, price: 20.0),
-                  ],
-                  locaComm: 'Paris',
-                  location: 'test in blabla',
-                  orderNumber: '123456',
-                  status: 'Livrée',
-                  paymentMethod: 'en ligne',
-                  personName: 'BENKEROU Dussan',
-                  price: '20.00',
-                  restaurantName: 'Restaurant Name',
-                  totalPrice: '15000.00',
-                ),
-                HistoryCommand(
-                  date: '2024-10-25',
-                  heure: '14:30',
-                  imgUrl: 'https://example.com/image.jpg',
-                  items: [
-                    OrderItem2(name: 'Item 2', quantity: 1, price: 20.0),
-                    OrderItem2(name: 'Item 2', quantity: 1, price: 20.0),
-                    OrderItem2(name: 'Item 2', quantity: 1, price: 20.0),
-                  ],
-                  locaComm: 'Paris',
-                  location: 'test in blabla',
-                  orderNumber: '123456',
-                  status: 'Livrée',
-                  paymentMethod: 'en ligne',
-                  personName: 'BENKEROU Dussan',
-                  price: '20.00',
-                  restaurantName: 'Restaurant Name',
-                  totalPrice: '15000.00',
-                ),
-              ],
-            ),
+            child:
+                completeOrdersState.isLoading
+                    ? const Center(child: CircularProgressIndicator())
+                    : completeOrdersState.errorMessage != null
+                    ? Center(
+                      child: Text(
+                        completeOrdersState.errorMessage!,
+                        style: const TextStyle(color: Colors.red),
+                      ),
+                    )
+                    : filteredOrders
+                        .isEmpty 
+                    ? const Center(child: Text('Aucune commande trouvée'))
+                    : ListView.builder(
+                      shrinkWrap: true,
+                      padding: const EdgeInsets.only(top: 10),
+                      physics: const BouncingScrollPhysics(),
+                      itemCount: filteredOrders.length,
+                      itemBuilder: (context, index) {
+                        final order = filteredOrders[index];
+                        return HistoryCommand(
+                          orderNumber: order.order.idOrd,
+                          imgUrl: order.business.imageUrl,
+                          items:
+                              order.products
+                                  .map(
+                                    (product) => OrderItem2(
+                                      name: product.name,
+                                      quantity: product.quantity,
+                                      unite: product.unite,
+                                    ),
+                                  )
+                                  .toList(),
+                          restaurantName: order.business.name,
+                          status: order.order.cancelComment,
+
+                          date:
+                              '${order.order.createdAt.day}-${order.order.createdAt.month}-${order.order.createdAt.year}',
+                          personName:
+                              '${order.customer.firstName} ${order.customer.lastName}',
+                          locaComm: order.business.address,
+                          price:
+                              '${order.order.deliveryPrice.toStringAsFixed(2)} DA',
+                          totalPrice:
+                              '${order.totalAmount.toStringAsFixed(2)} DA',
+                          paymentMethod: order.order.transactionNumber,
+
+                          heure:
+                              '${order.order.createdAt.hour}:${order.order.createdAt.minute.toString().padLeft(2, '0')}',
+                          location: order.business.address,
+                        );
+                      },
+                    ),
           ),
         ],
       ),
     );
   }
-
-  /// This now uses the _selectedSegment to highlight the correct one dynamically
 }

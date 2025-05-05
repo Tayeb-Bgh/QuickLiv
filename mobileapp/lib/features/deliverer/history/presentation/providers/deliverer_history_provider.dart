@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mobileapp/features/auth/presentation/providers/auth_provider.dart';
 import 'package:mobileapp/features/deliverer/history/data/repositories/order_repositorie_impl.dart';
 import 'package:mobileapp/features/deliverer/history/business/entities/order_entitie.dart';
 import 'package:mobileapp/features/deliverer/history/data/service/order_service.dart';
@@ -21,9 +22,8 @@ final selectedFilterProvider = StateProvider<String?>((ref) => 'Toutes');
 
 // Provider pour le RemoteDataSource
 final remoteDataSourceProvider = Provider<RemoteDataSource>((ref) {
-  const baseUrl = 'http://192.168.43.52:3000/api/deliverer';
-
-  return RemoteDataSource(baseUrl);
+final dio = ref.watch(dioProvider);
+  return RemoteDataSource(dio,ref);
 });
 // Provider pour le repository
 final orderRepositoryProvider = Provider<OrderRepositoryImpl>((ref) {

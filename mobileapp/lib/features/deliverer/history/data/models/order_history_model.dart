@@ -80,18 +80,24 @@ class BusinessModel {
 class ProductSummaryModel {
   final String nameProd;
   final int qttyProdCart;
+  final int unitProd;
 
-  ProductSummaryModel({required this.nameProd, required this.qttyProdCart});
+  ProductSummaryModel({
+    required this.unitProd,
+    required this.nameProd,
+    required this.qttyProdCart,
+  });
 
   factory ProductSummaryModel.fromJson(Map<String, dynamic> json) {
     return ProductSummaryModel(
       nameProd: json['nameProd'],
       qttyProdCart: json['qttyProdCart'],
+      unitProd: json['unitProd'],
     );
   }
 
   Product toEntity() {
-    return Product(name: nameProd, quantity: qttyProdCart);
+    return Product(name: nameProd, quantity: qttyProdCart, unite: unitProd);
   }
 }
 

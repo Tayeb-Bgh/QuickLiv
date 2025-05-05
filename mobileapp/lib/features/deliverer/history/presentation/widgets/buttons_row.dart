@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mobileapp/core/config/dark_mode_provider.dart';
 import 'package:mobileapp/core/constants/constants.dart';
-import 'package:mobileapp/features/deliverer/history/presentation/providers/deliverer_history_provider.dart';
+import 'package:mobileapp/features/deliverer/history/presentation/providers/filter_provider.dart'; // Changement ici
 
 class HorizontalRadioButtons extends ConsumerWidget {
   const HorizontalRadioButtons({super.key});
@@ -9,8 +10,16 @@ class HorizontalRadioButtons extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final selected = ref.watch(selectedFilterProvider);
-    final double screenWidth = MediaQuery.of(context).size.width;
     final double screenHeight = MediaQuery.of(context).size.height;
+    final isDarkMode = ref.watch(darkModeProvider);
+
+    final backgroundColor = isDarkMode ? kPrimaryDark : Colors.white;
+    final textColor = isDarkMode ? kPrimaryWhite : Colors.black;
+    final shadowColor =
+        isDarkMode
+            ? Colors.black.withOpacity(0.5)
+            : Colors.black.withOpacity(0.25);
+    final borderColor = isDarkMode ? kPrimaryWhite : kPrimaryBlack;
 
     final categories = [
       {'label': 'Toutes'},
@@ -31,9 +40,10 @@ class HorizontalRadioButtons extends ConsumerWidget {
 
           return GestureDetector(
             onTap: () {
-              final selected = isSelected ? null : category['label'] as String;
-              ref.read(selectedFilterProvider.notifier).state = selected;
-              print("[DEBUUUUUUUUG] $selected");
+              if (!isSelected) {
+                ref.read(selectedFilterProvider.notifier).state =
+                    category['label'] as String;
+              }
             },
             child: AnimatedContainer(
               duration: const Duration(milliseconds: 200),

@@ -9,6 +9,7 @@ const restaurantsRouter = require("./routes/mobile_app/restaurants/restaurants")
 const restaurantOpenedRouter = require("./routes/mobile_app/restaurant_opened/restaurant_opened")
 const delivererHomeRouter = require("./routes/mobile_app/deliverer/deliverer_home")
 const groceryOpenedRouter = require("./routes/mobile_app/grocery_opened/grocery_opened")
+const delivererHistoryRouter = require("./routes/mobile_app/deleverer_history/deleverer_history")
 
 
 const app = express();
@@ -18,15 +19,16 @@ const serverPort = process.env.PORT || 3000;
 
 
 
-app.use("/api/example",exampleRouter);
-app.use("/api/ai",iaImplementRouter);
-app.use("/api/auth",authRouter)
-app.use("/api/groceries",groceriesRouter);
-app.use("/api/restaurants",restaurantsRouter);
-app.use("/api/restaurant-opened",restaurantOpenedRouter);
-app.use("/api/deliverer",delivererHomeRouter)
-app.use("/api/grocery-opened",groceryOpenedRouter);
+app.use("/api/example", exampleRouter);
+app.use("/api/ai", iaImplementRouter);
+app.use("/api/auth", authRouter)
+app.use("/api/groceries", groceriesRouter);
+app.use("/api/restaurants", restaurantsRouter);
+app.use("/api/restaurant-opened", restaurantOpenedRouter);
+app.use("/api/deliverer", delivererHomeRouter)
+app.use("/api/grocery-opened", groceryOpenedRouter);
 app.use("/api/coupon", couponRouter);
+app.use("/api/deliverer", delivererHistoryRouter)
 
 
 

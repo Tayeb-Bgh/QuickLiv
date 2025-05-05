@@ -1,17 +1,21 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:mobileapp/core/config/dark_mode_provider.dart';
+import 'package:mobileapp/core/constants/constants.dart';
+import 'package:mobileapp/core/utils/utility_functions.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class OrderItem2 {
   final String name;
-  final double price;
   final int quantity;
+  final int unite;
 
-  OrderItem2({required this.name, required this.price, required this.quantity});
+  OrderItem2({required this.unite, required this.name, required this.quantity});
 }
 
-class HistoryCommand extends StatefulWidget {
-  final String orderNumber;
+class HistoryCommand extends ConsumerStatefulWidget {
+  final int orderNumber;
   final String imgUrl;
   final List<OrderItem2> items;
   final String restaurantName;
@@ -21,7 +25,7 @@ class HistoryCommand extends StatefulWidget {
   final String locaComm;
   final String price;
   final String totalPrice;
-  final String paymentMethod;
+  final int paymentMethod;
   final String heure;
   final String location;
   const HistoryCommand({
@@ -40,17 +44,26 @@ class HistoryCommand extends StatefulWidget {
     required this.heure,
     required this.location,
   });
-
   @override
-  State<HistoryCommand> createState() => _OrderDialogState();
+  ConsumerState<HistoryCommand> createState() => _OrderDialogState();
 }
 
-class _OrderDialogState extends State<HistoryCommand> {
+class _OrderDialogState extends ConsumerState<HistoryCommand> {
   bool _expanded = false;
 
   @override
   Widget build(BuildContext context) {
     final dialogWidth = MediaQuery.of(context).size.width * 0.9;
+    final isDarkMode = ref.watch(darkModeProvider);
+
+    // Définissez les couleurs dynamiquement
+    final backgroundColor = isDarkMode ? kPrimaryDark : Colors.white;
+    final textColor = isDarkMode ? kPrimaryWhite : Colors.black;
+    final shadowColor =
+        isDarkMode
+            ? Colors.black.withOpacity(0.5)
+            : Colors.black.withOpacity(0.25);
+    final borderColor = isDarkMode ? kPrimaryWhite : kPrimaryBlack;
     return Padding(
       padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
       child: Container(
@@ -61,9 +74,9 @@ class _OrderDialogState extends State<HistoryCommand> {
           boxShadow: [
             BoxShadow(
               // ignore: deprecated_member_use
-              color: Colors.black.withOpacity(0.3),
-              blurRadius: 7,
-              offset: Offset(0, 2),
+              color: Colors.black.withOpacity(0.25),
+              blurRadius: 4,
+              offset: Offset(0, 4),
             ),
           ],
         ),
@@ -82,7 +95,7 @@ class _OrderDialogState extends State<HistoryCommand> {
                       'CMD N° - ${widget.orderNumber}',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        fontSize: 25,
+                        fontSize: 20,
                       ),
                       maxLines: 1,
                       minFontSize: 5,
@@ -95,26 +108,41 @@ class _OrderDialogState extends State<HistoryCommand> {
                     height: dialogWidth * 0.1,
                     width: dialogWidth * 0.28,
                     decoration: BoxDecoration(
-                      color: Color(0xFF47CF5B).withOpacity(0.28),
+                      color:
+                          widget.status == ''
+                              ? kSecondaryGreen.withOpacity(0.28)
+                              : kPrimaryRed.withOpacity(0.17),
                       borderRadius: BorderRadius.circular(30),
-                      border: Border.all(width: 2, color: Color(0xFF34EB4F)),
+                      border: Border.all(
+                        width: 2,
+                        color:
+                            widget.status == '' ? kPrimaryGreen : kPrimaryRed,
+                      ),
                     ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        Icon(Icons.check, color: Color(0xFF34EB4F), size: 20),
+                        Icon(
+                          widget.status == '' ? Icons.check : Icons.close,
+                          color:
+                              widget.status == '' ? kPrimaryGreen : kPrimaryRed,
+                          size: 20,
+                        ),
                         SizedBox(
                           width: dialogWidth * 0.15,
                           child: AutoSizeText(
-                            widget.status,
+                            widget.status == '' ? "Livrée" : "Annulée",
                             style: TextStyle(
-                              color: Color(0xFF34EB4F),
+                              color:
+                                  widget.status == ''
+                                      ? kPrimaryGreen
+                                      : kPrimaryRed,
                               fontSize: 15,
                               fontWeight: FontWeight.bold,
                             ),
                             maxLines: 1,
                             minFontSize: 5,
-                            maxFontSize: 20,
+                            maxFontSize: 25,
                           ),
                         ),
                       ],
@@ -133,10 +161,10 @@ class _OrderDialogState extends State<HistoryCommand> {
                     width: dialogWidth * 0.4,
                     child: Row(
                       children: [
-                        Icon(
-                          Icons.calendar_today,
-                          color: Color(0xFF000000),
-                          size: 16,
+                        SvgPicture.asset(
+                          'assets/images/Calandar.svg',
+                          height: 16,
+                          width: 16,
                         ),
                         SizedBox(width: 2),
                         Padding(
@@ -173,8 +201,8 @@ class _OrderDialogState extends State<HistoryCommand> {
                               widget.personName,
                               style: TextStyle(
                                 color: Color(0xFF000000),
-                                fontSize: 12,
-                                fontWeight: FontWeight.w700,
+                                fontSize: 14,
+                                fontWeight: FontWeight.w400,
                               ),
                               minFontSize: 5,
                               maxLines: 2,
@@ -209,7 +237,7 @@ class _OrderDialogState extends State<HistoryCommand> {
                               widget.heure,
                               style: TextStyle(
                                 color: Color(0xFF000000),
-                                fontSize: 12,
+                                fontSize: 14,
                                 fontWeight: FontWeight.w400,
                               ),
                               maxLines: 1,
@@ -241,7 +269,7 @@ class _OrderDialogState extends State<HistoryCommand> {
                               style: TextStyle(
                                 color: Color(0xFF000000),
                                 fontSize: 12,
-                                fontWeight: FontWeight.w700,
+                                fontWeight: FontWeight.w400,
                               ),
                               maxLines: 2,
                               minFontSize: 5,
@@ -256,118 +284,121 @@ class _OrderDialogState extends State<HistoryCommand> {
               ),
             ),
             Container(
-              color: Color(0xFFEEEEEE),
+              decoration: BoxDecoration(
+                color: kLightGrayWhite,
+                borderRadius:
+                    !_expanded
+                        ? BorderRadius.only(
+                          bottomLeft: Radius.circular(10),
+                          bottomRight: Radius.circular(10),
+                        )
+                        : BorderRadius.zero,
+              ),
               child: Padding(
                 padding: const EdgeInsets.symmetric(
                   horizontal: 16,
                   vertical: 10,
                 ),
                 child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     CircleAvatar(
-                      radius: 22.5,
-                      child: Image.network(widget.imgUrl, fit: BoxFit.contain),
+                      radius: 25,
+                      backgroundImage: NetworkImage(widget.imgUrl),
+                      backgroundColor: Colors.transparent,
                     ),
-
+                    const SizedBox(width: 10),
                     Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.only(left: 10),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Expanded(
-                                  child: AutoSizeText(
-                                    widget.restaurantName,
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 20,
-                                    ),
-                                    maxLines: 1,
-                                    minFontSize: 5,
-                                    maxFontSize: 30,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                ),
-
-                                AutoSizeText(
-                                  widget.price,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Expanded(
+                                child: AutoSizeText(
+                                  widget.restaurantName,
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 20,
-                                    color: Color(0xFFE13838),
                                   ),
                                   maxLines: 1,
-                                  minFontSize: 10,
+                                  minFontSize: 5,
+                                  maxFontSize: 30,
+                                  overflow: TextOverflow.ellipsis,
                                 ),
-                              ],
-                            ),
-
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Expanded(
-                                  child: Row(
-                                    children: [
-                                      SvgPicture.asset(
-                                        '../assets/images/Location.svg',
-                                        width: 17,
-                                        height: 17,
-                                        colorFilter: ColorFilter.mode(
-                                          Color(0xFF686868),
-                                          BlendMode.srcIn,
-                                        ),
-                                      ),
-                                      SizedBox(width: 3),
-                                      Expanded(
-                                        child: AutoSizeText(
-                                          widget.locaComm,
-                                          style: TextStyle(
-                                            color: Color(0xFF686868),
-                                            fontSize: 12,
-                                          ),
-                                          maxLines: 1,
-                                          minFontSize: 10,
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
+                              ),
+                              const SizedBox(width: 10),
+                              AutoSizeText(
+                                widget.price,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 20,
+                                  color: kPrimaryRed,
                                 ),
-
-                                Visibility(
-                                  visible: !_expanded,
-                                  child: GestureDetector(
-                                    onTap:
-                                        () => setState(() => _expanded = true),
-                                    child: Icon(
-                                      Icons.keyboard_arrow_down,
-
-                                      color: Color(0xFFE13838),
-                                      size: 27,
+                                maxLines: 1,
+                                minFontSize: 10,
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 5),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Expanded(
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Icon(
+                                      Icons.location_on,
+                                      size: 17,
+                                      color: kMediumGray,
                                     ),
+                                    const SizedBox(width: 3),
+                                    Expanded(
+                                      child: AutoSizeText(
+                                        widget.locaComm,
+                                        style: TextStyle(
+                                          color: kMediumGray,
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w400,
+                                        ),
+                                        maxLines: 1,
+                                        minFontSize: 10,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              const SizedBox(width: 10),
+                              Visibility(
+                                visible: !_expanded,
+                                child: GestureDetector(
+                                  onTap: () => setState(() => _expanded = true),
+                                  child: Icon(
+                                    Icons.keyboard_arrow_down,
+                                    color: kPrimaryRed,
+                                    size: 27,
                                   ),
                                 ),
-                              ],
-                            ),
-                          ],
-                        ),
+                              ),
+                            ],
+                          ),
+                        ],
                       ),
                     ),
                   ],
                 ),
               ),
             ),
-
             if (_expanded)
               Container(
                 decoration: BoxDecoration(
-                  color: Color(0xFFEEEEEE),
-
+                  color: kLightGrayWhite,
                   borderRadius: BorderRadius.only(
                     bottomRight: Radius.circular(10),
                     bottomLeft: Radius.circular(10),
@@ -381,9 +412,9 @@ class _OrderDialogState extends State<HistoryCommand> {
                       children: [
                         Container(
                           height: dialogWidth * 0.4,
-                          width: dialogWidth * 0.65,
+                          width: dialogWidth * 0.68,
                           decoration: BoxDecoration(
-                            color: Colors.white,
+                            color: kPrimaryWhite,
                             borderRadius: BorderRadius.circular(10),
                           ),
                           child: Container(
@@ -406,7 +437,7 @@ class _OrderDialogState extends State<HistoryCommand> {
                         Column(
                           children: [
                             const SizedBox(height: 12),
-                            // Total price row
+                            // Ligne pour "Total payé"
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
@@ -423,7 +454,7 @@ class _OrderDialogState extends State<HistoryCommand> {
                                   style: const TextStyle(
                                     fontWeight: FontWeight.w400,
                                     fontSize: 15,
-                                    color: Color(0xFFE13838),
+                                    color: kPrimaryRed,
                                   ),
                                   minFontSize: 10,
                                 ),
@@ -433,25 +464,47 @@ class _OrderDialogState extends State<HistoryCommand> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text(
+                                AutoSizeText(
                                   'Moyen de paiement',
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                     fontSize: 15,
                                     fontWeight: FontWeight.bold,
                                   ),
+                                  minFontSize: 1,
+                                  maxFontSize: 40,
                                 ),
-                                Row(
-                                  children: [
-                                    const Icon(Icons.money, size: 14),
-                                    const SizedBox(width: 4),
-                                    Text(
-                                      widget.paymentMethod,
-                                      style: const TextStyle(
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.bold,
-                                      ),
+                                Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 8,
+                                    vertical: 4,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: Colors.transparent,
+                                    borderRadius: BorderRadius.circular(20),
+                                    border: Border.all(
+                                      color: Colors.black,
+                                      width: 1,
                                     ),
-                                  ],
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      SvgPicture.asset(
+                                        'assets/images/money.svg',
+                                        height: 17,
+                                        width: 17,
+                                      ),
+                                      const SizedBox(width: 4),
+                                      Text(
+                                        widget.paymentMethod == 0
+                                            ? "Espèces"
+                                            : "Carte",
+                                        style: const TextStyle(
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ],
                             ),
@@ -463,7 +516,7 @@ class _OrderDialogState extends State<HistoryCommand> {
                             onTap: () => setState(() => _expanded = false),
                             child: Icon(
                               Icons.keyboard_arrow_up,
-                              color: Color(0xFFE13838),
+                              color: kPrimaryRed,
                               size: 27,
                             ),
                           ),
@@ -485,16 +538,20 @@ class _OrderDialogState extends State<HistoryCommand> {
       child: Row(
         children: [
           SizedBox(
-            width: 30,
+            width: 50,
             child: Text(
-              'x${item.quantity}',
-              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+              item.unite == 1
+                  ? '${gramsToKg(item.quantity)} kg'
+                  : 'x${item.quantity}',
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+              textAlign: TextAlign.center,
             ),
           ),
+          const SizedBox(width: 5),
           Expanded(
             child: AutoSizeText(
               item.name,
-              style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
+              style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700),
               maxLines: 1,
               minFontSize: 5,
             ),

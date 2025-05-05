@@ -75,3 +75,8 @@ double calculateProgress(int currentPoints) {
 int remainingPointsForMilestone(int currentPoints) {
   return (1000 - currentPoints).clamp(0, 1000);
 }
+
+dynamic gramsToKg(int quantity) {
+  double result = quantity / 1000;
+  return result % 1 == 0 ? result.toInt() : result;
+}

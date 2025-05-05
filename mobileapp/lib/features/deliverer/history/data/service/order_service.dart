@@ -1,59 +1,65 @@
-import 'dart:convert';
-import 'package:http/http.dart' as http;
+
+import 'package:dio/dio.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mobileapp/core/config/backend_api_config.dart';
+import 'package:mobileapp/features/auth/presentation/providers/auth_provider.dart';
 import '../models/order_history_model.dart';
 
 class RemoteDataSource {
-  final String baseUrl;
+  final Dio dio;
+  final Ref ref;
 
-  RemoteDataSource(this.baseUrl);
+  RemoteDataSource(this.dio, this.ref);
 
   Future<List<CompleteOrderModel>> fetchCompleteOrders() async {
     try {
-      print('Fetching orders from $baseUrl/orders');
-      final orderResponse = await http.get(Uri.parse('$baseUrl/orders'));
+      final url = await ApiConfig.getBaseUrl();
+      final token = await ref.read(jwtTokenProvider.future);
+
+      final orderResponse = await dio.get('$url/deliverer/orders',
+          options: Options(headers: {'Authorization': 'Bearer $token'}));
       if (orderResponse.statusCode != 200) {
-        print(
-          'Error: Failed to fetch orders. Status code: ${orderResponse.statusCode}',
-        );
         throw Exception('Error while fetching the orders');
       }
 
-      final ordersData = json.decode(orderResponse.body)['data'] as List;
+      final ordersData = orderResponse.data['data'] as List;
 
       List<CompleteOrderModel> completeOrders = [];
       for (var orderData in ordersData) {
         final int idOrd = orderData['idOrd'];
 
-        final customerResponse = await http.get(
-          Uri.parse('$baseUrl/customer/$idOrd'),
+        final customerResponse = await dio.get(
+          '$url/deliverer/customer/$idOrd',
+          options: Options(headers: {'Authorization': 'Bearer $token'}),
         );
         if (customerResponse.statusCode != 200) {
           throw Exception('Error while fetching the customer');
         }
-        final customerData = json.decode(customerResponse.body)['data'];
+        final customerData = customerResponse.data['data'];
 
         if (customerData == null || !customerData.containsKey('idBusnsCart')) {
-          print('Error: Customer data is invalid or missing idBusnsCart');
           throw Exception('Customer data is invalid or missing idBusnsCart');
         }
 
         final businessId = customerData['idBusnsCart'];
 
-        final businessResponse = await http.get(
-          Uri.parse('$baseUrl/business/$businessId'),
+        final businessResponse = await dio.get(
+          '$url/deliverer/business/$businessId',
+          options: Options(headers: {'Authorization': 'Bearer $token'}),
         );
         if (businessResponse.statusCode != 200) {
           throw Exception('Error while fetching the business');
         }
-        final businessData = json.decode(businessResponse.body)['data'];
+        final businessData = businessResponse.data['data'];
 
-        final productsResponse = await http.get(
-          Uri.parse('$baseUrl/products/$idOrd'),
+        final productsResponse = await dio.get(
+          '$url/deliverer/products/$idOrd',
+          options: Options(headers: {'Authorization': 'Bearer $token'}),
         );
         if (productsResponse.statusCode != 200) {
           throw Exception('Error while fetching the products');
         }
-        final productsData = json.decode(productsResponse.body)['data'];
+        final productsData = productsResponse.data['data'];
 
         completeOrders.add(
           CompleteOrderModel(

@@ -11,7 +11,7 @@ class Order {
     required this.transactionNumber,
     required this.createdAt,
     required this.cancelComment,
-    required this.idOrd
+    required this.idOrd,
   });
 }
 
@@ -33,8 +33,9 @@ class Business {
 class Product {
   final String name;
   final int quantity;
+  final int unite;
 
-  Product({required this.name, required this.quantity});
+  Product({required this.name, required this.quantity, required this.unite});
 }
 
 class CompleteOrder {
@@ -42,7 +43,7 @@ class CompleteOrder {
   final Customer customer;
   final Business business;
   final List<Product> products;
-  final double totalAmount; 
+  final double totalAmount;
 
   CompleteOrder({
     required this.order,
