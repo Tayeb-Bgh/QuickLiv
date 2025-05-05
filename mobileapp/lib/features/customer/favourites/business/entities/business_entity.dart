@@ -3,12 +3,12 @@ class Business{
   final String name;
   final String desc;
   final String type;
-
   final bool liked;
-  final DateTime deliveryTime;
+  final int deliveryTime;
   final double deliveryPrice;
   final double rating;
   final bool open;
+  final String? imgUrlBusns;
 
   Business({
     required this.id,
@@ -20,13 +20,6 @@ class Business{
     required this.deliveryPrice,
     required this.rating,
     required this.open,
+    required this.imgUrlBusns,
   });
-
-  static double calculDeliveryPrice(double distance) {
-    return 0;
-  }
-
-  static DateTime calculDeliveryTime(DateTime orderTime, double distance) {
-    return DateTime.now();
-  }
 }

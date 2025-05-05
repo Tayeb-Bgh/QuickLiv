@@ -9,6 +9,7 @@ import 'package:mobileapp/features/customer/research/presentation/pages/seach_pa
 import 'package:mobileapp/features/customer/research/presentation/providers/research_provider.dart';
 import 'package:mobileapp/features/customer/restaurants/presentation/pages/restaurants_page.dart';
 import 'package:mobileapp/features/customer/skeleton/presentation/widgets/auth_required_widget.dart';
+import 'package:mobileapp/features/customer/favourites/presentation/pages/favourites_page.dart';
 import 'package:mobileapp/features/customer/skeleton/presentation/widgets/customer_custom_top_bar.dart';
 import 'package:mobileapp/features/customer/groceries/presentation/pages/groceries_page.dart';
 import 'package:mobileapp/core/constants/constants.dart';
@@ -40,7 +41,6 @@ class _CustomerSkeletonState extends ConsumerState<CustomerSkeleton> {
     Container(color: kPrimaryBlack),
   ];
 
-  
   void _setCurrentIndex(int index) async {
     if (index == 0) {
       setState(() {
@@ -62,30 +62,36 @@ class _CustomerSkeletonState extends ConsumerState<CustomerSkeleton> {
       final token = await secureStorage.read(key: 'authToken');
 
       if (token == null) {
-         setState(() {
+        setState(() {
           _pages[3] = const AuthRequiredWidget();
           _currentIndex = index;
         });
-        
-        
       } else {
-        setState(() {
-          _pages[3] = Container(color: kPrimaryBlack);
-          _currentIndex = index;
-        });
-        return;
+        final secureStorage = ref.read(secureStorageProvider);
+        final token = await secureStorage.read(key: 'authToken');
+
+        if (token == null) {
+          setState(() {
+            _pages[3] = const AuthRequiredWidget();
+            _currentIndex = index;
+          });
+        } else {
+          setState(() {
+            _pages[3] = FavouritesPageTest();
+            _currentIndex = index;
+          });
+          return;
+        }
       }
     } else if (index == 4) {
       final secureStorage = ref.read(secureStorageProvider);
       final token = await secureStorage.read(key: 'authToken');
 
       if (token == null) {
-         setState(() {
+        setState(() {
           _pages[4] = const AuthRequiredWidget();
           _currentIndex = index;
         });
-        
-        
       } else {
         setState(() {
           _pages[4] = CouponPage();

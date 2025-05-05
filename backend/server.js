@@ -11,6 +11,8 @@ const couponRouter = require("./routes/mobile_app/coupon/coupon")
 const researchRouter = require("./routes/mobile_app/research/research")
 const delivererRouter = require("./routes/mobile_app/gesProfil/create_deliverer")
 const TraderRouter = require("./routes/mobile_app/gesProfil/create_trader")
+const favouritesRouter = require("./routes/mobile_app/favourites/favourites")
+
 
 const app = express();
 app.use(cors());
@@ -31,6 +33,8 @@ app.use("/api/coupon", couponRouter);
 app.use("/api/research", researchRouter);
 app.use("/api/gesProfil", delivererRouter); 
 app.use("/api/gesProfil", TraderRouter);
+app.use("/api/favourites",favouritesRouter);
+
 
 
 app.listen(serverPort,() => {
