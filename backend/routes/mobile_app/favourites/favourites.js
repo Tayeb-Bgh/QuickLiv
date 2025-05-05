@@ -39,9 +39,9 @@ router.get("/filter/:typeBusns", authenticate, (req, res) => {
 router.post("/:idBusnsFav", authenticate, (req, res) => {
   const idCustFav = req.user.id;
   const { idBusnsFav } = req.params;
-  const query = 'INSERT INTO Favourite (idCustFav, idBusnsFav) VALUES (?, ?)';
+  const query = 'INSERT INTO Favourite ( idBusnsFav,idCustFav) VALUES (?, ?)';
 
-  db.query(query, [idCustFav, idBusnsFav], (err, results) => {
+  db.query(query, [ idBusnsFav,idCustFav], (err, results) => {
     if (err) {
       console.error("[SQL ERROR]", err);
       return res.status(500).json({ error: "Database error" });

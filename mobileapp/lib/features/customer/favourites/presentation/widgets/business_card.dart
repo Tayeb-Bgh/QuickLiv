@@ -20,12 +20,8 @@ class BusinessCard extends ConsumerWidget {
     final coverHeight = height * 0.216;
 
     final isDarkMode = ref.watch(darkModeProvider);
-    final favIdsAsync = ref.watch(userFavouritesProvider);
-    final isLiked = favIdsAsync.when(
-      data: (ids) => ids.contains(grocery.id),
-      loading: () => false,
-      error: (_, __) => false,
-    );
+    // final favIdsAsync = ref.watch(userFavouritesProvider);
+    final isLiked = ref.watch(favouriteProvider).contains(grocery.id);
 
     final Color likeBtnColor = isDarkMode ? kSecondaryDark : kSecondaryWhite;
     final Color footerBgColor = isDarkMode ? kSecondaryDark : kPrimaryWhite;
@@ -201,7 +197,7 @@ class BusinessCard extends ConsumerWidget {
                           fontSize: width * 0.033,
                           color: footerTextColor,
                         ),
-                        maxLines: 2,
+                        maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mobileapp/core/config/dark_mode_provider.dart';
 import 'package:mobileapp/core/constants/constants.dart';
+import 'package:mobileapp/features/customer/favourites/presentation/providers/favourites_provider.dart';
 import 'package:mobileapp/features/customer/groceries/business/entities/grocery_entity.dart';
 import 'package:mobileapp/core/utils/utility_functions.dart';
 import 'package:mobileapp/features/customer/grocery_opened/presentation/pages/grocery_opened_page.dart';
@@ -12,8 +13,14 @@ import 'package:mobileapp/features/customer/restaurants/presentation/providers/r
 class GroceryCard extends ConsumerWidget {
   final bool isFull;
   final Grocery grocery;
+  final VoidCallback? onRemove;
 
-  const GroceryCard({super.key, required this.grocery, required this.isFull});
+  const GroceryCard({
+    super.key,
+    required this.grocery,
+    required this.isFull,
+    this.onRemove,
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -21,6 +28,21 @@ class GroceryCard extends ConsumerWidget {
     final width = MediaQuery.of(context).size.width;
     final coverHeight = isFull ? height * 0.216 : height * 0.131;
     final bool isDarkMode = ref.watch(darkModeProvider);
+
+    final favIds = ref.watch(favouriteProvider);
+
+    ref.listen(userFavouritesProvider, (previous, next) {
+      final ids = next.asData?.value;
+      if (ids != null) {
+        final currentFavs = ref.read(favouriteProvider);
+        ref.read(favouriteProvider.notifier).state = {
+          ...currentFavs,
+          ...ids.toSet(),
+        };
+      }
+    });
+
+    final isLiked = favIds.contains(grocery.id);
 
     final Color likeBtnColor = isDarkMode ? kSecondaryDark : kSecondaryWhite;
     final Color footerBgColor = isDarkMode ? kSecondaryDark : kPrimaryWhite;
@@ -61,26 +83,36 @@ class GroceryCard extends ConsumerWidget {
                     fit: BoxFit.cover,
                   ),
                   Positioned(
-                    top: 5,
-                    right: 5,
-                    child: GestureDetector(
-                      onTap:
-                          () => {print("${grocery.name} ajouté à favoris !")},
-                      child: Container(
-                        height: isFull ? 43 : 36,
-                        width: isFull ? 43 : 36,
-                        padding: EdgeInsets.all(3),
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-
-                          color: likeBtnColor,
-                        ),
-                        child: Icon(
-                          grocery.liked
-                              ? Icons.favorite
-                              : Icons.favorite_border,
-                          color: grocery.liked ? kPrimaryRed : kLightGray,
-                          size: isFull ? 33 : 28,
+                    top: 8,
+                    right: 8,
+                    child: Container(
+                      height: isFull ? 43 : 36,
+                      width: isFull ? 43 : 36,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: likeBtnColor,
+                      ),
+                      child: Center(
+                        child: IconButton(
+                          icon: Icon(
+                            isLiked ? Icons.favorite : Icons.favorite_border,
+                            color: isLiked ? kPrimaryRed : kMediumGray,
+                            size: 22,
+                          ),
+                          onPressed: () {
+                            if (isLiked) {
+                              ref
+                                  .read(favouriteProvider.notifier)
+                                  .removeFavourite(grocery.id);
+                              if (onRemove != null) onRemove!();
+                            } else {
+                              ref
+                                  .read(favouriteProvider.notifier)
+                                  .addFavourite(grocery.id);
+                            }
+                          },
+                          padding: EdgeInsets.zero,
+                          constraints: BoxConstraints(),
                         ),
                       ),
                     ),
@@ -88,7 +120,6 @@ class GroceryCard extends ConsumerWidget {
                 ],
               ),
             ),
-
             Container(
               height: isFull ? height * 0.11 : height * 0.099,
               decoration: BoxDecoration(
@@ -135,10 +166,8 @@ class GroceryCard extends ConsumerWidget {
                     ),
                     SizedBox(height: height * 0.0039),
                     Row(
-                      spacing: isFull ? width * 0.028 : width * 0.019,
                       children: [
                         Row(
-                          spacing: width * 0.01,
                           children: [
                             Icon(
                               Icons.delivery_dining,
@@ -155,17 +184,14 @@ class GroceryCard extends ConsumerWidget {
                             ),
                           ],
                         ),
-                        const SizedBox(width: 2),
-
+                        const SizedBox(width: 8),
                         Row(
-                          spacing: width * 0.01,
                           children: [
                             Icon(
                               Icons.access_time,
                               size: isFull ? width * 0.06 : width * 0.038,
                               color: iconColor,
                             ),
-
                             Text(
                               parseTime(grocery.delivTime),
                               style: TextStyle(
@@ -176,17 +202,14 @@ class GroceryCard extends ConsumerWidget {
                             ),
                           ],
                         ),
-                        const SizedBox(width: 2),
-
+                        const SizedBox(width: 8),
                         Row(
-                          spacing: width * 0.01,
                           children: [
                             Icon(
                               Icons.star,
                               size: isFull ? width * 0.06 : width * 0.038,
                               color: iconColor,
                             ),
-
                             Text(
                               grocery.rating.toString(),
                               style: TextStyle(

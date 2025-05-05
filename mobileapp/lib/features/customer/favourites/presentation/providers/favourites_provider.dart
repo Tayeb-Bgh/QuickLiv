@@ -48,7 +48,6 @@ final selectedTypeProvider = StateProvider<String?>((ref) => null);
 
 final prov = FutureProvider.family<List<Business>, String?>((ref, type) async {
   final LatLng? currentPos = await ref.watch(locationProvider.future);
-  print(type);
   if (currentPos == null) return [];
 
   final String currentWilaya = await ref.watch(
@@ -66,41 +65,53 @@ final prov = FutureProvider.family<List<Business>, String?>((ref, type) async {
   }
 });
 
-
-
 final favouritesListProvider = FutureProvider<List<Business>>((ref) async {
   return await ref.watch(prov(null).future);
 });
 
-final favouritesByTypeListProvider = FutureProvider<List<Business>>((ref) async {
+final favouritesByTypeListProvider = FutureProvider<List<Business>>((
+  ref,
+) async {
   final type = ref.watch(selectedTypeProvider);
   return await ref.watch(prov(type).future);
 });
 
+final favouriteProvider = StateNotifierProvider<FavouriteNotifier, Set<int>>(
+  (ref) => FavouriteNotifier(
+    addFavourites: ref.watch(addFavouritesProvider),
+    removeFavourites: ref.watch(removeFavouritesProvider),
+      service: ref.watch(favouritesServiceProvider), 
+  ),
+);
+
 class FavouriteNotifier extends StateNotifier<Set<int>> {
   final AddFavourites _addFavourites;
   final RemoveFavourite _removeFavourites;
+    final FavouritesService _service;
 
   FavouriteNotifier({
     required AddFavourites addFavourites,
     required RemoveFavourite removeFavourites,
+      required FavouritesService service,
   }) : _addFavourites = addFavourites,
        _removeFavourites = removeFavourites,
+        _service = service,
        super({});
+   Future<void> initialize() async {
+    final favourites = await _service.fetchCustomerFavourites();
+    state = favourites.map((b) => b.idBusns).toSet();
+  }
 
-  // Ajouter un favori
   Future<void> addFavourite(int businessId) async {
     state = {...state, businessId};
     await _addFavourites.call(businessId);
   }
 
-  // Retirer un favori
   Future<void> removeFavourite(int businessId) async {
     state = {...state}..remove(businessId);
     await _removeFavourites.call(businessId);
   }
 
-  // Vérifier si un business est favori
   bool isLiked(int businessId) {
     return state.contains(businessId);
   }
@@ -108,14 +119,9 @@ class FavouriteNotifier extends StateNotifier<Set<int>> {
 
 final userFavouritesProvider = FutureProvider<List<int>>((ref) async {
   final service = ref.watch(favouritesServiceProvider);
-  final favourites =
-      await service.fetchCustomerFavourites(); // liste de Business
-  return favourites.map((b) => b.idBusns).toList(); // Liste des IDs favoris
+  final favourites = await service.fetchCustomerFavourites();
+  return favourites.map((b) => b.idBusns).toList();
 });
-
-final favouriteProvider = StateNotifierProvider<FavouriteNotifier, Set<int>>(
-  (ref) => FavouriteNotifier(
-    addFavourites: ref.watch(addFavouritesProvider),
-    removeFavourites: ref.watch(removeFavouritesProvider),
-  ),
-);
+final initFavouritesProvider = FutureProvider<void>((ref) async {
+  await ref.read(favouriteProvider.notifier).initialize();
+});

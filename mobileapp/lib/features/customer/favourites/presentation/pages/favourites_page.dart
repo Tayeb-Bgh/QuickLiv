@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mobileapp/core/config/dark_mode_provider.dart';
-import 'package:mobileapp/features/customer/favourites/business/entities/business_entity.dart';
 import 'package:mobileapp/features/customer/favourites/presentation/providers/favourites_provider.dart';
 import 'package:mobileapp/features/customer/favourites/presentation/widgets/horizontal_radio_buttons.dart';
 import 'package:mobileapp/core/constants/constants.dart';
@@ -22,25 +21,30 @@ class _favouritesPageTestState extends ConsumerState<FavouritesPageTest> {
   @override
   Widget build(BuildContext context) {
     final selectedType = ref.watch(selectedTypeProvider);
-    final asyncFavouritesList = ref.watch(prov(selectedType));
-    final asyncFavouritesListByType = ref.watch(prov(selectedType));
+    final asyncFavouritesList = ref.watch(prov(selectedType)); 
     final isDarkMode = ref.watch(darkModeProvider);
     final bgColor = isDarkMode ? kPrimaryDark : kSecondaryWhite;
     final tc = isDarkMode ? kSecondaryWhite : kPrimaryDark;
+
+    // Écouter les changements dans le favouriteProvider directement dans le build
+    ref.listen(favouriteProvider, (previous, next) {
+      if (next != previous) {
+        //ref.invalidate(favouritesListProvider); // Rafraîchit la liste
+        ref.invalidate(prov(ref.read(selectedTypeProvider)));
+        ref.invalidate(prov(null)); 
+      }
+    });
 
     return ColoredBox(
       color: bgColor,
       child: CustomScrollView(
         slivers: [
           SliverToBoxAdapter(child: SizedBox(height: 10)),
-
           SliverPersistentHeader(
             pinned: true,
             delegate: _StickyRadioButtonsDelegate(isDarkMode: isDarkMode),
           ),
-
           SliverToBoxAdapter(child: SizedBox(height: 8)),
-          //SliverToBoxAdapter(child: VerticalMarketList(businesses: asyncFavouritesList, onRefresh: _refresh,))
           asyncFavouritesList.when(
             data: (list) {
               if (list.isEmpty) {
@@ -68,14 +72,12 @@ class _favouritesPageTestState extends ConsumerState<FavouritesPageTest> {
                 );
               }
             },
-            loading:
-                () => const SliverFillRemaining(
-                  child: Center(child: CircularProgressIndicator()),
-                ),
-            error:
-                (err, stack) => SliverFillRemaining(
-                  child: Center(child: Text('Erreur : $err')),
-                ),
+            loading: () => const SliverFillRemaining(
+              child: Center(child: CircularProgressIndicator()),
+            ),
+            error: (err, stack) => SliverFillRemaining(
+              child: Center(child: Text('Erreur : $err')),
+            ),
           ),
         ],
       ),

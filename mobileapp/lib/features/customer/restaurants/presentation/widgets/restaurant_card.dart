@@ -4,16 +4,19 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mobileapp/core/config/dark_mode_provider.dart';
 import 'package:mobileapp/core/constants/constants.dart';
 import 'package:mobileapp/core/utils/utility_functions.dart';
+import 'package:mobileapp/features/customer/favourites/presentation/providers/favourites_provider.dart';
 import 'package:mobileapp/features/customer/restaurants/business/entities/restaurant_entity.dart';
 
 class RestaurantCard extends ConsumerWidget {
   final bool isFull;
   final Restaurant restaurant;
+  final VoidCallback? onRemove;
 
   const RestaurantCard({
     super.key,
     required this.restaurant,
     required this.isFull,
+    this.onRemove,
   });
 
   @override
@@ -28,6 +31,21 @@ class RestaurantCard extends ConsumerWidget {
     final Color footerTitleColor = isDarkMode ? kSecondaryWhite : kPrimaryBlack;
     final Color footerTextColor = isDarkMode ? kLightGray : kMediumGray;
     final Color iconColor = kPrimaryRed;
+
+    final favIds = ref.watch(favouriteProvider);
+
+    ref.listen(userFavouritesProvider, (previous, next) {
+      final ids = next.asData?.value;
+      if (ids != null) {
+        final currentFavs = ref.read(favouriteProvider);
+        ref.read(favouriteProvider.notifier).state = {
+          ...currentFavs,
+          ...ids.toSet(),
+        };
+      }
+    });
+
+    final isLiked = favIds.contains(restaurant.id);
 
     return SizedBox(
       height: isFull ? height * 0.33 : height * 0.31,
@@ -49,26 +67,36 @@ class RestaurantCard extends ConsumerWidget {
                   fit: BoxFit.cover,
                 ),
                 Positioned(
-                  top: 5,
-                  right: 5,
-                  child: GestureDetector(
-                    onTap:
-                        () => {print("${restaurant.name} ajouté à favoris !")},
-                    child: Container(
-                      height: isFull ? 43 : 36,
-                      width: isFull ? 43 : 36,
-                      padding: EdgeInsets.all(3),
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-
-                        color: likeBtnColor,
-                      ),
-                      child: Icon(
-                        restaurant.liked
-                            ? Icons.favorite
-                            : Icons.favorite_border,
-                        color: restaurant.liked ? kPrimaryRed : kLightGray,
-                        size: isFull ? 33 : 28,
+                  top: 8,
+                  right: 8,
+                  child: Container(
+                    height: isFull ? 43 : 36,
+                    width: isFull ? 43 : 36,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: likeBtnColor,
+                    ),
+                    child: Center(
+                      child: IconButton(
+                        icon: Icon(
+                          isLiked ? Icons.favorite : Icons.favorite_border,
+                          color: isLiked ? kPrimaryRed : kMediumGray,
+                          size: 22,
+                        ),
+                        onPressed: () {
+                          if (isLiked) {
+                            ref
+                                .read(favouriteProvider.notifier)
+                                .removeFavourite(restaurant.id);
+                            if (onRemove != null) onRemove!();
+                          } else {
+                            ref
+                                .read(favouriteProvider.notifier)
+                                .addFavourite(restaurant.id);
+                          }
+                        },
+                        padding: EdgeInsets.zero,
+                        constraints: BoxConstraints(),
                       ),
                     ),
                   ),

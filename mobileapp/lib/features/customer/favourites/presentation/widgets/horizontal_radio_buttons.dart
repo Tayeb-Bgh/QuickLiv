@@ -109,8 +109,14 @@ class HorizontalRadioButtons extends ConsumerWidget {
     final isDarkMode = ref.watch(darkModeProvider);
 
     final selected = ref.watch(selectedTypeProvider);
-    final categories = [
-      {'label': 'Pizzerias', 'type': 'pizzeria', 'icon': Icons.local_pizza},
+   final categories = [
+      {'label': 'Kebabiers', 'type': 'kebabier', 'icon': Icons.kebab_dining},
+      {'label': 'Burgueries', 'type': 'burguerie', 'icon': Icons.lunch_dining},
+      {'label': 'Fast food', 'type': 'fast food', 'icon': Icons.fastfood},
+      {'label': 'Grillades', 'type': 'grillades', 'icon': Icons.outdoor_grill},
+      {'label': 'Rôtisseries', 'type': 'rôtisserie', 'icon': Icons.set_meal},
+      {'label': 'Pâtisseries', 'type': 'pâtisserie', 'icon': Icons.cake},
+      {'label': 'Pizzeria', 'type': 'pizzeria', 'icon': Icons.local_pizza},
       {'label': 'Restaurants', 'type': 'restaurant', 'icon': Icons.restaurant},
       {'label': 'Superéttes', 'type': 'supérette', 'icon': Icons.store},
       {
@@ -125,19 +131,18 @@ class HorizontalRadioButtons extends ConsumerWidget {
         'icon': Icons.eco,
       },
       {
-        'label': "Boulangerie",
+        'label': "Boulangeries",
         'type': 'boulangerie',
         'icon': Icons.breakfast_dining,
       },
       {
-        'label': "Poissonnerie",
+        'label': "Poissonneries",
         'type': 'poissonnerie',
         'icon': Icons.set_meal_outlined,
       },
-      {'label': "Fromagerie", 'type': 'fromagerie', 'icon': Icons.icecream},
+      {'label': "Fromageries", 'type': 'fromagerie', 'icon': Icons.icecream},
       {'label': "Épices", 'type': 'magasin d\'épices', 'icon': Icons.spa},
     ];
-
     return SizedBox(
       height: height * 0.039,
       child: ListView.separated(
