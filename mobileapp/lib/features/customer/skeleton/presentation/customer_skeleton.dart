@@ -5,6 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mobileapp/core/config/dark_mode_provider.dart';
 import 'package:mobileapp/features/auth/presentation/providers/auth_provider.dart';
 import 'package:mobileapp/features/customer/coupons_store/presentation/pages/Coupon_page.dart';
+import 'package:mobileapp/features/customer/home/presentation/pages/home_page.dart';
 import 'package:mobileapp/features/customer/research/presentation/pages/seach_page.dart';
 import 'package:mobileapp/features/customer/research/presentation/providers/research_provider.dart';
 import 'package:mobileapp/features/customer/restaurants/presentation/pages/restaurants_page.dart';
@@ -40,11 +41,10 @@ class _CustomerSkeletonState extends ConsumerState<CustomerSkeleton> {
     Container(color: kPrimaryBlack),
   ];
 
-  
   void _setCurrentIndex(int index) async {
     if (index == 0) {
       setState(() {
-        _pages[0] = Container(color: kPrimaryBlack);
+        _pages[0] = HomePage();
         _currentIndex = index;
       });
     } else if (index == 1) {
@@ -62,12 +62,10 @@ class _CustomerSkeletonState extends ConsumerState<CustomerSkeleton> {
       final token = await secureStorage.read(key: 'authToken');
 
       if (token == null) {
-         setState(() {
+        setState(() {
           _pages[3] = const AuthRequiredWidget();
           _currentIndex = index;
         });
-        
-        
       } else {
         setState(() {
           _pages[3] = Container(color: kPrimaryBlack);
@@ -80,12 +78,10 @@ class _CustomerSkeletonState extends ConsumerState<CustomerSkeleton> {
       final token = await secureStorage.read(key: 'authToken');
 
       if (token == null) {
-         setState(() {
+        setState(() {
           _pages[4] = const AuthRequiredWidget();
           _currentIndex = index;
         });
-        
-        
       } else {
         setState(() {
           _pages[4] = CouponPage();

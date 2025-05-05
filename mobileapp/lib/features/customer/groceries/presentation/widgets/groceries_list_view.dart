@@ -7,13 +7,14 @@ import 'package:mobileapp/features/customer/groceries/presentation/widgets/groce
 
 class GroceriesListView extends ConsumerWidget {
   final AsyncValue<List<Grocery>> groceries;
-  final String title = "Notre sélection du jour";
+  final String title;
   final Function onRefresh;
   final isFull = false;
   const GroceriesListView({
     super.key,
     required this.groceries,
     required this.onRefresh,
+    this.title = "Notre sélection du jour",
   });
 
   @override

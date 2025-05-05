@@ -1,15 +1,18 @@
+import 'package:mobileapp/features/customer/groceries/business/entities/grocery_entity.dart';
+import 'package:mobileapp/features/customer/restaurants/business/entities/restaurant_entity.dart';
+
 class ProductReduc {
   final int idProd;
-  final String descProd;
+  final Grocery? grocery;
+  final Restaurant? restaurant;
   final String imgUrlProd;
   final double reducRateProd;
-  final int idBusns;
 
   ProductReduc({
     required this.idProd,
-    required this.idBusns,
+    this.restaurant,
+    this.grocery,
     required this.imgUrlProd,
     required this.reducRateProd,
-    required this.descProd,
   });
 }

@@ -10,6 +10,7 @@ const delivererHomeRouter = require("./routes/mobile_app/deliverer/deliverer_hom
 const groceryOpenedRouter = require("./routes/mobile_app/grocery_opened/grocery_opened")
 const couponRouter = require("./routes/mobile_app/coupon/coupon")
 const researchRouter = require("./routes/mobile_app/research/research")
+const homeRouter = require("./routes/mobile_app/home/home")
 
 const app = express();
 app.use(cors());
@@ -28,6 +29,7 @@ app.use("/api/deliverer",delivererHomeRouter)
 app.use("/api/grocery-opened",groceryOpenedRouter);
 app.use("/api/coupon", couponRouter);
 app.use("/api/research", researchRouter);
+app.use("/api/home", homeRouter);
 
 
 

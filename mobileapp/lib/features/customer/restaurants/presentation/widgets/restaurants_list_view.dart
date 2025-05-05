@@ -8,13 +8,14 @@ import 'package:mobileapp/features/customer/restaurants/business/entities/restau
 
 class RestaurantsListView extends ConsumerWidget {
   final AsyncValue<List<Restaurant>> restaurants;
-  final String title = "Notre sélection du jour";
+  final String title;
   final Function onRefresh;
   final isFull = false;
   const RestaurantsListView({
     super.key,
     required this.restaurants,
     required this.onRefresh,
+    this.title = "Notre sélection du jour",
   });
 
   @override
