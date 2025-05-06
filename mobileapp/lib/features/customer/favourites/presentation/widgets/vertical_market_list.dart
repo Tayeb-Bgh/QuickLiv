@@ -4,6 +4,12 @@ import 'package:mobileapp/core/config/dark_mode_provider.dart';
 import 'package:mobileapp/core/constants/constants.dart';
 import 'package:mobileapp/features/customer/favourites/business/entities/business_entity.dart';
 import 'package:mobileapp/features/customer/favourites/presentation/widgets/business_card.dart';
+import 'package:mobileapp/features/customer/groceries/business/entities/grocery_entity.dart';
+import 'package:mobileapp/features/customer/groceries/presentation/providers/groceries_provider.dart';
+import 'package:mobileapp/features/customer/grocery_opened/presentation/pages/grocery_opened_page.dart';
+import 'package:mobileapp/features/customer/grocery_opened/presentation/providers/grocery_opened_provider.dart';
+import 'package:mobileapp/features/customer/restaurant_opened/presentation/pages/restaurant_opened_page.dart';
+import 'package:mobileapp/features/customer/restaurants/business/entities/restaurant_entity.dart';
 
 class VerticalMarketList extends ConsumerWidget {
   final AsyncValue<List<Business>> businesses;
@@ -31,15 +37,78 @@ class VerticalMarketList extends ConsumerWidget {
                 const SizedBox(height: 10),
                 SizedBox(
                   height:
-                      MediaQuery.of(context).size.height *
-                      0.7, // ajuste selon besoin
+                      MediaQuery.of(context).size.height , // ajuste selon besoin
                   child: ListView.builder(
                     itemCount: bsnss.length,
                     itemBuilder: (context, index) {
                       final grocer = bsnss[index];
                       return GestureDetector(
                         onTap: () {
-                          // Handle tap event here
+                          if (grocer.type == 'grocery') {
+                            ref.read(searchTextProvider.notifier).state = "";
+                            ref
+                                .watch(selectedCategoriesProvider.notifier)
+                                .state = [];
+                            ref
+                                .watch(
+                                  selectedSecondCategoriesProvider.notifier,
+                                )
+                                .state = [];
+                            ref.watch(selectedCategoryProvider.notifier).state =
+                                null;
+                            ref
+                                .watch(selectedSecondCategoryProvider.notifier)
+                                .state = null;
+
+                            ref
+                                .read(selectedGroceryProvider.notifier)
+                                .state = Grocery(
+                              id: grocer.id,
+                              name: grocer.name,
+                              category: "",
+                              description: grocer.desc,
+                              imgUrl: grocer.imgUrlBusns ?? "",
+                              vidUrl: "",
+                              delivPrice: grocer.deliveryPrice,
+                              delivTime: grocer.deliveryTime,
+                              rating: grocer.rating,
+                              liked: true,
+                              distance: 1231312,
+                            );
+
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => GroceryOpenedPage(),
+                              ),
+                            );
+                          } else {
+                            showModalBottomSheet(
+                              context: context,
+                              shape: const RoundedRectangleBorder(
+                                borderRadius: BorderRadius.vertical(
+                                  top: Radius.circular(20),
+                                ),
+                              ),
+                              isScrollControlled: true,
+                              builder:
+                                  (_) => RestaurantBottomSheet(
+                                    restaurant: Restaurant(
+                                      id: grocer.id,
+                                      name: grocer.name,
+                                      category: "",
+                                      description: grocer.desc,
+                                      imgUrl: grocer.imgUrlBusns ?? "",
+                                      vidUrl: "",
+                                      delivPrice: grocer.deliveryPrice,
+                                      delivTime: grocer.deliveryTime,
+                                      rating: grocer.rating,
+                                      liked: true,
+                                      distance: 5,
+                                    ),
+                                  ),
+                            );
+                          }
                         },
                         child: BusinessCard(
                           grocery: grocer,

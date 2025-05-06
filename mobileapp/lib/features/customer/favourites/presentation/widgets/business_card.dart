@@ -28,6 +28,11 @@ class BusinessCard extends ConsumerWidget {
     final Color footerTitleColor = isDarkMode ? kSecondaryWhite : kPrimaryBlack;
     final Color footerTextColor = isDarkMode ? kLightGray : kMediumGray;
     final Color iconColor = kPrimaryRed;
+    final Color isOpenTxtColor = kPrimaryGreen;
+    final Color isOpenBgColor = kPrimaryGreen.withOpacity(0.2);
+
+    final Color isCloseTxtColor = kPrimaryRed;
+    final Color isCloseBgColor = kPrimaryRed.withOpacity(0.2);
 
     return Container(
       child: Container(
@@ -156,34 +161,34 @@ class BusinessCard extends ConsumerWidget {
                           minFontSize: 10,
                         ),
                         Container(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 10,
-                            vertical: 0.7,
-                          ),
                           decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20),
+                            color:
+                                grocery.open ? isOpenBgColor : isCloseBgColor,
                             border: Border.all(
                               color:
                                   grocery.open
-                                      ? Colors.green.shade800
-                                      : kPrimaryRed,
-                              width: 2,
+                                      ? isOpenTxtColor
+                                      : isCloseTxtColor,
+                              width: 1.5,
                             ),
-                            color:
-                                grocery.open
-                                    ? Colors.green.shade200
-                                    : Colors.red.shade200,
-                            borderRadius: BorderRadius.circular(25),
                           ),
-                          child: Text(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 10,
+                            vertical: 5,
+                          ),
+                          child: AutoSizeText(
                             grocery.open ? "Ouvert" : "Fermé",
                             style: TextStyle(
                               color:
                                   grocery.open
-                                      ? Colors.green.shade800
-                                      : kPrimaryRed,
-                              fontWeight: FontWeight.w800,
-                              fontSize: width * 0.04,
+                                      ? isOpenTxtColor
+                                      : isCloseTxtColor,
+                              fontWeight: FontWeight.bold,
                             ),
+                            maxLines: 1,
+                            minFontSize: 10,
+                            maxFontSize: 12,
                           ),
                         ),
                       ],
