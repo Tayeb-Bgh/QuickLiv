@@ -1,24 +1,32 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive/hive.dart';
+import 'package:mobileapp/core/config/dark_mode_provider.dart';
 import 'package:mobileapp/core/constants/constants.dart';
 import 'package:mobileapp/core/hive_object/vehicle_hive_object.dart';
 import 'package:intl/intl.dart';
 
-class VehicleInfoCard extends StatelessWidget {
+class VehicleInfoCard extends ConsumerWidget {
   const VehicleInfoCard({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final screenHeight = MediaQuery.of(context).size.height;
-
+    final isDarkMode = ref.watch(darkModeProvider);
     var vehicleBox = Hive.box<VehicleHiveObject>('vehicleBox');
     VehicleHiveObject? savedVehicle = vehicleBox.get('currentVehicle');
+
+    final textColor = isDarkMode ? kPrimaryWhite : kPrimaryBlack;
+    final cardColor = isDarkMode ? kSecondaryDark : kPrimaryWhite;
+    final accentColor = kPrimaryRed;
+    final subtitleColor = isDarkMode ? kLightGray : kDarkGray;
+    final iconColor = isDarkMode ? kPrimaryWhite : kPrimaryBlack;
 
     return Center(
       child: Container(
         constraints: BoxConstraints(maxHeight: screenHeight * 0.4),
-
         child: Card(
+          color: cardColor,
           elevation: 4,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
@@ -31,20 +39,20 @@ class VehicleInfoCard extends StatelessWidget {
                 children: [
                   Row(
                     children: [
-                      Icon(Icons.directions_bike, color: kPrimaryBlack),
+                      Icon(Icons.directions_bike, color: iconColor),
                       SizedBox(width: 8),
                       RichText(
                         text: TextSpan(
                           text: 'Modele : ',
                           style: TextStyle(
-                            color: kPrimaryRed,
+                            color: accentColor,
                             fontWeight: FontWeight.bold,
                           ),
                           children: [
                             TextSpan(
                               text: savedVehicle?.model,
                               style: TextStyle(
-                                color: kPrimaryBlack,
+                                color: textColor,
                                 fontWeight: FontWeight.normal,
                               ),
                             ),
@@ -58,12 +66,24 @@ class VehicleInfoCard extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      columnText('Type', savedVehicle?.type ?? 'N/A'),
+                      columnText(
+                        'Type',
+                        savedVehicle?.type ?? 'N/A',
+                        accentColor,
+                        textColor,
+                      ),
                       columnText(
                         'Annee',
                         DateFormat('yyyy').format(savedVehicle!.year),
+                        accentColor,
+                        textColor,
                       ),
-                      columnText('Couleur', savedVehicle.color),
+                      columnText(
+                        'Couleur',
+                        savedVehicle.color,
+                        accentColor,
+                        textColor,
+                      ),
                     ],
                   ),
 
@@ -75,13 +95,16 @@ class VehicleInfoCard extends StatelessWidget {
                       Text(
                         'matricule : ',
                         style: TextStyle(
-                          color: kPrimaryRed,
+                          color: accentColor,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                       Text(
                         savedVehicle.registerNbr ?? 'N/A',
-                        style: TextStyle(fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: textColor,
+                        ),
                       ),
                     ],
                   ),
@@ -93,13 +116,13 @@ class VehicleInfoCard extends StatelessWidget {
                       Icon(
                         Icons.calendar_today,
                         size: 18,
-                        color: Colors.black54,
+                        color: subtitleColor,
                       ),
                       SizedBox(width: 6),
                       Text(
                         'Date expiration : ',
                         style: TextStyle(
-                          color: Colors.black,
+                          color: textColor,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -107,6 +130,7 @@ class VehicleInfoCard extends StatelessWidget {
                         DateFormat(
                           'yyyy-MM-dd',
                         ).format(savedVehicle.insuranceExpr),
+                        style: TextStyle(color: textColor),
                       ),
                     ],
                   ),
@@ -116,7 +140,7 @@ class VehicleInfoCard extends StatelessWidget {
                   Text(
                     'Document',
                     style: TextStyle(
-                      color: kPrimaryRed,
+                      color: accentColor,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -124,7 +148,7 @@ class VehicleInfoCard extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('Carte grise'),
+                      Text('Carte grise', style: TextStyle(color: textColor)),
                       Text('Verifie', style: TextStyle(color: kPrimaryGreen)),
                     ],
                   ),
@@ -132,7 +156,10 @@ class VehicleInfoCard extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('Permis de conduite'),
+                      Text(
+                        'Permis de conduite',
+                        style: TextStyle(color: textColor),
+                      ),
                       Text('Verifie', style: TextStyle(color: kPrimaryGreen)),
                     ],
                   ),
@@ -145,15 +172,23 @@ class VehicleInfoCard extends StatelessWidget {
     );
   }
 
-  Widget columnText(String title, String value) {
+  Widget columnText(
+    String title,
+    String value,
+    Color titleColor,
+    Color valueColor,
+  ) {
     return Column(
       children: [
         Text(
           title,
-          style: TextStyle(fontWeight: FontWeight.bold, color: kPrimaryRed),
+          style: TextStyle(fontWeight: FontWeight.bold, color: titleColor),
         ),
         SizedBox(height: 4),
-        Text(value, style: TextStyle(fontWeight: FontWeight.w500)),
+        Text(
+          value,
+          style: TextStyle(fontWeight: FontWeight.w500, color: valueColor),
+        ),
       ],
     );
   }

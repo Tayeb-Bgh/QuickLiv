@@ -1,21 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mobileapp/core/config/dark_mode_provider.dart';
 import 'package:mobileapp/core/constants/constants.dart';
 import 'package:mobileapp/core/hive_object/deliverer_hive_object.dart';
 
-class DriverProfileCard extends StatelessWidget {
+class DriverProfileCard extends ConsumerWidget {
   final DelivererHiveObject? savedDeliverer;
   const DriverProfileCard({super.key, required this.savedDeliverer});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
     final firstName = savedDeliverer?.firstName ?? 'N/A';
     final lastName = savedDeliverer?.lastName ?? 'N/A';
+     final isDarkMode = ref.watch(darkModeProvider);
+
+    final cardColor = isDarkMode ? kSecondaryDark : kPrimaryWhite;
+    final textColor = isDarkMode ? kPrimaryWhite : kPrimaryBlack;
+    final borderColor = isDarkMode ? kMediumGray : kSecondaryGreen;
+    final badgeBackgroundColor = isDarkMode ? kPrimaryDark : kLightGreen;
+    final secondaryTextColor = isDarkMode ? kRegularGray : kDarkGray;
+    final iconBackgroundColor = kPrimaryRed;
+    final iconColor = kPrimaryWhite;
+    final ratingIconColor = kPrimaryYellow;
+
     return Card(
       elevation: 4,
-
+      color: cardColor,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Padding(
         padding: const EdgeInsets.all(12.0),
@@ -23,13 +36,9 @@ class DriverProfileCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             CircleAvatar(
-              backgroundColor: kPrimaryRed,
+              backgroundColor: iconBackgroundColor,
               radius: height * 0.04,
-              child: Icon(
-                Icons.person,
-                color: Colors.white,
-                size: height * 0.04,
-              ),
+              child: Icon(Icons.person, color: iconColor, size: height * 0.04),
             ),
             SizedBox(width: width * 0.04),
             Expanded(
@@ -40,24 +49,23 @@ class DriverProfileCard extends StatelessWidget {
                     " $firstName $lastName ",
                     maxLines: 1,
                     minFontSize: 16,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
                       height: 1.2,
+                      color: textColor,
                     ),
                   ),
-
                   const SizedBox(height: 4),
-
                   Container(
                     padding: const EdgeInsets.symmetric(
                       horizontal: 8,
                       vertical: 2,
                     ),
                     decoration: BoxDecoration(
-                      color: Colors.green[50],
+                      color: badgeBackgroundColor,
                       borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: Colors.green[200]!),
+                      border: Border.all(color: borderColor),
                     ),
                     child: const AutoSizeText(
                       'En service',
@@ -70,20 +78,19 @@ class DriverProfileCard extends StatelessWidget {
                       ),
                     ),
                   ),
-
                   const SizedBox(height: 12),
-
                   Row(
                     children: [
-                      const Icon(Icons.star, color: Colors.amber, size: 18),
+                      Icon(Icons.star, color: ratingIconColor, size: 18),
                       const SizedBox(width: 4),
                       AutoSizeText(
-                         (savedDeliverer?.rating.toString() ?? 'N/A'),
+                        (savedDeliverer?.rating.toString() ?? 'N/A'),
                         maxLines: 1,
                         minFontSize: 12,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
+                          color: textColor,
                         ),
                       ),
                       const SizedBox(width: 16),
@@ -91,7 +98,10 @@ class DriverProfileCard extends StatelessWidget {
                         (savedDeliverer?.deliveryNbr.toString() ?? 'N/A'),
                         maxLines: 1,
                         minFontSize: 12,
-                        style: TextStyle(fontSize: 14, color: Colors.grey[600]),
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: secondaryTextColor,
+                        ),
                       ),
                     ],
                   ),
