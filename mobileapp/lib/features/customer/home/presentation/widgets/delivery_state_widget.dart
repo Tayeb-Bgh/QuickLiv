@@ -21,24 +21,25 @@ class DeliveryStateWidget extends ConsumerWidget {
             color: kPrimaryRed, // background color of the circle
             width: 40,
             height: 40,
-            child: Icon(Icons.fire_truck, color: kPrimaryWhite, size: 30),
+            child: Icon(Icons.delivery_dining, color: kPrimaryWhite, size: 30),
           ),
         ),
+        SizedBox(width: 5),
         Column(
           children: [
             AutoSizeText(
               "Livraison",
               style: TextStyle(color: textColor, fontWeight: FontWeight.bold),
               maxLines: 1,
-              maxFontSize: 10,
-              minFontSize: 8,
+              maxFontSize: 11,
+              minFontSize: 9,
             ),
             AutoSizeText(
               state ? "Disponible" : "Indisponible",
               style: TextStyle(color: kPrimaryRed, fontWeight: FontWeight.bold),
               maxLines: 1,
-              maxFontSize: 10,
-              minFontSize: 8,
+              maxFontSize: 11,
+              minFontSize: 9,
             ),
           ],
         ),

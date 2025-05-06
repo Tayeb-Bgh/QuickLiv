@@ -19,6 +19,14 @@ class CouponPage extends ConsumerStatefulWidget {
 }
 
 class _CouponPageState extends ConsumerState<CouponPage> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _refresh();
+    });
+  }
+
   Future<void> _refresh() async {
     await ref.refresh(couponProvider.notifier).fetchCoupons();
     ref.refresh(pointProvider.notifier).refreshPoints();
@@ -54,7 +62,6 @@ class _CouponPageState extends ConsumerState<CouponPage> {
   Widget build(BuildContext context) {
     final couponsState = ref.watch(couponProvider);
     final isDarkMode = ref.watch(darkModeProvider);
-    
 
     Widget buildCouponContent() {
       if (couponsState.status == CouponStatus.error) {
@@ -87,7 +94,7 @@ class _CouponPageState extends ConsumerState<CouponPage> {
 
     return Scaffold(
       backgroundColor: isDarkMode ? kPrimaryBlack : kSecondaryWhite,
-      body:  buildCouponContent(),
+      body: buildCouponContent(),
     );
   }
 }
