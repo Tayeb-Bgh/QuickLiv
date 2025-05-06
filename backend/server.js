@@ -12,7 +12,7 @@ const researchRouter = require("./routes/mobile_app/research/research")
 const delivererRouter = require("./routes/mobile_app/gesProfil/create_deliverer")
 const TraderRouter = require("./routes/mobile_app/gesProfil/create_trader")
 const favouritesRouter = require("./routes/mobile_app/favourites/favourites")
-
+const homeRouter = require("./routes/mobile_app/home/home")
 
 const app = express();
 app.use(cors());
@@ -34,6 +34,7 @@ app.use("/api/research", researchRouter);
 app.use("/api/gesProfil", delivererRouter); 
 app.use("/api/gesProfil", TraderRouter);
 app.use("/api/favourites",favouritesRouter);
+app.use("/api/home", homeRouter);
 
 
 

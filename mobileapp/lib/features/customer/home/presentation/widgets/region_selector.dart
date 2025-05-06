@@ -3,8 +3,8 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mobileapp/core/config/dark_mode_provider.dart';
 
-class RegionPopup extends ConsumerWidget {
-  const RegionPopup({super.key});
+class RegionSelector extends ConsumerWidget {
+  const RegionSelector({super.key});
 
   final List<String> regions = const [
     'Alger',

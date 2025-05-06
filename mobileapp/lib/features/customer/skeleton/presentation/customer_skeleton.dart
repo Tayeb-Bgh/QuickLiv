@@ -5,6 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mobileapp/core/config/dark_mode_provider.dart';
 import 'package:mobileapp/features/auth/presentation/providers/auth_provider.dart';
 import 'package:mobileapp/features/customer/coupons_store/presentation/pages/Coupon_page.dart';
+import 'package:mobileapp/features/customer/home/presentation/pages/home_page.dart';
 import 'package:mobileapp/features/customer/research/presentation/pages/seach_page.dart';
 import 'package:mobileapp/features/customer/research/presentation/providers/research_provider.dart';
 import 'package:mobileapp/features/customer/restaurants/presentation/pages/restaurants_page.dart';
@@ -34,7 +35,7 @@ class _CustomerSkeletonState extends ConsumerState<CustomerSkeleton> {
   ];
 
   final List<Widget> _pages = [
-    Container(color: kPrimaryBlack),
+    HomePage(),
     Container(color: kPrimaryBlack),
     Container(color: kPrimaryBlack),
     Container(color: kPrimaryBlack),
@@ -44,7 +45,7 @@ class _CustomerSkeletonState extends ConsumerState<CustomerSkeleton> {
   void _setCurrentIndex(int index) async {
     if (index == 0) {
       setState(() {
-        _pages[0] = Container(color: kPrimaryBlack);
+       
         _currentIndex = index;
       });
     } else if (index == 1) {
