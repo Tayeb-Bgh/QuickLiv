@@ -37,7 +37,7 @@ class VerticalMarketList extends ConsumerWidget {
                 const SizedBox(height: 10),
                 SizedBox(
                   height:
-                      MediaQuery.of(context).size.height , // ajuste selon besoin
+                      MediaQuery.of(context).size.height *0.74, 
                   child: ListView.builder(
                     itemCount: bsnss.length,
                     itemBuilder: (context, index) {
