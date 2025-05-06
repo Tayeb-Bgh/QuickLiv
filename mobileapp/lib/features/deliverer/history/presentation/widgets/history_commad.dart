@@ -5,6 +5,7 @@ import 'package:mobileapp/core/config/dark_mode_provider.dart';
 import 'package:mobileapp/core/constants/constants.dart';
 import 'package:mobileapp/core/utils/utility_functions.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mobileapp/features/deliverer/history/presentation/providers/deliverer_history_provider.dart';
 
 class OrderItem2 {
   final String name;
@@ -14,7 +15,7 @@ class OrderItem2 {
   OrderItem2({required this.unite, required this.name, required this.quantity});
 }
 
-class HistoryCommand extends ConsumerStatefulWidget {
+class HistoryCommand extends ConsumerWidget {
   final int orderNumber;
   final String imgUrl;
   final List<OrderItem2> items;
@@ -44,36 +45,23 @@ class HistoryCommand extends ConsumerStatefulWidget {
     required this.heure,
     required this.location,
   });
-  @override
-  ConsumerState<HistoryCommand> createState() => _OrderDialogState();
-}
-
-class _OrderDialogState extends ConsumerState<HistoryCommand> {
-  bool _expanded = false;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final dialogWidth = MediaQuery.of(context).size.width * 0.9;
-    final isDarkMode = ref.watch(darkModeProvider);
+    final isDarkMode = true;
+    final isExpanded = ref.watch(expandedProvider);
+    debugPrint('Dark mode is: $isDarkMode');
 
-    // Définissez les couleurs dynamiquement
-    final backgroundColor = isDarkMode ? kPrimaryDark : Colors.white;
-    final textColor = isDarkMode ? kPrimaryWhite : Colors.black;
-    final shadowColor =
-        isDarkMode
-            ? Colors.black.withOpacity(0.5)
-            : Colors.black.withOpacity(0.25);
-    final borderColor = isDarkMode ? kPrimaryWhite : kPrimaryBlack;
     return Padding(
       padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
       child: Container(
         width: dialogWidth,
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: isDarkMode ? kPrimaryDark : Colors.white,
           borderRadius: BorderRadius.circular(10),
           boxShadow: [
             BoxShadow(
-              // ignore: deprecated_member_use
               color: Colors.black.withOpacity(0.25),
               blurRadius: 4,
               offset: Offset(0, 4),
@@ -92,51 +80,72 @@ class _OrderDialogState extends ConsumerState<HistoryCommand> {
                   SizedBox(
                     width: dialogWidth * 0.5,
                     child: AutoSizeText(
-                      'CMD N° - ${widget.orderNumber}',
+                      'CMD N° - ${orderNumber}',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 20,
+                        color:
+                            isDarkMode == true ? kPrimaryWhite : Colors.black,
                       ),
                       maxLines: 1,
                       minFontSize: 5,
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
-
                   Container(
                     padding: EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                     height: dialogWidth * 0.1,
                     width: dialogWidth * 0.28,
                     decoration: BoxDecoration(
                       color:
-                          widget.status == ''
-                              ? kSecondaryGreen.withOpacity(0.28)
-                              : kPrimaryRed.withOpacity(0.17),
+                          status == ''
+                              ? (isDarkMode == true
+                                  ? kLightGreen.withOpacity(0.28)
+                                  : kSecondaryGreen.withOpacity(0.28))
+                              : (isDarkMode == true
+                                  ? KSecondaryRed.withOpacity(0.17)
+                                  : kPrimaryRed.withOpacity(0.17)),
                       borderRadius: BorderRadius.circular(30),
                       border: Border.all(
                         width: 2,
                         color:
-                            widget.status == '' ? kPrimaryGreen : kPrimaryRed,
+                            status == ''
+                                ? (isDarkMode == true
+                                    ? kSecondaryGreen
+                                    : kPrimaryGreen)
+                                : (isDarkMode == true
+                                    ? KSecondaryRed
+                                    : kPrimaryRed),
                       ),
                     ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         Icon(
-                          widget.status == '' ? Icons.check : Icons.close,
+                          status == '' ? Icons.check : Icons.close,
                           color:
-                              widget.status == '' ? kPrimaryGreen : kPrimaryRed,
+                              status == ''
+                                  ? (isDarkMode == true
+                                      ? kSecondaryGreen
+                                      : kPrimaryGreen)
+                                  : (isDarkMode == true
+                                      ? KSecondaryRed
+                                      : kPrimaryRed),
                           size: 20,
                         ),
                         SizedBox(
                           width: dialogWidth * 0.15,
                           child: AutoSizeText(
-                            widget.status == '' ? "Livrée" : "Annulée",
+                            status == '' ? "Livrée" : "Annulée",
                             style: TextStyle(
                               color:
-                                  widget.status == ''
-                                      ? kPrimaryGreen
-                                      : kPrimaryRed,
+                                  status == ''
+                                      ? (isDarkMode == true
+                                          ? kSecondaryGreen
+                                          : kPrimaryGreen)
+                                      : (isDarkMode == true
+                                          ? KSecondaryRed
+                                          : kPrimaryRed),
                               fontSize: 15,
                               fontWeight: FontWeight.bold,
                             ),
@@ -151,12 +160,10 @@ class _OrderDialogState extends ConsumerState<HistoryCommand> {
                 ],
               ),
             ),
-
             Padding(
               padding: const EdgeInsets.fromLTRB(16, 10, 16, 4),
               child: Row(
                 children: [
-                  // Date section
                   SizedBox(
                     width: dialogWidth * 0.4,
                     child: Row(
@@ -165,6 +172,8 @@ class _OrderDialogState extends ConsumerState<HistoryCommand> {
                           'assets/images/Calandar.svg',
                           height: 16,
                           width: 16,
+                          color:
+                              isDarkMode == true ? kPrimaryWhite : Colors.black,
                         ),
                         SizedBox(width: 2),
                         Padding(
@@ -172,9 +181,12 @@ class _OrderDialogState extends ConsumerState<HistoryCommand> {
                           child: SizedBox(
                             width: dialogWidth * 0.3,
                             child: AutoSizeText(
-                              widget.date,
+                              date,
                               style: TextStyle(
-                                color: Color(0xFF000000),
+                                color:
+                                    isDarkMode == true
+                                        ? kPrimaryWhite
+                                        : Colors.black,
                                 fontSize: 14,
                                 fontWeight: FontWeight.w400,
                               ),
@@ -187,20 +199,27 @@ class _OrderDialogState extends ConsumerState<HistoryCommand> {
                       ],
                     ),
                   ),
-
                   Expanded(
                     flex: 1,
                     child: Row(
                       children: [
-                        Icon(Icons.person, color: Color(0xFF000000), size: 16),
+                        Icon(
+                          Icons.person,
+                          color:
+                              isDarkMode == true ? kPrimaryWhite : Colors.black,
+                          size: 16,
+                        ),
                         SizedBox(width: 2),
                         Expanded(
                           child: Padding(
                             padding: EdgeInsets.only(top: 3.0),
                             child: AutoSizeText(
-                              widget.personName,
+                              personName,
                               style: TextStyle(
-                                color: Color(0xFF000000),
+                                color:
+                                    isDarkMode == true
+                                        ? kPrimaryWhite
+                                        : Colors.black,
                                 fontSize: 14,
                                 fontWeight: FontWeight.w400,
                               ),
@@ -226,7 +245,7 @@ class _OrderDialogState extends ConsumerState<HistoryCommand> {
                       children: [
                         Icon(
                           Icons.access_time,
-                          color: Color(0xFF000000),
+                          color: isDarkMode ? kPrimaryWhite : Color(0xFF000000),
                           size: 16,
                         ),
                         SizedBox(width: 2),
@@ -234,9 +253,12 @@ class _OrderDialogState extends ConsumerState<HistoryCommand> {
                           child: Padding(
                             padding: EdgeInsets.only(top: 3.0),
                             child: AutoSizeText(
-                              widget.heure,
+                              heure,
                               style: TextStyle(
-                                color: Color(0xFF000000),
+                                color:
+                                    isDarkMode
+                                        ? kPrimaryWhite
+                                        : Color(0xFF000000),
                                 fontSize: 14,
                                 fontWeight: FontWeight.w400,
                               ),
@@ -249,25 +271,26 @@ class _OrderDialogState extends ConsumerState<HistoryCommand> {
                       ],
                     ),
                   ),
-
                   Expanded(
                     flex: 1,
                     child: Row(
                       children: [
                         Icon(
                           Icons.location_on,
-                          color: Color(0xFF000000),
+                          color: isDarkMode ? kPrimaryWhite : Color(0xFF000000),
                           size: 16,
                         ),
-
                         SizedBox(width: 2),
                         Expanded(
                           child: Padding(
                             padding: EdgeInsets.only(top: 3.0),
                             child: AutoSizeText(
-                              widget.location,
+                              location,
                               style: TextStyle(
-                                color: Color(0xFF000000),
+                                color:
+                                    isDarkMode
+                                        ? kPrimaryWhite
+                                        : Color(0xFF000000),
                                 fontSize: 12,
                                 fontWeight: FontWeight.w400,
                               ),
@@ -285,9 +308,9 @@ class _OrderDialogState extends ConsumerState<HistoryCommand> {
             ),
             Container(
               decoration: BoxDecoration(
-                color: kLightGrayWhite,
+                color: isDarkMode ? kSecondaryDark : kLightGrayWhite,
                 borderRadius:
-                    !_expanded
+                    !isExpanded
                         ? BorderRadius.only(
                           bottomLeft: Radius.circular(10),
                           bottomRight: Radius.circular(10),
@@ -304,7 +327,7 @@ class _OrderDialogState extends ConsumerState<HistoryCommand> {
                   children: [
                     CircleAvatar(
                       radius: 25,
-                      backgroundImage: NetworkImage(widget.imgUrl),
+                      backgroundImage: NetworkImage(imgUrl),
                       backgroundColor: Colors.transparent,
                     ),
                     const SizedBox(width: 10),
@@ -319,10 +342,14 @@ class _OrderDialogState extends ConsumerState<HistoryCommand> {
                             children: [
                               Expanded(
                                 child: AutoSizeText(
-                                  widget.restaurantName,
+                                  restaurantName,
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 20,
+                                    color:
+                                        isDarkMode
+                                            ? kPrimaryWhite
+                                            : Colors.black,
                                   ),
                                   maxLines: 1,
                                   minFontSize: 5,
@@ -332,7 +359,7 @@ class _OrderDialogState extends ConsumerState<HistoryCommand> {
                               ),
                               const SizedBox(width: 10),
                               AutoSizeText(
-                                widget.price,
+                                price,
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 20,
@@ -355,14 +382,18 @@ class _OrderDialogState extends ConsumerState<HistoryCommand> {
                                     Icon(
                                       Icons.location_on,
                                       size: 17,
-                                      color: kMediumGray,
+                                      color:
+                                          isDarkMode ? kLightGray : kMediumGray,
                                     ),
                                     const SizedBox(width: 3),
                                     Expanded(
                                       child: AutoSizeText(
-                                        widget.locaComm,
+                                        locaComm,
                                         style: TextStyle(
-                                          color: kMediumGray,
+                                          color:
+                                              isDarkMode
+                                                  ? kLightGray
+                                                  : kMediumGray,
                                           fontSize: 12,
                                           fontWeight: FontWeight.w400,
                                         ),
@@ -376,9 +407,13 @@ class _OrderDialogState extends ConsumerState<HistoryCommand> {
                               ),
                               const SizedBox(width: 10),
                               Visibility(
-                                visible: !_expanded,
+                                visible: !isExpanded,
                                 child: GestureDetector(
-                                  onTap: () => setState(() => _expanded = true),
+                                  onTap:
+                                      () =>
+                                          ref
+                                              .read(expandedProvider.notifier)
+                                              .state = !isExpanded,
                                   child: Icon(
                                     Icons.keyboard_arrow_down,
                                     color: kPrimaryRed,
@@ -395,10 +430,11 @@ class _OrderDialogState extends ConsumerState<HistoryCommand> {
                 ),
               ),
             ),
-            if (_expanded)
+
+            if (isExpanded)
               Container(
                 decoration: BoxDecoration(
-                  color: kLightGrayWhite,
+                  color: isDarkMode ? kSecondaryDark : kLightGrayWhite,
                   borderRadius: BorderRadius.only(
                     bottomRight: Radius.circular(10),
                     bottomLeft: Radius.circular(10),
@@ -414,7 +450,7 @@ class _OrderDialogState extends ConsumerState<HistoryCommand> {
                           height: dialogWidth * 0.4,
                           width: dialogWidth * 0.68,
                           decoration: BoxDecoration(
-                            color: kPrimaryWhite,
+                            color: isDarkMode ? kPrimaryDark : kPrimaryWhite,
                             borderRadius: BorderRadius.circular(10),
                           ),
                           child: Container(
@@ -425,8 +461,9 @@ class _OrderDialogState extends ConsumerState<HistoryCommand> {
                                 mainAxisSize: MainAxisSize.min,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  ...widget.items.map(
-                                    (item) => _buildOrderItemRow(item),
+                                  ...items.map(
+                                    (item) =>
+                                        _buildOrderItemRow(item, isDarkMode),
                                   ),
                                 ],
                               ),
@@ -443,15 +480,19 @@ class _OrderDialogState extends ConsumerState<HistoryCommand> {
                               children: [
                                 AutoSizeText(
                                   'Total payé',
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 15,
+                                    color:
+                                        isDarkMode
+                                            ? kPrimaryWhite
+                                            : Colors.black,
                                   ),
                                   minFontSize: 10,
                                 ),
                                 AutoSizeText(
-                                  widget.totalPrice,
-                                  style: const TextStyle(
+                                  totalPrice,
+                                  style: TextStyle(
                                     fontWeight: FontWeight.w400,
                                     fontSize: 15,
                                     color: kPrimaryRed,
@@ -466,9 +507,13 @@ class _OrderDialogState extends ConsumerState<HistoryCommand> {
                               children: [
                                 AutoSizeText(
                                   'Moyen de paiement',
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                     fontSize: 15,
                                     fontWeight: FontWeight.bold,
+                                    color:
+                                        isDarkMode
+                                            ? kPrimaryWhite
+                                            : Colors.black,
                                   ),
                                   minFontSize: 1,
                                   maxFontSize: 40,
@@ -482,7 +527,10 @@ class _OrderDialogState extends ConsumerState<HistoryCommand> {
                                     color: Colors.transparent,
                                     borderRadius: BorderRadius.circular(20),
                                     border: Border.all(
-                                      color: Colors.black,
+                                      color:
+                                          isDarkMode
+                                              ? kPrimaryWhite
+                                              : Colors.black,
                                       width: 1,
                                     ),
                                   ),
@@ -492,15 +540,23 @@ class _OrderDialogState extends ConsumerState<HistoryCommand> {
                                         'assets/images/money.svg',
                                         height: 17,
                                         width: 17,
+                                        color:
+                                            isDarkMode
+                                                ? kPrimaryWhite
+                                                : Colors.black,
                                       ),
                                       const SizedBox(width: 4),
                                       Text(
-                                        widget.paymentMethod == 0
+                                        paymentMethod == 0
                                             ? "Espèces"
                                             : "Carte",
-                                        style: const TextStyle(
+                                        style: TextStyle(
                                           fontSize: 12,
                                           fontWeight: FontWeight.bold,
+                                          color:
+                                              isDarkMode
+                                                  ? kPrimaryWhite
+                                                  : Colors.black,
                                         ),
                                       ),
                                     ],
@@ -513,7 +569,10 @@ class _OrderDialogState extends ConsumerState<HistoryCommand> {
                         Container(
                           alignment: Alignment.topRight,
                           child: GestureDetector(
-                            onTap: () => setState(() => _expanded = false),
+                            onTap:
+                                () =>
+                                    ref.read(expandedProvider.notifier).state =
+                                        !isExpanded,
                             child: Icon(
                               Icons.keyboard_arrow_up,
                               color: kPrimaryRed,
@@ -532,7 +591,7 @@ class _OrderDialogState extends ConsumerState<HistoryCommand> {
     );
   }
 
-  Widget _buildOrderItemRow(OrderItem2 item) {
+  Widget _buildOrderItemRow(OrderItem2 item, bool isDarkMode) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
       child: Row(
@@ -543,7 +602,11 @@ class _OrderDialogState extends ConsumerState<HistoryCommand> {
               item.unite == 1
                   ? '${gramsToKg(item.quantity)} kg'
                   : 'x${item.quantity}',
-              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 15,
+                color: isDarkMode ? kPrimaryWhite : Colors.black,
+              ),
               textAlign: TextAlign.center,
             ),
           ),
@@ -551,7 +614,11 @@ class _OrderDialogState extends ConsumerState<HistoryCommand> {
           Expanded(
             child: AutoSizeText(
               item.name,
-              style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700),
+              style: TextStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.w700,
+                color: isDarkMode ? kPrimaryWhite : Colors.black,
+              ),
               maxLines: 1,
               minFontSize: 5,
             ),

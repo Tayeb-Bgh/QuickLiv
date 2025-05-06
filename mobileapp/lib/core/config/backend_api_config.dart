@@ -16,7 +16,7 @@ class ApiConfig {
         final isEmulator = !androidInfo.isPhysicalDevice;
         return isEmulator
             ? 'http://10.0.2.2:3000/api'
-            : 'http://192.168.43.52:3000/api';
+            : 'http://192.168.171.170:3000/api';
       }
 
       if (Platform.isIOS) {

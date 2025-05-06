@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mobileapp/core/config/dark_mode_provider.dart';
 import 'package:mobileapp/features/deliverer/history/presentation/widgets/buttons_row.dart';
 import 'package:mobileapp/features/deliverer/history/presentation/widgets/history_commad.dart';
 import 'package:mobileapp/features/deliverer/history/presentation/providers/deliverer_history_provider.dart';
-import 'package:mobileapp/features/deliverer/history/presentation/providers/filter_provider.dart'; 
+import 'package:mobileapp/features/deliverer/history/presentation/providers/filter_provider.dart';
 
 class DeliveriesHistory extends ConsumerStatefulWidget {
   const DeliveriesHistory({super.key});
@@ -14,10 +15,10 @@ class DeliveriesHistory extends ConsumerStatefulWidget {
 
 class _DeliveriesHistoryState extends ConsumerState<DeliveriesHistory> {
   @override
+  @override
   void initState() {
     super.initState();
-
-    Future.microtask(() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(completeOrdersProvider.notifier).fetchCompleteOrders();
     });
   }
@@ -26,15 +27,14 @@ class _DeliveriesHistoryState extends ConsumerState<DeliveriesHistory> {
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
     final completeOrdersState = ref.watch(completeOrdersProvider);
-    final filteredOrders = ref.watch(
-      filteredOrdersProvider,
-    );
+    final filteredOrders = ref.watch(filteredOrdersProvider);
+    final isDarkMode = true;
+    debugPrint(isDarkMode.toString());
     return Padding(
       padding: const EdgeInsets.all(16),
       child: Column(
-        spacing: 40,
         children: [
-          HorizontalRadioButtons(),
+          const HorizontalRadioButtons(),
           SizedBox(
             height: height * 0.67,
             child:
@@ -47,8 +47,7 @@ class _DeliveriesHistoryState extends ConsumerState<DeliveriesHistory> {
                         style: const TextStyle(color: Colors.red),
                       ),
                     )
-                    : filteredOrders
-                        .isEmpty 
+                    : filteredOrders.isEmpty
                     ? const Center(child: Text('Aucune commande trouvée'))
                     : ListView.builder(
                       shrinkWrap: true,
@@ -72,7 +71,6 @@ class _DeliveriesHistoryState extends ConsumerState<DeliveriesHistory> {
                                   .toList(),
                           restaurantName: order.business.name,
                           status: order.order.cancelComment,
-
                           date:
                               '${order.order.createdAt.day}-${order.order.createdAt.month}-${order.order.createdAt.year}',
                           personName:
@@ -83,7 +81,6 @@ class _DeliveriesHistoryState extends ConsumerState<DeliveriesHistory> {
                           totalPrice:
                               '${order.totalAmount.toStringAsFixed(2)} DA',
                           paymentMethod: order.order.transactionNumber,
-
                           heure:
                               '${order.order.createdAt.hour}:${order.order.createdAt.minute.toString().padLeft(2, '0')}',
                           location: order.business.address,

@@ -68,3 +68,5 @@ class CompleteOrdersNotifier extends StateNotifier<CompleteOrdersState> {
     }
   }
 }
+final expandedProvider = StateProvider<bool>((ref) => false);
+

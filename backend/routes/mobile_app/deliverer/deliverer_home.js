@@ -5,7 +5,7 @@ const bodyParser = require('body-parser');
 const db = require("../../../dbConnexion");
 const authenticate = require('../../auth/utils/verify_jwt');
 
-const router = express.Router();  
+const router = express.Router();
 router.use(bodyParser.json());
 
 router.get('/home', authenticate, (req, res) => {
@@ -19,7 +19,7 @@ router.get('/home', authenticate, (req, res) => {
     FROM Deliverer
     JOIN Delivery ON Delivery.idDel = Deliverer.idDel
     JOIN CustomerOrder ON Delivery.idOrd = CustomerOrder.idOrd
-    WHERE Delivery.idDel = ?;
+    WHERE Delivery.idDel = ? AND Delivery.cancelCommentDel IS NULL;
   `;
 
   db.query(query, [id], (err, results) => {
@@ -47,9 +47,9 @@ router.get('/home', authenticate, (req, res) => {
 });
 router.put('/home', authenticate, (req, res) => {
   const { id } = req.user;
-  const { status } = req.body;  
+  const { status } = req.body;
 
-  console.log('Received status update:', status);  
+  console.log('Received status update:', status);
 
   const query = `
     UPDATE Deliverer

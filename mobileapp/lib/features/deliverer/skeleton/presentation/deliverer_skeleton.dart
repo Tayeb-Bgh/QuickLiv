@@ -34,7 +34,7 @@ class _DelivererSkeletonState extends ConsumerState<DelivererSkeleton> {
 
   @override
   Widget build(BuildContext context) {
-    final isDarkMode = ref.watch(darkModeProvider);
+    final isDarkMode = true;
     final backgroundColor = isDarkMode ? kPrimaryBlack : kPrimaryWhite;
 
     final height = MediaQuery.of(context).size.height;
