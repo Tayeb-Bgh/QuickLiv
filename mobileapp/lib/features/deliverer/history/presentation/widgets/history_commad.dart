@@ -1,7 +1,6 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:mobileapp/core/config/dark_mode_provider.dart';
 import 'package:mobileapp/core/constants/constants.dart';
 import 'package:mobileapp/core/utils/utility_functions.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -50,7 +49,7 @@ class HistoryCommand extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final dialogWidth = MediaQuery.of(context).size.width * 0.9;
     final isDarkMode = true;
-    final isExpanded = ref.watch(expandedProvider);
+    final isExpanded = ref.watch(expandedProvider(orderNumber));
     debugPrint('Dark mode is: $isDarkMode');
 
     return Padding(
@@ -412,8 +411,13 @@ class HistoryCommand extends ConsumerWidget {
                                   onTap:
                                       () =>
                                           ref
-                                              .read(expandedProvider.notifier)
+                                              .read(
+                                                expandedProvider(
+                                                  orderNumber,
+                                                ).notifier,
+                                              )
                                               .state = !isExpanded,
+
                                   child: Icon(
                                     Icons.keyboard_arrow_down,
                                     color: kPrimaryRed,
@@ -537,7 +541,9 @@ class HistoryCommand extends ConsumerWidget {
                                   child: Row(
                                     children: [
                                       SvgPicture.asset(
-                                        'assets/images/money.svg',
+                                        paymentMethod == 0
+                                            ? 'assets/images/money_2.svg'
+                                            : 'assets/images/money.svg',
                                         height: 17,
                                         width: 17,
                                         color:
@@ -571,8 +577,14 @@ class HistoryCommand extends ConsumerWidget {
                           child: GestureDetector(
                             onTap:
                                 () =>
-                                    ref.read(expandedProvider.notifier).state =
-                                        !isExpanded,
+                                    ref
+                                        .read(
+                                          expandedProvider(
+                                            orderNumber,
+                                          ).notifier,
+                                        )
+                                        .state = !isExpanded,
+
                             child: Icon(
                               Icons.keyboard_arrow_up,
                               color: kPrimaryRed,

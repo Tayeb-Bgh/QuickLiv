@@ -22,8 +22,8 @@ final selectedFilterProvider = StateProvider<String?>((ref) => 'Toutes');
 
 // Provider pour le RemoteDataSource
 final remoteDataSourceProvider = Provider<RemoteDataSource>((ref) {
-final dio = ref.watch(dioProvider);
-  return RemoteDataSource(dio,ref);
+  final dio = ref.watch(dioProvider);
+  return RemoteDataSource(dio, ref);
 });
 // Provider pour le repository
 final orderRepositoryProvider = Provider<OrderRepositoryImpl>((ref) {
@@ -68,5 +68,7 @@ class CompleteOrdersNotifier extends StateNotifier<CompleteOrdersState> {
     }
   }
 }
-final expandedProvider = StateProvider<bool>((ref) => false);
 
+final expandedProvider = StateProvider.family<bool, int>(
+  (ref, orderId) => false,
+);

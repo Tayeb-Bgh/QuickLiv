@@ -19,58 +19,63 @@ class HorizontalRadioButtons extends ConsumerWidget {
       {'label': "Livrées"},
       {'label': 'Annulées'},
     ];
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 10.0),
+      child: SizedBox(
+        height: screenHeight * 0.05,
+        child: ListView.separated(
+          scrollDirection: Axis.horizontal,
+          padding: const EdgeInsets.symmetric(horizontal: 12),
+          itemCount: categories.length,
+          separatorBuilder: (_, __) => const SizedBox(width: 10),
+          itemBuilder: (context, index) {
+            final category = categories[index];
+            final isSelected = selected == category['label'];
 
-    return SizedBox(
-      height: screenHeight * 0.065,
-      child: ListView.separated(
-        scrollDirection: Axis.horizontal,
-        padding: const EdgeInsets.symmetric(horizontal: 12),
-        itemCount: categories.length,
-        separatorBuilder: (_, __) => const SizedBox(width: 10),
-        itemBuilder: (context, index) {
-          final category = categories[index];
-          final isSelected = selected == category['label'];
+            final backgroundColor =
+                isSelected
+                    ? (isDarkMode == true ? KSecondaryRed : kPrimaryRed)
+                    : Colors.transparent;
+            final textColor =
+                isSelected
+                    ? (isDarkMode == true ? kLightGrayWhite : kPrimaryWhite)
+                    : (isDarkMode == true ? kLightGray : kPrimaryRed);
 
-          final backgroundColor =
-              isSelected
-                  ? (isDarkMode == true ? KSecondaryRed : kPrimaryRed)
-                  : Colors.transparent;
-          final textColor =
-              isSelected
-                  ? (isDarkMode == true ? kLightGrayWhite : kPrimaryWhite)
-                  : (isDarkMode == true ? kLightGray : kPrimaryRed);
-
-          return GestureDetector(
-            onTap: () {
-              if (!isSelected) {
-                ref.read(selectedFilterProvider.notifier).state =
-                    category['label'] as String;
-              }
-            },
-            child: AnimatedContainer(
-              duration: const Duration(milliseconds: 200),
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-              decoration: BoxDecoration(
-                color: backgroundColor,
-                border: Border.all(color: borderColor, width: 2),
-                borderRadius: BorderRadius.circular(30),
-              ),
-              child: Row(
-                children: [
-                  const SizedBox(width: 8),
-                  Text(
-                    category['label'] as String,
-                    style: TextStyle(
-                      color: textColor,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 17,
+            return GestureDetector(
+              onTap: () {
+                if (!isSelected) {
+                  ref.read(selectedFilterProvider.notifier).state =
+                      category['label'] as String;
+                }
+              },
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 200),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 2,
+                ),
+                decoration: BoxDecoration(
+                  color: backgroundColor,
+                  border: Border.all(color: borderColor, width: 2),
+                  borderRadius: BorderRadius.circular(30),
+                ),
+                child: Row(
+                  children: [
+                    const SizedBox(width: 8),
+                    Text(
+                      category['label'] as String,
+                      style: TextStyle(
+                        color: textColor,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 17,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-          );
-        },
+            );
+          },
+        ),
       ),
     );
   }

@@ -36,7 +36,7 @@ class _DeliveriesHistoryState extends ConsumerState<DeliveriesHistory> {
         children: [
           const HorizontalRadioButtons(),
           SizedBox(
-            height: height * 0.67,
+            height: height * 0.70,
             child:
                 completeOrdersState.isLoading
                     ? const Center(child: CircularProgressIndicator())
