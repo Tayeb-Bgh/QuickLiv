@@ -363,6 +363,12 @@ class HistoryCommand extends ConsumerWidget {
                                   fontWeight: FontWeight.bold,
                                   fontSize: 20,
                                   color: kPrimaryRed,
+                              decoration:
+                                      status.isEmpty
+                                          ? TextDecoration.none
+                                          : TextDecoration.lineThrough,
+                                  decorationColor: kPrimaryRed,
+                                  decorationThickness: 2.0,
                                 ),
                                 maxLines: 1,
                                 minFontSize: 10,
