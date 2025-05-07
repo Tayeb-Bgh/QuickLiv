@@ -1,55 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:mobileapp/core/constants/constants.dart';
 import 'package:mobileapp/features/auth/presentation/pages/login_page.dart';
+import 'package:mobileapp/features/confidentiality/presentation/widgets/confidentiality.dart';
 import 'package:mobileapp/features/customer/gesProfil/DevLivreur/presentation/pages/deliverer_first_page.dart';
 import 'package:mobileapp/features/customer/gesProfil/DevLivreur/presentation/pages/deliverer_second_page.dart';
 import 'package:mobileapp/features/customer/gesProfil/DevLivreur/presentation/pages/deliverer_third_page.dart';
 
-class BeDelivererSkeleton extends StatefulWidget {
-  const BeDelivererSkeleton({super.key});
+class ConfidentialiyPage extends StatefulWidget {
+  const ConfidentialiyPage({super.key});
 
   @override
-  State<BeDelivererSkeleton> createState() => _BeDelivererSkeletonState();
+  State<ConfidentialiyPage> createState() => _ConfidentialiyPageState();
 }
 
-class _BeDelivererSkeletonState extends State<BeDelivererSkeleton> {
-  final PageController _pageController = PageController();
-  int _currentIndex = 0;
-
-  void nextPage() {
-    if (_currentIndex < 2) {
-      _pageController.nextPage(
-        duration: Duration(milliseconds: 300),
-        curve: Curves.easeInOut,
-      );
-      setState(() => _currentIndex++);
-    }
-  }
-
-  void previousPage() {
-    if (_currentIndex > 0) {
-      _pageController.previousPage(
-        duration: Duration(milliseconds: 300),
-        curve: Curves.easeInOut,
-      );
-      setState(() => _currentIndex--);
-    }
-  }
-
-  @override
-  void dispose() {
-    _pageController.dispose();
-    super.dispose();
-  }
-
+class _ConfidentialiyPageState extends State<ConfidentialiyPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: MediaQuery.of(context).size.height * 0.08,
         centerTitle: true,
-        backgroundColor: kPrimaryRed,
+        backgroundColor: Colors.redAccent,
         leading: IconButton(
           icon: Container(
             decoration: BoxDecoration(
@@ -67,7 +38,7 @@ class _BeDelivererSkeletonState extends State<BeDelivererSkeleton> {
               padding: const EdgeInsets.all(7.0),
               child: SvgPicture.asset(
                 'assets/images/Vector.svg',
-                color: kPrimaryWhite,
+                color: Colors.white,
                 width: 20,
                 height: 20,
               ),
@@ -78,7 +49,7 @@ class _BeDelivererSkeletonState extends State<BeDelivererSkeleton> {
           },
         ),
         title: Text(
-          'Devenir Livreur',
+          'Confidentialité',
           style: TextStyle(
             fontFamily: 'Roboto',
             color: Colors.white,
@@ -88,21 +59,13 @@ class _BeDelivererSkeletonState extends State<BeDelivererSkeleton> {
               Shadow(
                 offset: Offset(0, 3),
                 blurRadius: 5,
-                color: kPrimaryDark,
+                color: Colors.black45,
               ),
             ],
           ),
         ),
       ),
-      body: PageView(
-        controller: _pageController,
-        physics: NeverScrollableScrollPhysics(),
-        children: [
-          DelivererFirstPage(onNext: nextPage),
-          DelivererSecondPage(onNext: nextPage, onPrevious: previousPage),
-          DelivererThirdPage(onNext: () {}, onPrevious: previousPage),
-        ],
-      ),
+      body: Confidentiality(),
     );
   }
 }

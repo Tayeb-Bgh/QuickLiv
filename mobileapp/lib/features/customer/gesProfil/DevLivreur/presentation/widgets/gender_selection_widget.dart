@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mobileapp/core/config/dark_mode_provider.dart';
+import 'package:mobileapp/core/constants/constants.dart';
 
 class GenderSelectionRow extends ConsumerWidget {
   final String? selectedValue;
@@ -21,7 +22,7 @@ class GenderSelectionRow extends ConsumerWidget {
   ) {
     Color effectiveTextColor =
         (gender == "Homme" || gender == "Femme")
-            ? (textColor == Colors.white ? Colors.white : Colors.black)
+            ? (textColor == kPrimaryWhite ? kPrimaryWhite : kPrimaryDark)
             : textColor;
 
     return GestureDetector(
@@ -32,9 +33,9 @@ class GenderSelectionRow extends ConsumerWidget {
           Container(
             padding: EdgeInsets.all(6),
             decoration: BoxDecoration(
-              color: isSelected ? Colors.red : Colors.transparent,
+              color: isSelected ? kPrimaryRed : Colors.transparent,
               shape: BoxShape.circle,
-              border: Border.all(color: Colors.red, width: 2),
+              border: Border.all(color: kPrimaryRed, width: 2),
             ),
             child: Icon(icon, color: iconColor, size: 12),
           ),
@@ -54,8 +55,8 @@ class GenderSelectionRow extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final bool isDarkMode = ref.watch(darkModeProvider);
-    final Color textColor = isDarkMode ? Colors.white : Colors.black;
-    final Color iconColor = isDarkMode ? Colors.white : Colors.black;
+    final Color textColor = isDarkMode ? kPrimaryWhite : kPrimaryDark;
+    final Color iconColor = isDarkMode ? kPrimaryWhite : kPrimaryDark;
 
     return Row(
       children: [

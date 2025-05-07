@@ -2,6 +2,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mobileapp/core/constants/constants.dart';
 import 'package:mobileapp/features/customer/gesProfil/DevCommercant/business/entities/trader.dart';
 
 import 'package:mobileapp/features/customer/gesProfil/DevCommercant/business/usercases/save_trader_usercase.dart';
@@ -80,7 +81,6 @@ class _DelivererThirdPageState extends ConsumerState<TraderThirdPage> {
     }
   }
 
-  // Vérifie si tous les documents sont joints
   bool _areDocumentsValid() {
     return _validator.validateDocuments(
       pieceIdentit: _pieceIdentit,
@@ -148,10 +148,10 @@ class _DelivererThirdPageState extends ConsumerState<TraderThirdPage> {
 
     final isDarkMode = ref.watch(darkModeProvider);
 
-    final Color backColor = isDarkMode ? Color(0xFF282525) : Colors.white;
-    final Color textColor = isDarkMode ? Colors.white : Colors.black;
+    final Color backColor = isDarkMode ? kPrimaryDark: kPrimaryWhite;
+    final Color textColor = isDarkMode ? kPrimaryWhite : kPrimaryBlack;
     final Color buttonColor =
-        isDarkMode ? Color(0xFF363333) : Color(0xFFD9D9D9);
+        isDarkMode ? kDarkGray : kWhiteGray;
 
     return Scaffold(
       backgroundColor: backColor,
@@ -172,20 +172,20 @@ class _DelivererThirdPageState extends ConsumerState<TraderThirdPage> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         CircleAvatar(
-                          backgroundColor: Colors.redAccent,
+                          backgroundColor: kPrimaryRed,
                           radius: 17,
                           child: AutoSizeText(
                             '1',
                             style: TextStyle(
                               fontFamily: 'Roboto',
-                              color: Colors.white,
+                              color: kPrimaryWhite,
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
                               shadows: [
                                 Shadow(
                                   offset: Offset(0, 3),
                                   blurRadius: 5,
-                                  color: Colors.black45,
+                                  color: kPrimaryBlack,
                                 ),
                               ],
                             ),
@@ -194,16 +194,16 @@ class _DelivererThirdPageState extends ConsumerState<TraderThirdPage> {
                         Container(
                           width: width * 0.2,
                           height: height * 0.006,
-                          decoration: BoxDecoration(color: Colors.redAccent),
+                          decoration: BoxDecoration(color: kPrimaryRed),
                         ),
                         CircleAvatar(
-                          backgroundColor: Colors.redAccent,
+                          backgroundColor: kPrimaryRed,
                           radius: 17,
                           child: AutoSizeText(
                             '2',
                             style: TextStyle(
                               fontFamily: 'Roboto',
-                              color: Colors.white,
+                              color: kPrimaryWhite,
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
                             ),
@@ -212,16 +212,16 @@ class _DelivererThirdPageState extends ConsumerState<TraderThirdPage> {
                         Container(
                           width: width * 0.2,
                           height: height * 0.006,
-                          decoration: BoxDecoration(color: Colors.redAccent),
+                          decoration: BoxDecoration(color: kPrimaryRed),
                         ),
                         CircleAvatar(
                           radius: 17,
-                          backgroundColor: Colors.redAccent,
+                          backgroundColor: kPrimaryRed,
                           child: AutoSizeText(
                             '3',
                             style: TextStyle(
                               fontFamily: 'Roboto',
-                              color: Colors.white,
+                              color: kPrimaryWhite,
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
                             ),
@@ -313,7 +313,7 @@ class _DelivererThirdPageState extends ConsumerState<TraderThirdPage> {
                       child: ElevatedButton(
                         onPressed: widget.onPrevious,
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Color(0xFF504E4E),
+                          backgroundColor: kDarkGray,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10),
                           ),
@@ -326,7 +326,7 @@ class _DelivererThirdPageState extends ConsumerState<TraderThirdPage> {
                           'Précédent',
                           style: TextStyle(
                             fontSize: 13,
-                            color: Colors.white,
+                            color: kPrimaryWhite,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -348,7 +348,7 @@ class _DelivererThirdPageState extends ConsumerState<TraderThirdPage> {
                           }
                         },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.redAccent,
+                          backgroundColor: kPrimaryRed,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10),
                           ),
@@ -361,7 +361,7 @@ class _DelivererThirdPageState extends ConsumerState<TraderThirdPage> {
                           'Confirmer',
                           style: TextStyle(
                             fontSize: 13,
-                            color: Colors.white,
+                            color: kPrimaryWhite,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -397,7 +397,7 @@ class _DelivererThirdPageState extends ConsumerState<TraderThirdPage> {
                 "*",
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
-                  color: Colors.red,
+                  color: kPrimaryRed,
                   fontSize: 20,
                 ),
               ),
@@ -416,7 +416,7 @@ class _DelivererThirdPageState extends ConsumerState<TraderThirdPage> {
               style: ElevatedButton.styleFrom(
                 backgroundColor:
                     isDocumentSelected
-                        ? const Color.fromARGB(255, 253, 77, 77)
+                        ? kPrimaryRed
                         : buttonColor,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(5),
@@ -440,7 +440,7 @@ class _DelivererThirdPageState extends ConsumerState<TraderThirdPage> {
 
   Widget _buildImagePreview(String label, String? imagePath) {
     final isDarkMode = ref.watch(darkModeProvider);
-    final Color textColor = isDarkMode ? Colors.white : Colors.black;
+    final Color textColor = isDarkMode ? kPrimaryWhite : kPrimaryBlack;
 
     if (imagePath == null || imagePath.isEmpty) {
       return SizedBox.shrink();

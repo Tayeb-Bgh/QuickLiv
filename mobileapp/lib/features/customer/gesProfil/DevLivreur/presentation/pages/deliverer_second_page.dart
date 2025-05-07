@@ -2,6 +2,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mobileapp/core/config/dark_mode_provider.dart';
+import 'package:mobileapp/core/constants/constants.dart';
 import 'package:mobileapp/features/customer/gesProfil/DevLivreur/business/usercases/validate_deliverer_usecase.dart';
 import 'package:mobileapp/features/customer/gesProfil/DevLivreur/presentation/providers/form_data_provider.dart';
 import 'package:mobileapp/features/customer/gesProfil/DevLivreur/presentation/widgets/gender_selection_widget.dart';
@@ -187,12 +188,10 @@ class _DelivererSecondPageState extends ConsumerState<DelivererSecondPage> {
 
     final isDarkMode = ref.watch(darkModeProvider);
 
-    final Color backColor = isDarkMode ? Color(0xFF282525) : Colors.white;
-    final Color textColor = isDarkMode ? Colors.white : Colors.black;
-    final Color textFieldColor =
-        isDarkMode ? Color(0xFF363333) : Color(0xFFCCCCCC);
-    final Color circleColor =
-        isDarkMode ? Color(0xFF363333) : Color(0xFFD9D9D9);
+    final Color backColor = isDarkMode ? kPrimaryDark : kSecondaryWhite;
+    final Color textColor = isDarkMode ? kPrimaryWhite : kPrimaryBlack;
+    final Color textFieldColor = isDarkMode ? kDarkGray : kWhiteGray;
+    final Color circleColor = isDarkMode ? kDarkGray : kWhiteGray;
 
     return Scaffold(
       backgroundColor: backColor,
@@ -212,20 +211,20 @@ class _DelivererSecondPageState extends ConsumerState<DelivererSecondPage> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         CircleAvatar(
-                          backgroundColor: Colors.redAccent,
+                          backgroundColor: kPrimaryRed,
                           radius: 17,
                           child: AutoSizeText(
                             '1',
                             style: TextStyle(
                               fontFamily: 'Roboto',
-                              color: Colors.white,
+                              color: kPrimaryWhite,
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
                               shadows: [
                                 Shadow(
                                   offset: Offset(0, 3),
                                   blurRadius: 5,
-                                  color: Colors.black45,
+                                  color: kPrimaryDark,
                                 ),
                               ],
                             ),
@@ -234,16 +233,16 @@ class _DelivererSecondPageState extends ConsumerState<DelivererSecondPage> {
                         Container(
                           width: width * 0.2,
                           height: height * 0.006,
-                          decoration: BoxDecoration(color: Colors.redAccent),
+                          decoration: BoxDecoration(color: kPrimaryRed),
                         ),
                         CircleAvatar(
-                          backgroundColor: Colors.redAccent,
+                          backgroundColor: kPrimaryRed,
                           radius: 17,
                           child: AutoSizeText(
                             '2',
                             style: TextStyle(
                               fontFamily: 'Roboto',
-                              color: Colors.white,
+                              color: kPrimaryWhite,
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
                             ),
@@ -356,7 +355,7 @@ class _DelivererSecondPageState extends ConsumerState<DelivererSecondPage> {
                       SizedBox(height: 8),
                       Text(
                         _sexeError!,
-                        style: TextStyle(color: Colors.red, fontSize: 12),
+                        style: TextStyle(color: kPrimaryRed, fontSize: 12),
                       ),
                     ],
                   ],
@@ -372,7 +371,7 @@ class _DelivererSecondPageState extends ConsumerState<DelivererSecondPage> {
                       child: ElevatedButton(
                         onPressed: widget.onPrevious,
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Color(0xFF504E4E),
+                          backgroundColor: kDarkGray,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10),
                           ),
@@ -401,7 +400,7 @@ class _DelivererSecondPageState extends ConsumerState<DelivererSecondPage> {
                           }
                         },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.redAccent,
+                          backgroundColor: kPrimaryRed,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10),
                           ),
@@ -449,7 +448,7 @@ class _DelivererSecondPageState extends ConsumerState<DelivererSecondPage> {
               "*",
               style: TextStyle(
                 fontWeight: FontWeight.bold,
-                color: Colors.red,
+                color: kPrimaryRed,
                 fontSize: 20,
               ),
             ),
@@ -479,7 +478,7 @@ class _DelivererSecondPageState extends ConsumerState<DelivererSecondPage> {
         ),
         if (errorMessage != null) ...[
           SizedBox(height: height * 0.01),
-          Text(errorMessage, style: TextStyle(color: Colors.red, fontSize: 12)),
+          Text(errorMessage, style: TextStyle(color: kPrimaryRed, fontSize: 12)),
         ],
         SizedBox(height: height * 0.02),
       ],
@@ -505,7 +504,7 @@ class _DelivererSecondPageState extends ConsumerState<DelivererSecondPage> {
               "*",
               style: TextStyle(
                 fontWeight: FontWeight.bold,
-                color: Colors.red,
+                color: kPrimaryRed,
                 fontSize: 20,
               ),
             ),
@@ -544,7 +543,7 @@ class _DelivererSecondPageState extends ConsumerState<DelivererSecondPage> {
         ),
         if (errorMessage != null) ...[
           SizedBox(height: height * 0.01),
-          Text(errorMessage, style: TextStyle(color: Colors.red, fontSize: 12)),
+          Text(errorMessage, style: TextStyle(color: kPrimaryRed, fontSize: 12)),
         ],
         SizedBox(height: height * 0.02),
       ],
@@ -571,7 +570,7 @@ class _DelivererSecondPageState extends ConsumerState<DelivererSecondPage> {
               "*",
               style: TextStyle(
                 fontWeight: FontWeight.bold,
-                color: Colors.red,
+                color: kPrimaryRed,
                 fontSize: 20,
               ),
             ),
@@ -626,7 +625,7 @@ class _DelivererSecondPageState extends ConsumerState<DelivererSecondPage> {
                   vertical: 8,
                   horizontal: 10,
                 ),
-                hintText: "aaaa-mm-jj", // Display format as a hint
+                hintText: "aaaa-mm-jj",
               ),
               style: TextStyle(color: textColor),
             ),
@@ -634,7 +633,7 @@ class _DelivererSecondPageState extends ConsumerState<DelivererSecondPage> {
         ),
         if (errorMessage != null) ...[
           SizedBox(height: height * 0.01),
-          Text(errorMessage, style: TextStyle(color: Colors.red, fontSize: 12)),
+          Text(errorMessage, style: TextStyle(color: kPrimaryRed, fontSize: 12)),
         ],
         SizedBox(height: height * 0.02),
       ],

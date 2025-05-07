@@ -8,7 +8,7 @@ import 'package:mobileapp/features/auth/presentation/providers/auth_provider.dar
 import 'package:mobileapp/features/customer/gesProfil/DevCommercant/presentation/pages/be_trader_skeleton.dart';
 import 'package:mobileapp/features/customer/gesProfil/DevLivreur/presentation/pages/be_deliverer_skeleton.dart';
 import 'package:mobileapp/features/customer/profile/presentation/widgets/log_out.dart';
-import 'package:mobileapp/features/customer/profile/presentation/widgets/message_diaalog.dart';
+import 'package:mobileapp/features/customer/profile/presentation/widgets/message_dialog.dart';
 import 'package:mobileapp/features/customer/profile/presentation/widgets/profil_card.dart';
 import 'package:mobileapp/features/customer/profile/presentation/widgets/profile_top_bar.dart';
 import 'package:light_dark_theme_toggle/light_dark_theme_toggle.dart';

@@ -15,7 +15,7 @@ class MessageDialog extends ConsumerWidget {
       child: Container(
         padding: EdgeInsets.all(16.0),
         width: 350,
-        height: 270, // Adjusted height for better layout
+        height: 270,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,

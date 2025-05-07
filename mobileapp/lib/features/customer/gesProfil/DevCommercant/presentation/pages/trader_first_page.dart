@@ -2,6 +2,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mobileapp/core/config/dark_mode_provider.dart';
+import 'package:mobileapp/core/constants/constants.dart';
 import 'package:mobileapp/features/customer/gesProfil/DevCommercant/business/usercases/validateTrader.dart';
 import 'package:mobileapp/features/customer/gesProfil/DevCommercant/presentation/providers/from_data_provider.dart';
 import 'package:mobileapp/features/customer/gesProfil/DevLivreur/presentation/widgets/gender_selection_widget.dart';
@@ -148,12 +149,10 @@ class _TradeFirstPageState extends ConsumerState<TradeFirstPage> {
 
     final bool isDarkMode = ref.watch(darkModeProvider);
 
-    final Color backColor = isDarkMode ? Color(0xFF282525) : Colors.white;
-    final Color textColor = isDarkMode ? Colors.white : Colors.black;
-    final Color textFieldColor =
-        isDarkMode ? Color(0xFF363333) : Color(0xFFCCCCCC);
-    final Color circleColor =
-        isDarkMode ? Color(0xFF363333) : Color(0xFFD9D9D9);
+    final Color backColor = isDarkMode ? kPrimaryDark : kSecondaryWhite;
+    final Color textColor = isDarkMode ? kPrimaryWhite : kPrimaryBlack;
+    final Color textFieldColor = isDarkMode ? kDarkGray : kWhiteGray;
+    final Color circleColor = isDarkMode ? kDarkGray : kWhiteGray;
 
     return Scaffold(
       backgroundColor: backColor,
@@ -173,20 +172,20 @@ class _TradeFirstPageState extends ConsumerState<TradeFirstPage> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         CircleAvatar(
-                          backgroundColor: Colors.redAccent,
+                          backgroundColor: kPrimaryRed,
                           radius: 17,
                           child: AutoSizeText(
                             '1',
                             style: TextStyle(
                               fontFamily: 'Roboto',
-                              color: Colors.white,
+                              color: kPrimaryWhite,
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
                               shadows: [
                                 Shadow(
                                   offset: Offset(0, 3),
                                   blurRadius: 5,
-                                  color: Colors.black45,
+                                  color: kPrimaryBlack,
                                 ),
                               ],
                             ),
@@ -310,7 +309,7 @@ class _TradeFirstPageState extends ConsumerState<TradeFirstPage> {
                     if (_sexeError != null)
                       Text(
                         _sexeError!,
-                        style: TextStyle(color: Colors.red, fontSize: 12),
+                        style: TextStyle(color: kPrimaryRed, fontSize: 12),
                       ),
                   ],
                 ),
@@ -331,7 +330,7 @@ class _TradeFirstPageState extends ConsumerState<TradeFirstPage> {
                           }else {}
                         },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.redAccent,
+                          backgroundColor: kPrimaryRed,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10),
                           ),
@@ -344,7 +343,7 @@ class _TradeFirstPageState extends ConsumerState<TradeFirstPage> {
                           'Suivant',
                           style: TextStyle(
                             fontSize: 13,
-                            color: Colors.white,
+                            color: kPrimaryWhite,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -379,7 +378,7 @@ class _TradeFirstPageState extends ConsumerState<TradeFirstPage> {
               "*",
               style: TextStyle(
                 fontWeight: FontWeight.bold,
-                color: Colors.red, // Red asterisk
+                color: kPrimaryRed, // Red asterisk
                 fontSize: 20,
               ),
             ),
@@ -409,7 +408,7 @@ class _TradeFirstPageState extends ConsumerState<TradeFirstPage> {
         ),
         if (errorMessage != null) ...[
           SizedBox(height: height * 0.01),
-          Text(errorMessage, style: TextStyle(color: Colors.red, fontSize: 12)),
+          Text(errorMessage, style: TextStyle(color: kPrimaryRed, fontSize: 12)),
         ],
         SizedBox(height: height * 0.02),
       ],
@@ -436,7 +435,7 @@ class _TradeFirstPageState extends ConsumerState<TradeFirstPage> {
               "*",
               style: TextStyle(
                 fontWeight: FontWeight.bold,
-                color: Colors.red,
+                color: kPrimaryRed,
                 fontSize: 20,
               ),
             ),
@@ -493,7 +492,7 @@ class _TradeFirstPageState extends ConsumerState<TradeFirstPage> {
         ),
         if (errorMessage != null) ...[
           SizedBox(height: height * 0.01),
-          Text(errorMessage, style: TextStyle(color: Colors.red, fontSize: 12)),
+          Text(errorMessage, style: TextStyle(color: kPrimaryRed, fontSize: 12)),
         ],
         SizedBox(height: height * 0.02),
       ],
