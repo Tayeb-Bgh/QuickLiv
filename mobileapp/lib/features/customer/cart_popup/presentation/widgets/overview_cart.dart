@@ -49,6 +49,7 @@ class _OverviewCartState extends State<OverviewCart> {
               radius: width * 0.1,
               backgroundImage: NetworkImage(widget.imgUrl),
             ),
+            SizedBox(height: 5),
             Text(
               widget.name,
               style: TextStyle(

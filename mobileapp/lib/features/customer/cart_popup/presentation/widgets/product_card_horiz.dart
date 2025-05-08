@@ -156,23 +156,23 @@ class ProductCardHoriz extends ConsumerWidget {
                         SizedBox(width: 4),
                         GestureDetector(
                           onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) {
-                                  log(
-                                    'this is a test to see if there is a notice ${productCart.notice}',
-                                  );
-                                  return NoticeInputWidget(
-                                    boxName: 'cartBox$cartNumber',
-                                    idProd: productCart.id,
-                                    notice: productCart.notice,
-                                  );
-                                },
-                              ),
+                            showDialog(
+                              context: context,
+                              builder: (context) {
+                                return NoticeInputWidget(
+                                  boxName: 'cartBox$cartNumber',
+                                  idProd: productCart.id,
+                                  notice: productCart.notice,
+                                );
+                              },
                             );
                           },
-                          child: _squareButton(Icons.receipt_long, Colors.red),
+                          child: _squareButton(
+                            Icons.receipt_long,
+                            productCart.notice == ""
+                                ? kPrimaryRed
+                                : kSecondaryGreen,
+                          ),
                         ),
                       ],
                     ),
