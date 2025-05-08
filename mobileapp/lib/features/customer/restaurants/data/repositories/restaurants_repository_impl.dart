@@ -170,6 +170,7 @@ class RestaurantsRepositoryImpl implements RestaurantsRepository {
         final nameProd = product.nameProd;
         final imgUrl = product.imgUrlProd;
         final description = product.descProd;
+        final unit = product.unitProd;
         final nameBusns =
             restaurants
                 .where((restaurant) => restaurant.id == restaurantId)
@@ -192,6 +193,7 @@ class RestaurantsRepositoryImpl implements RestaurantsRepository {
         productsList.add(
           Product(
             idProd: idProd,
+            unit: unit,
             idBusns: idBusns,
             nameProd: nameProd,
             nameBusns: nameBusns,

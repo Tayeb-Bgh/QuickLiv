@@ -1,4 +1,3 @@
-
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -6,6 +5,7 @@ import 'package:mobileapp/core/constants/constants.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mobileapp/features/auth/presentation/pages/login_page.dart';
 import 'package:mobileapp/features/auth/presentation/providers/auth_provider.dart';
+import 'package:mobileapp/features/customer/cart_popup/presentation/pages/cart_popup.dart';
 import 'package:mobileapp/features/customer/profile/presentation/pages/profile_popup_page.dart';
 
 class MyPainter extends CustomPainter {
@@ -150,11 +150,26 @@ class CustomTopBar extends ConsumerWidget {
             children: [
               _buildIcon(context, "assets/images/order.svg"),
               const SizedBox(width: 6),
-              _buildIcon(
-                context,
-                "assets/images/cart.svg",
-                width * 0.06,
-                width * 0.06,
+              GestureDetector(
+                onTap: () {
+                  showModalBottomSheet(
+                    context: context,
+                    shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.vertical(
+                        top: Radius.circular(20),
+                      ),
+                    ),
+                    isScrollControlled: true,
+                    builder: (_) => CartPopup(),
+                  );
+                },
+
+                child: _buildIcon(
+                  context,
+                  "assets/images/cart.svg",
+                  width * 0.06,
+                  width * 0.06,
+                ),
               ),
               const SizedBox(width: 6),
               GestureDetector(

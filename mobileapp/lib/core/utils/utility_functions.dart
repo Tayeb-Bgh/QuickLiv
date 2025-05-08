@@ -76,3 +76,6 @@ double calculateProgress(int currentPoints) {
 int remainingPointsForMilestone(int currentPoints) {
   return (1000 - currentPoints).clamp(0, 1000);
 }
+double gramsToKilograms(num grams) {
+  return grams / 1000;
+}

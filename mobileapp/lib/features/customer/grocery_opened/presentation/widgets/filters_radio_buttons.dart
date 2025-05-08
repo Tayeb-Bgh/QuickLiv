@@ -6,7 +6,7 @@ import 'package:mobileapp/features/customer/grocery_opened/presentation/provider
 
 class FiltersRadioButtons extends ConsumerWidget {
   final List<String> categories;
-  FiltersRadioButtons({super.key, required this.categories});
+  const FiltersRadioButtons({super.key, required this.categories});
 
   void _showFilterDialog(BuildContext context, WidgetRef ref) {
     final selected = ref.watch(selectedSecondCategoryProvider);

@@ -5,8 +5,11 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:mobileapp/core/hive_object/customer_hive_object.dart';
 import 'package:mobileapp/core/hive_object/deliverer_hive_object.dart';
 import 'package:mobileapp/core/hive_object/vehicle_hive_object.dart';
+import 'package:mobileapp/features/customer/cart_popup/data/models/product_hive_object.dart';
 
 import 'package:mobileapp/features/customer/skeleton/presentation/customer_skeleton.dart';
+
+import 'features/customer/cart_popup/data/models/cart_hive_object.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -18,11 +21,17 @@ void main() async {
   Hive.registerAdapter(CustomerHiveObjectAdapter());
   Hive.registerAdapter(VehicleHiveObjectAdapter());
   Hive.registerAdapter(DelivererHiveObjectAdapter());
-
+  Hive.registerAdapter(CartAdapter());
+  Hive.registerAdapter(ProductAdapter());
   await Hive.openBox<CustomerHiveObject>('customerBox');
   await Hive.openBox<DelivererHiveObject>('delivererBox');
   await Hive.openBox<VehicleHiveObject>('vehicleBox');
-
+  await Hive.openBox<Cart>('cartBox1');
+  await Hive.openBox<Cart>('cartBox2');
+  await Hive.openBox<Cart>('cartBox3');
+  await Hive.openBox<Cart>('cartBox4');
+  await Hive.openBox<Cart>('cartBox5');
+  
   runApp(ProviderScope(child: MyApp()));
 }
 

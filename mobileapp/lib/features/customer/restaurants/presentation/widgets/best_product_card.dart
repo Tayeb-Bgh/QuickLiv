@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mobileapp/core/constants/constants.dart';
 import 'package:mobileapp/core/utils/utility_functions.dart';
 import 'package:mobileapp/core/config/dark_mode_provider.dart';
+import 'package:mobileapp/features/customer/cart_popup/presentation/providers/cart_provider.dart';
+import 'package:mobileapp/features/customer/cart_popup/presentation/widgets/pop_ups.dart';
 import 'package:mobileapp/features/customer/restaurants/business/entities/product_entity.dart';
 
 class BestProductCard extends ConsumerWidget {
@@ -63,7 +65,19 @@ class BestProductCard extends ConsumerWidget {
                 bottom: 5,
                 right: 5,
                 child: GestureDetector(
-                  onTap: () {}, // Replace with your action
+                  onTap: () async {
+                    product.unit
+                        ? showQuantityWithUnitSelectorDialog(
+                          context,
+                          ref,
+                          restauProduct: product,
+                        )
+                        : showQuantitySelectorDialog(
+                          context,
+                          ref,
+                          restauProduct: product,
+                        );
+                  },
                   child: Container(
                     padding: const EdgeInsets.all(4),
                     decoration: BoxDecoration(
@@ -119,8 +133,7 @@ class BestProductCard extends ConsumerWidget {
             child: Text(
               product.description,
               style: TextStyle(
-                decorationThickness:
-                    1, // Augmentez cette valeur pour un trait plus épais
+                decorationThickness: 1,
                 decorationColor: reducTxtColor,
                 fontSize: width * 0.029,
                 color: reducTxtColor,

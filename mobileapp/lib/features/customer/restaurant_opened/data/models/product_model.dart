@@ -9,8 +9,9 @@ class ProductModel {
   final String imgUrlProd;
   final double priceProd;
   final double? reducProd;
-
+  final bool unitProd; // <- ici, je l'ai mis à false par défaut
   ProductModel({
+  required this.unitProd,
     required this.idProd,
     required this.nameProd,
     required this.categoryProd,
@@ -23,6 +24,7 @@ class ProductModel {
   factory ProductModel.fromJson(Map<String, dynamic> json) {
   return ProductModel(
     idProd: json["idProd"],
+    unitProd: json["unitProd"] == 0 ? false : true, // <- ici
     nameProd: json["nameProd"],
     categoryProd: json["secondCategoryProd"], // <- ici
     descProd: json["descProd"],
@@ -39,12 +41,15 @@ class ProductModel {
       "categoryProd": categoryProd,
       "descProd": descProd,
       "imgUrlProd": imgUrlProd,
+      
     };
   }
 
-  Product toEntity() {
+  Product toEntity(int idBusns) {
     return Product(
+       unit: unitProd,
       id: idProd,
+      idBusns: idBusns,
       category: categoryProd,
       name: nameProd,
       desc: descProd,

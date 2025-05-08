@@ -46,8 +46,7 @@ class CouponNotifier extends StateNotifier<CouponState> {
     required GetClientCoupons getClientCoupons,
   }) : _createCoupon = createCoupon,
        _getClientCoupons = getClientCoupons,
-       super(CouponState()) {
-  }
+       super(CouponState());
 
   Future<void> fetchCoupons() async {
     try {

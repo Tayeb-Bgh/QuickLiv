@@ -45,6 +45,7 @@ class ProductModel {
     int delivDuration,
   ) {
     return Product(
+      unit: unitProd,
       idProd: idProd,
       idBusns: idBusns,
       nameProd: nameProd,

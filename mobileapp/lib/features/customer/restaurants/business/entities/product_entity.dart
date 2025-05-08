@@ -5,7 +5,7 @@ class Product {
   final String nameBusns;
   final String description;
   final String imgUrl;
-
+  final bool unit;
   final double price;
   final int delivDuration;
 
@@ -18,5 +18,6 @@ class Product {
     required this.delivDuration,
     required this.price,
     required this.description,
+    required this.unit,
   });
 }

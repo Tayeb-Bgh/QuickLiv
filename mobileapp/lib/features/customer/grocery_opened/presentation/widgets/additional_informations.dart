@@ -68,7 +68,7 @@ class AdditionalInformations extends ConsumerWidget {
               Icon(Icons.star, color: iconsColor, size: iconsSize),
               SizedBox(width: 2),
               AutoSizeText(
-                "${grocery?.rating}",
+                "${grocery.rating}",
                 style: TextStyle(color: textColor, fontSize: 12),
                 maxLines: 1,
                 minFontSize: minFontSize,

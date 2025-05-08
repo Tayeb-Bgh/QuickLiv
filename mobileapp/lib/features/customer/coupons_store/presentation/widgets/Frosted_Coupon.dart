@@ -10,7 +10,7 @@ class FrostedCoupon extends StatelessWidget {
   final bool isActive;
   final bool isLoading;
 
-  FrostedCoupon({
+  const FrostedCoupon({
     super.key,
     required this.pointsText,
     required this.onPressed,

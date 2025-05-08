@@ -167,6 +167,7 @@ class GroceriesRepositoryImpl implements GroceriesRepository {
         final idBusns = groceryId;
         final nameProd = product.nameProd;
         final imgUrl = product.imgUrlProd;
+        final bool unitProd = product.unitProd;
         final nameBusns =
             groceries.where((grocery) => grocery.id == groceryId).first.name;
         final delivDuration =
@@ -190,6 +191,7 @@ class GroceriesRepositoryImpl implements GroceriesRepository {
 
         reductionsList.add(
           ProductWithReduc(
+            description: product.description,
             idProd: idProd,
             idBusns: idBusns,
             nameProd: nameProd,
@@ -199,6 +201,7 @@ class GroceriesRepositoryImpl implements GroceriesRepository {
             delivDuration: delivDuration,
             price: price,
             priceWithReduc: getPriceWithReduction(price, reducRate),
+            unit: unitProd,
           ),
         );
       }

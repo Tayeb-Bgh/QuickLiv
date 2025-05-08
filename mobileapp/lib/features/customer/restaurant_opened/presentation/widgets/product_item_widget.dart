@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mobileapp/core/config/dark_mode_provider.dart';
 import 'package:mobileapp/core/constants/constants.dart';
+import 'package:mobileapp/features/customer/cart_popup/presentation/widgets/pop_ups.dart';
 import 'package:mobileapp/features/customer/restaurant_opened/business/entities/product_entity.dart';
 
 class ProductListItem extends ConsumerWidget {
@@ -29,7 +30,7 @@ class ProductListItem extends ConsumerWidget {
       child: Container(
         margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
         padding: const EdgeInsets.all(8),
-        height: product.priceWithReduc != null ? 110 : 95, 
+        height: product.priceWithReduc != null ? 110 : 95,
         decoration: BoxDecoration(
           color: isDarkMode ? kPrimaryDark : Colors.white,
           borderRadius: BorderRadius.circular(12),
@@ -83,66 +84,80 @@ class ProductListItem extends ConsumerWidget {
                   Text(
                     product.desc,
                     overflow: TextOverflow.ellipsis,
-                    maxLines: 2, 
+                    maxLines: 2,
                     style: TextStyle(
                       fontSize: 11,
                       color: isDarkMode ? kLightGray : kMediumGray,
                     ),
                   ),
-                  const Spacer(), 
+                  const Spacer(),
                   Row(
                     children: [
                       product.priceWithReduc != null
                           ? Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  children: [
-                                    SizedBox(width: 16,),
-                                    Text(
-                                  '${product.price.toStringAsFixed(2)} DA',
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    color: isDarkMode ? kLightGray : kMediumGray,
-                                    decoration: TextDecoration.lineThrough,
-                                    decorationColor: isDarkMode ? kLightGrayWhite: kMediumGray,
-                                    decorationThickness: 1.9,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  SizedBox(width: 16),
+                                  Text(
+                                    '${product.price.toStringAsFixed(2)} DA',
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      color:
+                                          isDarkMode ? kLightGray : kMediumGray,
+                                      decoration: TextDecoration.lineThrough,
+                                      decorationColor:
+                                          isDarkMode
+                                              ? kLightGrayWhite
+                                              : kMediumGray,
+                                      decorationThickness: 1.9,
+                                    ),
                                   ),
-                                ),
-                                  ],
-                                ),
-                                
-                                Text(
-                                  '${product.priceWithReduc!.toStringAsFixed(2)} DA',
-                                  style: TextStyle(
-                                    fontSize: width * 0.04,
-                                    fontWeight: FontWeight.bold,
-                                    color: kPrimaryRed,
-                                  ),
-                                ),
-                              ],
-                            )
-                          : Text(
-                              '${product.price.toStringAsFixed(2)} DA',
-                              style: TextStyle(
-                                fontSize: width * 0.04,
-                                fontWeight: FontWeight.bold,
-                                color: kPrimaryRed,
+                                ],
                               ),
+
+                              Text(
+                                '${product.priceWithReduc!.toStringAsFixed(2)} DA',
+                                style: TextStyle(
+                                  fontSize: width * 0.04,
+                                  fontWeight: FontWeight.bold,
+                                  color: kPrimaryRed,
+                                ),
+                              ),
+                            ],
+                          )
+                          : Text(
+                            '${product.price.toStringAsFixed(2)} DA',
+                            style: TextStyle(
+                              fontSize: width * 0.04,
+                              fontWeight: FontWeight.bold,
+                              color: kPrimaryRed,
                             ),
+                          ),
                     ],
                   ),
                 ],
               ),
             ),
             const SizedBox(width: 8),
-            // Bouton + indépendant avec marge
+
             GestureDetector(
-              onTap: () {
-                print('Ajouté au panier : ${product.name}');
+              onTap: () async {
+                product.unit
+                    ? showQuantityWithUnitSelectorDialog(
+                      context,
+                      ref,
+                      restauOpProduct: product,
+                    )
+                    : showQuantitySelectorDialog(
+                      context,
+                      ref,
+                      restauOpProduct: product,
+                    );
               },
               child: Container(
-                margin: const EdgeInsets.only(left: 8, top: 8), // Ajoute un peu d'espace
+                margin: const EdgeInsets.only(left: 8, top: 8),
                 padding: const EdgeInsets.all(6),
                 decoration: BoxDecoration(
                   color: kPrimaryRed,
@@ -155,11 +170,7 @@ class ProductListItem extends ConsumerWidget {
                     ),
                   ],
                 ),
-                child: const Icon(
-                  Icons.add,
-                  color: Colors.white,
-                  size: 20,
-                ),
+                child: const Icon(Icons.add, color: Colors.white, size: 20),
               ),
             ),
           ],

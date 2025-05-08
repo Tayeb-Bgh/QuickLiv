@@ -11,7 +11,7 @@ class VerticalListOfProdcutsList extends ConsumerWidget {
   final List<String> secondCategories;
   final isFull = true;
 
-  VerticalListOfProdcutsList({
+  const VerticalListOfProdcutsList({
     super.key,
     required this.products,
     required this.secondCategories,

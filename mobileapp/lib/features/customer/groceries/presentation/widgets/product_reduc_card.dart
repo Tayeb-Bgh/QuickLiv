@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mobileapp/core/constants/constants.dart';
+import 'package:mobileapp/features/customer/cart_popup/presentation/providers/cart_provider.dart';
+import 'package:mobileapp/features/customer/cart_popup/presentation/widgets/pop_ups.dart';
 import 'package:mobileapp/features/customer/groceries/business/entities/product_with_reduc_entity.dart';
 import 'package:mobileapp/core/utils/utility_functions.dart';
 import 'package:mobileapp/core/config/dark_mode_provider.dart';
@@ -62,7 +64,19 @@ class ProductReducCard extends ConsumerWidget {
                 bottom: 5,
                 right: 5,
                 child: GestureDetector(
-                  onTap: () {}, // Replace with your action
+                  onTap: () async {
+                    product.unit
+                        ? showQuantityWithUnitSelectorDialog(
+                          context,
+                          ref,
+                          productWithRed: product,
+                        )
+                        : showQuantitySelectorDialog(
+                          context,
+                          ref,
+                          productWithRed: product,
+                        );
+                  },
                   child: Container(
                     padding: const EdgeInsets.all(4),
                     decoration: BoxDecoration(
