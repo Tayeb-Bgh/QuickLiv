@@ -5,7 +5,7 @@ import 'package:mobileapp/core/constants/constants.dart';
 import 'package:mobileapp/features/customer/grocery_opened/presentation/providers/grocery_opened_provider.dart';
 
 class FiltersCheckboxButtons extends ConsumerWidget {
-  FiltersCheckboxButtons({super.key});
+  const FiltersCheckboxButtons({super.key});
 
   void _showFilterDialog(BuildContext context, WidgetRef ref) async {
     final isDarkMode = ref.watch(darkModeProvider);

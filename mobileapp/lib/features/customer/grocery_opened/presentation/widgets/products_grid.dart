@@ -12,7 +12,7 @@ class ProductsGrid extends ConsumerWidget {
   final List<String> secondCategories;
   final AsyncValue<List<Product>> productsAsync;
 
-  ProductsGrid({
+  const ProductsGrid({
     super.key,
     required this.category,
     required this.secondCategories,
@@ -80,8 +80,12 @@ class ProductsGrid extends ConsumerWidget {
             ],
           );
         },
-        error: (error, _) {},
-        loading: () {},
+        error: (error, _) {
+          return null;
+        },
+        loading: () {
+          return null;
+        },
       ),
     );
   }

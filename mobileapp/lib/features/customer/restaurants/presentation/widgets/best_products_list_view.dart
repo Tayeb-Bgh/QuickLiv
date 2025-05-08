@@ -60,7 +60,7 @@ class BestProductsListView extends ConsumerWidget {
                       color: btnBgColor,
                       shape:
                           BoxShape
-                              .circle, // ou BorderRadius.circular(...) si tu préfères
+                              .circle, 
                     ),
                     child: Icon(
                       Icons.arrow_forward,

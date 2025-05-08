@@ -13,6 +13,6 @@ class RestaurantOpenedRepositoryImpl implements RestaurantOpenedRepository {
     final List<ProductModel> response = await service.fetchProducts(
       restaurantId,
     );
-    return response.map((model) => model.toEntity()).toList();
+    return response.map((model) => model.toEntity(restaurantId)).toList();
   }
 }

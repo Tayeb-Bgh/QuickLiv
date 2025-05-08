@@ -1,10 +1,23 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mobileapp/core/config/dark_mode_provider.dart';
+import 'package:mobileapp/core/constants/constants.dart';
+import 'package:mobileapp/features/customer/cart_popup/data/services/cart_service.dart';
+import 'package:mobileapp/features/customer/cart_popup/presentation/providers/cart_provider.dart';
 
 class NoticeInputWidget extends ConsumerStatefulWidget {
-  const NoticeInputWidget({super.key});
+  final String boxName;
+  final int idProd;
+  final String notice;
 
+  NoticeInputWidget({
+    super.key,
+    required this.boxName,
+    required this.idProd,
+    required this.notice,
+  });
   @override
   ConsumerState<NoticeInputWidget> createState() => _NoticeInputWidgetState();
 }
@@ -16,6 +29,8 @@ class _NoticeInputWidgetState extends ConsumerState<NoticeInputWidget> {
   @override
   void initState() {
     super.initState();
+    _controller.text = widget.notice;
+    log('the notice is here ${widget.notice}');
     _controller.addListener(() {
       setState(() {});
     });
@@ -28,7 +43,7 @@ class _NoticeInputWidgetState extends ConsumerState<NoticeInputWidget> {
     bool isDarkMode = ref.watch(darkModeProvider);
 
     return Dialog(
-      backgroundColor: const Color(0xFFF5F5F5),
+      backgroundColor: isDarkMode ? kPrimaryDark : kPrimaryWhite,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Container(
         height: dialogHeight,
@@ -62,6 +77,7 @@ class _NoticeInputWidgetState extends ConsumerState<NoticeInputWidget> {
                         decoration: const InputDecoration(
                           border: InputBorder.none,
                           counterText: "",
+
                           hintText:
                               "Exemple : Je veux pas de salade sur mon burger s'il vous plaît",
                           hintStyle: TextStyle(
@@ -100,8 +116,14 @@ class _NoticeInputWidgetState extends ConsumerState<NoticeInputWidget> {
                 _buildCircleButton(
                   icon: Icons.check,
                   color: const Color(0xFFE13838),
-                  onPressed: () {
-                    print("Notice validé: ${_controller.text}");
+                  onPressed: () async {
+                    await CartService.updateProduct(
+                      boxName: widget.boxName,
+                      productId: widget.idProd.toString(),
+                      notice: _controller.text,
+                    );
+                    log("Notice validé: ${_controller.text}");
+                    await ref.read(cartsProvider.notifier).reload();
                     Navigator.pop(context);
                   },
                 ),

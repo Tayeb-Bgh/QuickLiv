@@ -94,7 +94,7 @@ class ReductionsListView extends ConsumerWidget {
                       ),
                     ),
                   ),
-              error: (err, _) => Text('errooor'),
+              error: (err, _) => Text(err.toString()),
               loading: () => const Center(child: CircularProgressIndicator()),
             ),
           ],

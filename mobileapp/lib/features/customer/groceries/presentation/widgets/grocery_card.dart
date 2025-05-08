@@ -63,7 +63,7 @@ class GroceryCard extends ConsumerWidget {
           MaterialPageRoute(builder: (context) => GroceryOpenedPage()),
         );
       },
-      child: Container(
+      child: SizedBox(
         height: isFull ? height * 0.33 : height * 0.31,
         width: isFull ? width * 0.9 : width * 0.6,
         child: Column(

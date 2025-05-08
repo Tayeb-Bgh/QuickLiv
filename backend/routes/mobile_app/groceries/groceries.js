@@ -69,7 +69,7 @@ router.get("/products/:idProd", (req, res) => {
 
     const { idProd } = req.params;
 
-    const query = `SELECT idProd,nameProd,imgUrlProd,unitProd FROM Product
+    const query = `SELECT idProd,nameProd,imgUrlProd,unitProd,descProd FROM Product
                    WHERE idProd = ? `;
 
     db.query(query, [idProd], async (err, results) => {

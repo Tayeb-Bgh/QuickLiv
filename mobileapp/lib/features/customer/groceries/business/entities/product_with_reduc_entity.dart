@@ -5,12 +5,14 @@ class ProductWithReduc {
   final double reducRate;
   final String nameBusns;
   final String imgUrl;
-
+  final bool unit;
   final double price;
   final double priceWithReduc;
   final int delivDuration;
+  final String description;
 
   ProductWithReduc({
+    required this.description,
     required this.idProd,
     required this.idBusns,
     required this.nameProd,
@@ -20,5 +22,6 @@ class ProductWithReduc {
     required this.delivDuration,
     required this.price,
     required this.priceWithReduc,
+    required this.unit,
   });
 }

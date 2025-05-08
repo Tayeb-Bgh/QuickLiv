@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mobileapp/core/constants/constants.dart';
 import 'package:mobileapp/core/config/dark_mode_provider.dart';
+import 'package:mobileapp/features/customer/cart_popup/presentation/widgets/pop_ups.dart';
 import 'package:mobileapp/features/customer/grocery_opened/business/entities/product_entity.dart';
 
 class ProductCard extends ConsumerWidget {
@@ -58,7 +59,19 @@ class ProductCard extends ConsumerWidget {
                 bottom: 5,
                 right: 5,
                 child: GestureDetector(
-                  onTap: () {}, // Replace with your action
+                  onTap: () {
+                    product.unit
+                        ? showQuantityWithUnitSelectorDialog(
+                          context,
+                          ref,
+                          product: product,
+                        )
+                        : showQuantitySelectorDialog(
+                          context,
+                          ref,
+                          product: product,
+                        );
+                  },
                   child: Container(
                     padding: EdgeInsets.all(4),
                     decoration: BoxDecoration(

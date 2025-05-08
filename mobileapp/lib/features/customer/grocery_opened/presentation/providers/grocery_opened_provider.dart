@@ -90,8 +90,9 @@ final secondCateogriesMapProvider = FutureProvider<Map<String, List<String>>>((
   }
 
   print("[DEBUG] second categories map:");
-  for (final key in secondCategoriesMap.keys)
+  for (final key in secondCategoriesMap.keys) {
     print("$key : ${secondCategoriesMap[key]}");
+  }
 
   return secondCategoriesMap;
 });

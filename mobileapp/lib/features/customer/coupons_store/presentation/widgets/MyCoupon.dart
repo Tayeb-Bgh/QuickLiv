@@ -4,11 +4,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mobileapp/core/config/dark_mode_provider.dart';
 import 'package:mobileapp/core/constants/constants.dart';
-import 'package:mobileapp/features/auth/presentation/providers/auth_provider.dart';
 import 'package:mobileapp/features/customer/coupons_store/presentation/providers/Coupon_provider.dart';
 
 class MyCoupon extends ConsumerWidget {
-  const MyCoupon({Key? key}) : super(key: key);
+  const MyCoupon({super.key});
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final couponsState = ref.watch(couponProvider);

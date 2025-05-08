@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mobileapp/core/config/dark_mode_provider.dart';
 import 'package:mobileapp/core/constants/constants.dart';
 import 'package:mobileapp/core/failure/failure.dart';
-import 'package:mobileapp/features/auth/presentation/providers/auth_provider.dart';
 import 'package:mobileapp/features/customer/coupons_store/presentation/providers/Coupon_provider.dart';
 import 'package:mobileapp/features/customer/coupons_store/presentation/providers/Point_provider.dart';
 import 'package:mobileapp/features/customer/coupons_store/presentation/widgets/AvailableCoupon.dart';

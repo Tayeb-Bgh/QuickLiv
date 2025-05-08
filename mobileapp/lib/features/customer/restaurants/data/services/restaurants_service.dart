@@ -16,6 +16,7 @@ class RestaurantsService {
     String? category,
   ) async {
     try {
+      print("fetchRestaurantsModelsByLocation: $wilaya, $lat, $lng, $category");
       final url = await ApiConfig.getBaseUrl();
       String urlWithOptions = "$url/restaurants/?wilaya=béjaïa";
       urlWithOptions += category != null ? "&category=$category" : "";

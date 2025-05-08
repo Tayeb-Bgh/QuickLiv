@@ -4,11 +4,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mobileapp/core/config/dark_mode_provider.dart';
 import 'package:mobileapp/core/constants/constants.dart';
 import 'package:mobileapp/core/utils/utility_functions.dart';
-import 'package:mobileapp/features/auth/presentation/providers/auth_provider.dart';
 import 'package:mobileapp/features/customer/coupons_store/presentation/providers/Point_provider.dart';
 
 class MyPoints extends ConsumerWidget {
-  const MyPoints({Key? key}) : super(key: key);
+  const MyPoints({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -72,7 +71,7 @@ class MyPoints extends ConsumerWidget {
                     borderRadius: BorderRadius.circular(30),
                   ),
                   child: AutoSizeText(
-                    "${points} pts",
+                    "$points pts",
                     style: TextStyle(
                       color: numberPointsColor,
                       fontWeight: FontWeight.w900,

@@ -6,8 +6,9 @@ class ProductModel {
   final String nameProd;
   final String imgUrlProd;
   final bool unitProd;
-
+  final String description;
   ProductModel({
+    required this.description,
     required this.idProd,
     required this.nameProd,
     required this.imgUrlProd,
@@ -21,6 +22,7 @@ class ProductModel {
       idProd: json["idProd"],
       nameProd: json["nameProd"],
       imgUrlProd: json["imgUrlProd"],
+      description: json["descProd"],
       unitProd: unitProdBool,
     );
   }
@@ -43,6 +45,7 @@ class ProductModel {
     double reducRate,
   ) {
     return ProductWithReduc(
+      description: description,
       idProd: idProd,
       idBusns: idBusns,
       nameProd: nameProd,
@@ -52,6 +55,7 @@ class ProductModel {
       delivDuration: delivDuration,
       price: price,
       priceWithReduc: getPriceWithReduction(price, reducRate),
+      unit: unitProd,
     );
   }
 }

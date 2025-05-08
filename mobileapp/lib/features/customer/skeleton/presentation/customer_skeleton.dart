@@ -45,7 +45,6 @@ class _CustomerSkeletonState extends ConsumerState<CustomerSkeleton> {
   void _setCurrentIndex(int index) async {
     if (index == 0) {
       setState(() {
-       
         _currentIndex = index;
       });
     } else if (index == 1) {
@@ -125,6 +124,7 @@ class _CustomerSkeletonState extends ConsumerState<CustomerSkeleton> {
                 backgroundColor: kPrimaryRed,
                 child: const Icon(
                   Icons.search,
+                  size: 39,
                   color: Colors.white, // Setting the icon color to white
                 ),
                 shape: RoundedRectangleBorder(
