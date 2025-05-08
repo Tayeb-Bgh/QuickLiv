@@ -9,7 +9,6 @@ class HorizontalRadioButtons extends ConsumerWidget {
 
   void _showFilterDialog(BuildContext context, WidgetRef ref) {
     final selected = ref.watch(selectedTypeProvider);
-    final isDarkMode = ref.watch(darkModeProvider);
     final categories = [
       {'label': 'Kebabiers', 'type': 'kebabier', 'icon': Icons.kebab_dining},
       {'label': 'Burgueries', 'type': 'burguerie', 'icon': Icons.lunch_dining},
@@ -59,7 +58,7 @@ class HorizontalRadioButtons extends ConsumerWidget {
                   final category = categories[index];
                   print('Dialog comparing: $selected == ${category['type']}');
 
-                  final isSelected = selected == category['type'];
+                  /* final isSelected = selected == category['type']; */
 
                   return RadioListTile<String>(
                     title: Row(
@@ -109,7 +108,7 @@ class HorizontalRadioButtons extends ConsumerWidget {
     final isDarkMode = ref.watch(darkModeProvider);
 
     final selected = ref.watch(selectedTypeProvider);
-   final categories = [
+    final categories = [
       {'label': 'Kebabiers', 'type': 'kebabier', 'icon': Icons.kebab_dining},
       {'label': 'Burgueries', 'type': 'burguerie', 'icon': Icons.lunch_dining},
       {'label': 'Fast food', 'type': 'fast food', 'icon': Icons.fastfood},

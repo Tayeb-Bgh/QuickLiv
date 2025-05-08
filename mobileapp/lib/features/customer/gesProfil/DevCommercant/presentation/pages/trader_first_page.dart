@@ -2,6 +2,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mobileapp/core/config/dark_mode_provider.dart';
+import 'package:mobileapp/core/constants/constants.dart';
 import 'package:mobileapp/features/customer/gesProfil/DevCommercant/business/usercases/validateTrader.dart';
 import 'package:mobileapp/features/customer/gesProfil/DevCommercant/presentation/providers/from_data_provider.dart';
 import 'package:mobileapp/features/customer/gesProfil/DevLivreur/presentation/widgets/gender_selection_widget.dart';
@@ -94,7 +95,7 @@ class _TradeFirstPageState extends ConsumerState<TradeFirstPage> {
       });
     }
 
-    if (adresseController.text.isEmpty ) {
+    if (adresseController.text.isEmpty) {
       isValid = false;
       setState(() {
         _adresseError = "Veuillez remplir ce champ.";
@@ -105,7 +106,8 @@ class _TradeFirstPageState extends ConsumerState<TradeFirstPage> {
       });
     }
 
-    if (telController.text.isEmpty || !validator.validatePhoneNumber(telController.text)) {
+    if (telController.text.isEmpty ||
+        !validator.validatePhoneNumber(telController.text)) {
       isValid = false;
       setState(() {
         _telError = "Veuillez remplir ce champ correctement.";
@@ -150,10 +152,8 @@ class _TradeFirstPageState extends ConsumerState<TradeFirstPage> {
 
     final Color backColor = isDarkMode ? Color(0xFF282525) : Colors.white;
     final Color textColor = isDarkMode ? Colors.white : Colors.black;
-    final Color textFieldColor =
-        isDarkMode ? Color(0xFF363333) : Color(0xFFCCCCCC);
-    final Color circleColor =
-        isDarkMode ? Color(0xFF363333) : Color(0xFFD9D9D9);
+    final Color textFieldColor = isDarkMode ? Color(0xFF363333) : kWhiteGray;
+    final Color circleColor = isDarkMode ? Color(0xFF363333) : kWhiteGray;
 
     return Scaffold(
       backgroundColor: backColor,
@@ -328,7 +328,7 @@ class _TradeFirstPageState extends ConsumerState<TradeFirstPage> {
                           if (_isFormValid()) {
                             _updateFormData();
                             widget.onNext();
-                          }else {}
+                          } else {}
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.redAccent,

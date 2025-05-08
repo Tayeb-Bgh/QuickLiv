@@ -15,7 +15,7 @@ void main() async {
   );
   await Hive.initFlutter();
   Hive.registerAdapter(CustomerHiveObjectAdapter());
-  Hive.registerAdapter(VehicleHiveObjectAdapter()); 
+  Hive.registerAdapter(VehicleHiveObjectAdapter());
   Hive.registerAdapter(DelivererHiveObjectAdapter());
 
   await Hive.openBox<CustomerHiveObject>('customerBox');

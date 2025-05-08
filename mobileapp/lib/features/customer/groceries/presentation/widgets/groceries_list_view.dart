@@ -41,7 +41,7 @@ class GroceriesListView extends ConsumerWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Text(
-                  title,
+                  "Nos meilleurs magasins",
                   textAlign: TextAlign.left,
 
                   style: TextStyle(

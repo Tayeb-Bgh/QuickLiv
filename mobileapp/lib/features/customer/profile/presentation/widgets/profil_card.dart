@@ -55,7 +55,7 @@ class ProfileCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 Text(
-                  '$firstName $lastName',
+                  capitalize('$firstName $lastName'),
                   style: TextStyle(
                     color: fontColor,
                     fontSize: 18,

@@ -93,7 +93,7 @@ class _CouponPageState extends ConsumerState<CouponPage> {
     }
 
     return Scaffold(
-      backgroundColor: isDarkMode ? kPrimaryBlack : kSecondaryWhite,
+      backgroundColor: isDarkMode ? kPrimaryDark : kSecondaryWhite,
       body: buildCouponContent(),
     );
   }
