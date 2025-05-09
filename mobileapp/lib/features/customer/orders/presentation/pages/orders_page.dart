@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mobileapp/core/config/dark_mode_provider.dart';
 import 'package:mobileapp/core/constants/constants.dart';
+import 'package:mobileapp/features/customer/orders/presentation/pages/order_delivered_page.dart';
+import 'package:mobileapp/features/customer/orders/presentation/pages/order_in_progress_page.dart';
 import 'package:mobileapp/features/customer/orders/presentation/providers/orders_provider.dart';
 import 'package:mobileapp/features/customer/orders/presentation/widgets/order_card_widget.dart';
 
@@ -42,16 +44,48 @@ class _State extends ConsumerState<OrdersPage> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              ChoiceChip(
-                label: const Text('En Cours'),
-                selected: !showOld,
-                onSelected: (_) => setState(() => showOld = false),
+              GestureDetector(
+                onTap: () => setState(() => showOld = false),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 24,
+                    vertical: 8,
+                  ),
+                  decoration: BoxDecoration(
+                    color: !showOld ? kPrimaryRed : Colors.transparent,
+                    borderRadius: BorderRadius.circular(24),
+                    border: Border.all(color: kPrimaryRed, width: 2),
+                  ),
+                  child: Text(
+                    'En Cours',
+                    style: TextStyle(
+                      color: !showOld ? kPrimaryWhite : kPrimaryRed,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
               ),
-              const SizedBox(width: 8),
-              ChoiceChip(
-                label: const Text('Anciennes'),
-                selected: showOld,
-                onSelected: (_) => setState(() => showOld = true),
+              const SizedBox(width: 12),
+              GestureDetector(
+                onTap: () => setState(() => showOld = true),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 24,
+                    vertical: 8,
+                  ),
+                  decoration: BoxDecoration(
+                    color: showOld ? kPrimaryRed : Colors.transparent,
+                    borderRadius: BorderRadius.circular(24),
+                    border: Border.all(color: kPrimaryRed, width: 2),
+                  ),
+                  child: Text(
+                    'Anciennes',
+                    style: TextStyle(
+                      color: showOld ? kPrimaryWhite : kPrimaryRed,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
               ),
             ],
           ),
@@ -60,7 +94,25 @@ class _State extends ConsumerState<OrdersPage> {
             child: ListView.builder(
               itemCount: filteredOrders.length,
               itemBuilder:
-                  (_, index) => OrderCard(order: filteredOrders[index]),
+                  (_, index) => GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder:
+                              (_) =>
+                                  filteredOrders[index].status == 4
+                                      ? OrderDeliveredPage(
+                                        order: filteredOrders[index],
+                                      )
+                                      : OrderDetailsPage(
+                                        order: filteredOrders[index],
+                                      ),
+                        ),
+                      );
+                    },
+                    child: OrderCard(order: filteredOrders[index]),
+                  ),
             ),
           ),
         ],

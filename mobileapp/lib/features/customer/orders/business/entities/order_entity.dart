@@ -9,6 +9,7 @@ class Order {
   final DateTime createdAt;
   final double totalAmount;
   final double? priceWithReduc;
+  final double deliveryPrice;
   final bool paymentMethod;
   final Business business;
   Deliverer? deliverer;
@@ -25,6 +26,7 @@ class Order {
     required this.createdAt,
     required this.totalAmount,
     required this.priceWithReduc,
+    required this.deliveryPrice,
     required this.paymentMethod,
     required this.business,
     this.deliverer,
