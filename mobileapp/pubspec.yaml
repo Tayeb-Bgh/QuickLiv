@@ -59,6 +59,7 @@ dependencies:
   cached_network_image: ^3.4.1
   file_picker: ^10.1.2
   card_swiper: ^3.0.1
+  material_symbols_icons: ^4.2815.0
 
 
   

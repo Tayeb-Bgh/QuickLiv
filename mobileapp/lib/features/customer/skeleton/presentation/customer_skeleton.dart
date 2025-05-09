@@ -45,7 +45,6 @@ class _CustomerSkeletonState extends ConsumerState<CustomerSkeleton> {
   void _setCurrentIndex(int index) async {
     if (index == 0) {
       setState(() {
-       
         _currentIndex = index;
       });
     } else if (index == 1) {

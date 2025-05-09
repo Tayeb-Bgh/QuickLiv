@@ -26,7 +26,7 @@ class _GoogleMapsPageState extends ConsumerState<GoogleMapsPage> {
         return GoogleMap(
           initialCameraPosition: CameraPosition(
             target: currentPosition,
-            zoom: 13,
+            zoom: 16,
           ),
           markers: {
             Marker(
