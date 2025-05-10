@@ -8,6 +8,11 @@ import 'package:mobileapp/features/customer/cart_popup/presentation/providers/ca
 import 'package:mobileapp/features/customer/cart_popup/presentation/widgets/cart_empty_popup.dart';
 import 'package:mobileapp/features/customer/cart_popup/presentation/widgets/overview_cart.dart';
 import 'package:mobileapp/features/customer/cart_popup/presentation/widgets/product_card_horiz.dart';
+import 'package:mobileapp/features/customer/payment/presentation/pages/payment_page.dart';
+import 'package:mobileapp/features/customer/payment/presentation/providers/bank_card_provider.dart';
+import 'package:mobileapp/features/customer/payment/presentation/providers/payment_provider.dart';
+import 'package:mobileapp/features/customer/payment/presentation/widgets/payment_mode_widget.dart';
+import 'package:mobileapp/features/customer/payment/presentation/widgets/use_coupon_widget.dart';
 
 class CartPopup extends ConsumerStatefulWidget {
   const CartPopup({super.key});
@@ -236,7 +241,51 @@ class _CartPopupState extends ConsumerState<CartPopup> {
                                     ),
                                     padding: EdgeInsets.all(12),
                                   ),
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    ref
+                                        .watch(usedCouponProvider.notifier)
+                                        .state = null;
+                                    ref.read(isLoadedCoup.notifier).state =
+                                        false;
+                                    ref.read(couponControllerProvider).text =
+                                        "";
+                                    ref
+                                        .read(couponTextProvider.notifier)
+                                        .state = "";
+
+                                    ref.read(isLoadingPay.notifier).state =
+                                        false;
+                                    ref.read(isVerified.notifier).state = false;
+
+                                    ref
+                                        .read(cardNbTextProvider.notifier)
+                                        .state = "";
+                                    ref
+                                        .read(cardNbTextControllerProvider)
+                                        .text = "";
+
+                                    ref.read(cvvNbTextProvider.notifier).state =
+                                        "";
+                                    ref.read(cvvNbControllerProvider).text = "";
+
+                                    ref
+                                        .read(dateExpTextProvider.notifier)
+                                        .state = "";
+                                    ref.read(dateExpControllerProvider).text =
+                                        "";
+
+                                    ref
+                                        .read(owernNameTextProvider.notifier)
+                                        .state = "";
+                                    ref.read(owernNameControllerProvider).text =
+                                        "";
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => PaymentPage(),
+                                      ),
+                                    );
+                                  },
                                   child: const Text(
                                     'Valider la commande',
                                     style: TextStyle(

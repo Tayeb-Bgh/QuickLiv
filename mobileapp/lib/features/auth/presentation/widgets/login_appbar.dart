@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-
 class LoginAppBar extends StatelessWidget {
   const LoginAppBar({super.key});
 
@@ -13,27 +12,9 @@ class LoginAppBar extends StatelessWidget {
         height: height * 0.36,
         width: double.infinity,
         child: Center(
-          child: Padding(
-            padding: EdgeInsets.all(height * 0.08),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                const CircleAvatar(
-                  radius: 45,
-                  backgroundColor: Colors.grey,
-                  child: Icon(Icons.person, size: 50, color: Colors.white),
-                ),
-                SizedBox(height: height * 0.019,),
-                Text(
-                  'QuickLiv',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
-            ),
+          child: Image(
+            image: AssetImage("assets/images/logo.png"),
+            width: height * 0.3,
           ),
         ),
       ),

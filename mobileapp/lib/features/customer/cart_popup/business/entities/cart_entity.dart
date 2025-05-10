@@ -16,4 +16,8 @@ class Cart {
     required this.prodPrice,
     required this.products,
   });
+
+  Map<String, dynamic> toJson() {
+    return {"idBusnsCart": idBusns};
+  }
 }

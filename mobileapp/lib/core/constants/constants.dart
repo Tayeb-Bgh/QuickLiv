@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 // Rouge
-const Color kPrimaryRed = Color(0xFFE13838);
+const Color kPrimaryRed = Color.fromRGBO(225, 56, 56, 1);
 const Color KSecondaryRed = Color(0x66E13838);
 
 // Blanc

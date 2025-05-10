@@ -9,13 +9,13 @@ class FavouritesService {
   final Ref ref;
 
   FavouritesService(this.dio, this.ref);
-  
+
   // Récupérer la liste des business favoris d'un client
   Future<List<BusinessModel>> fetchCustomerFavourites() async {
     try {
       final secureStorage = ref.watch(secureStorageProvider);
       String? token = await secureStorage.read(key: "authToken");
-      
+
       final response = await dio.get(
         "${await ApiConfig.getBaseUrl()}/favourites",
         options: Options(
@@ -24,11 +24,11 @@ class FavouritesService {
             'authorization': 'Bearer $token',
           },
           validateStatus: (status) {
-            return status! < 500; 
+            return status! < 500;
           },
-        )
+        ),
       );
-
+      print(response);
       if (response.statusCode == 200) {
         return (response.data as List)
             .map((e) => BusinessModel.fromJson(e))
@@ -43,7 +43,7 @@ class FavouritesService {
     } on DioException catch (e) {
       _logError("fetchCustomerFavourites", e);
       if (e.response?.statusCode == 404) {
-        return []; 
+        return [];
       }
       rethrow;
     }
@@ -54,7 +54,7 @@ class FavouritesService {
     try {
       final secureStorage = ref.watch(secureStorageProvider);
       String? token = await secureStorage.read(key: "authToken");
-      
+
       final response = await dio.get(
         "${await ApiConfig.getBaseUrl()}/favourites/filter/$typeBusns",
         options: Options(
@@ -63,18 +63,15 @@ class FavouritesService {
             'authorization': 'Bearer $token',
           },
           validateStatus: (status) {
-            return status! < 500; 
+            return status! < 500;
           },
-        )
+        ),
       );
 
       if (response.statusCode == 200) {
-       
-
         return (response.data as List)
             .map((e) => BusinessModel.fromJson(e))
             .toList();
-
       } else {
         throw DioException(
           requestOptions: response.requestOptions,
@@ -85,7 +82,7 @@ class FavouritesService {
     } on DioException catch (e) {
       _logError("filterFavouritesByType", e);
       if (e.response?.statusCode == 404) {
-        return []; 
+        return [];
       }
       rethrow;
     }
@@ -96,7 +93,7 @@ class FavouritesService {
     try {
       final secureStorage = ref.watch(secureStorageProvider);
       String? token = await secureStorage.read(key: "authToken");
-      
+
       final response = await dio.post(
         "${await ApiConfig.getBaseUrl()}/favourites/$idBusnsFav",
         options: Options(
@@ -127,7 +124,7 @@ class FavouritesService {
     try {
       final secureStorage = ref.watch(secureStorageProvider);
       String? token = await secureStorage.read(key: "authToken");
-      
+
       final response = await dio.delete(
         "${await ApiConfig.getBaseUrl()}/favourites/$idBusnsFav",
         options: Options(
@@ -156,8 +153,7 @@ class FavouritesService {
       return false;
     }
   }
-  
-  
+
   void _logError(String method, DioException e) {
     print("❌ [FavouritesService.$method] Error: ${e.message}");
     if (e.response != null) {

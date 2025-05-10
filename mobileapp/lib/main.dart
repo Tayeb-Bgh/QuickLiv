@@ -40,7 +40,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: CustomerSkeleton(),
+      home: Scaffold(body: CustomerSkeleton()),
     );
   }
 }

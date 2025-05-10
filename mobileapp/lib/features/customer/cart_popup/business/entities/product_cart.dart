@@ -18,4 +18,14 @@ class ProductCart {
     required this.unitProd,
     required this.quantity,
   });
+
+  Map<String, dynamic> toJson(int idCart) {
+    return {
+      "idProd": id,
+      "idCart": idCart,
+      "unitPriceProdCart": price,
+      "qttyProdCart": quantity,
+      "noteProdCart": notice,
+    };
+  }
 }

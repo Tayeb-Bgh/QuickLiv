@@ -23,9 +23,9 @@ router.post('/delivery-type', async (req, res) => {
 Tu es une intelligence artificielle experte en logistique. En te basant uniquement sur les noms des produits et leur quantité, détermine si une commande peut être livrée en scooter ou nécessite une voiture. Sois logique en imaginant la taille/volume/poids typique de chaque produit.
 
 Voici la liste :
-${items.map(item => `- ${item.quantity} ${!item.unit ? "unité" : item.unit}  x ${item.name}`).join('\n')}
+${items.map(item => `- ${item.quantity} ${item.unit ? "grammes" : "unités"}  x ${item.name}`).join('\n')}
 
-Répond uniquement par : "scooter" ou "voiture", sans phrase supplémentaire.
+Répond uniquement par : "scooter" pour scooter ou "car" pour voiture, sans phrase supplémentaire.
     `.trim();
     
     const response = await axios.post(

@@ -13,6 +13,7 @@ const delivererRouter = require("./routes/mobile_app/gesProfil/create_deliverer"
 const TraderRouter = require("./routes/mobile_app/gesProfil/create_trader")
 const favouritesRouter = require("./routes/mobile_app/favourites/favourites")
 const homeRouter = require("./routes/mobile_app/home/home")
+const paymentRouter = require("./routes/mobile_app/payment/payment")
 
 const cartRouter = require("./routes/mobile_app/cart/cart")
 const app = express();
@@ -37,6 +38,7 @@ app.use("/api/gesProfil", TraderRouter);
 app.use("/api/favourites",favouritesRouter);
 app.use("/api/home", homeRouter);
 app.use("/api/cart", cartRouter );
+app.use("/api/payment", paymentRouter );
 
 
 app.listen(serverPort,() => {
