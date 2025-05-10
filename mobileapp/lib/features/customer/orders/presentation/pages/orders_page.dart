@@ -38,84 +38,93 @@ class _State extends ConsumerState<OrdersPage> {
         foregroundColor: kPrimaryWhite,
         title: const Text('Mes commandes'),
       ),
-      body: Column(
-        children: [
-          const SizedBox(height: 8),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              GestureDetector(
-                onTap: () => setState(() => showOld = false),
-                child: Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 24,
-                    vertical: 8,
-                  ),
-                  decoration: BoxDecoration(
-                    color: !showOld ? kPrimaryRed : Colors.transparent,
-                    borderRadius: BorderRadius.circular(24),
-                    border: Border.all(color: kPrimaryRed, width: 2),
-                  ),
-                  child: Text(
-                    'En Cours',
-                    style: TextStyle(
-                      color: !showOld ? kPrimaryWhite : kPrimaryRed,
-                      fontWeight: FontWeight.bold,
+      body: Container(
+        color: isDarkMode ? kPrimaryDark : kSecondaryWhite,
+        child: Column(
+          children: [
+            const SizedBox(height: 8),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                GestureDetector(
+                  onTap: () => setState(() => showOld = false),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 24,
+                      vertical: 8,
+                    ),
+                    decoration: BoxDecoration(
+                      color: !showOld ? kPrimaryRed : Colors.transparent,
+                      borderRadius: BorderRadius.circular(24),
+                      border: Border.all(color: kPrimaryRed, width: 2),
+                    ),
+                    child: Text(
+                      'En cours',
+                      style: TextStyle(
+                        color:
+                            isDarkMode
+                                ? (!showOld ? kPrimaryWhite : kPrimaryWhite)
+                                : (!showOld ? kPrimaryWhite : kPrimaryRed),
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 ),
-              ),
-              const SizedBox(width: 12),
-              GestureDetector(
-                onTap: () => setState(() => showOld = true),
-                child: Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 24,
-                    vertical: 8,
-                  ),
-                  decoration: BoxDecoration(
-                    color: showOld ? kPrimaryRed : Colors.transparent,
-                    borderRadius: BorderRadius.circular(24),
-                    border: Border.all(color: kPrimaryRed, width: 2),
-                  ),
-                  child: Text(
-                    'Anciennes',
-                    style: TextStyle(
-                      color: showOld ? kPrimaryWhite : kPrimaryRed,
-                      fontWeight: FontWeight.bold,
+                const SizedBox(width: 12),
+                GestureDetector(
+                  onTap: () => setState(() => showOld = true),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 24,
+                      vertical: 8,
+                    ),
+                    decoration: BoxDecoration(
+                      color: showOld ? kPrimaryRed : Colors.transparent,
+                      borderRadius: BorderRadius.circular(24),
+                      border: Border.all(color: kPrimaryRed, width: 2),
+                    ),
+                    child: Text(
+                      'Anciennes',
+                      style: TextStyle(
+                        color:
+                            isDarkMode
+                                ? (!showOld ? kPrimaryWhite : kPrimaryWhite)
+                                : (!showOld ? kPrimaryRed : kPrimaryWhite),
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 8),
-          Expanded(
-            child: ListView.builder(
-              itemCount: filteredOrders.length,
-              itemBuilder:
-                  (_, index) => GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder:
-                              (_) =>
-                                  filteredOrders[index].status == 4
-                                      ? OrderDeliveredPage(
-                                        order: filteredOrders[index],
-                                      )
-                                      : OrderDetailsPage(
-                                        order: filteredOrders[index],
-                                      ),
-                        ),
-                      );
-                    },
-                    child: OrderCard(order: filteredOrders[index]),
-                  ),
+              ],
             ),
-          ),
-        ],
+            const SizedBox(height: 8),
+            Expanded(
+              child: ListView.builder(
+                itemCount: filteredOrders.length,
+                itemBuilder:
+                    (_, index) => GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder:
+                                (_) =>
+                                    filteredOrders[index].status == 4
+                                        ? OrderDeliveredPage(
+                                          order: filteredOrders[index],
+                                        )
+                                        : OrderDetailsPage(
+                                          order: filteredOrders[index],
+                                        ),
+                          ),
+                        );
+                      },
+                      child: OrderCard(order: filteredOrders[index]),
+                    ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

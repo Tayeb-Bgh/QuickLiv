@@ -1,16 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mobileapp/core/config/dark_mode_provider.dart';
+import 'package:mobileapp/core/constants/constants.dart';
 import 'package:mobileapp/features/customer/orders/business/entities/order_entity.dart';
 
-class OrderCard extends StatelessWidget {
+class OrderCard extends ConsumerWidget {
   final Order order;
 
   const OrderCard({super.key, required this.order});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isDarkMode = ref.watch(darkModeProvider);
     final isDelivered = order.status == 4;
 
     return Card(
+      color: isDarkMode ? kSecondaryDark : kPrimaryWhite,
       elevation: 4,
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: Padding(
@@ -33,9 +38,10 @@ class OrderCard extends StatelessWidget {
                     children: [
                       Text(
                         order.business.name,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 16,
+                          color: isDarkMode ? kSecondaryWhite : kSecondaryDark,
                         ),
                       ),
                       Row(
@@ -47,7 +53,8 @@ class OrderCard extends StatelessWidget {
                                 ? "En attente"
                                 : "En route",
                             style: TextStyle(
-                              color: isDelivered ? Colors.green : Colors.orange,
+                              color:
+                                  isDelivered ? kPrimaryGreen : Colors.orange,
                               fontSize: 12,
                               fontWeight: FontWeight.w500,
                             ),
@@ -55,7 +62,11 @@ class OrderCard extends StatelessWidget {
                           const SizedBox(width: 6),
                           Text(
                             "${order.createdAt.day.toString().padLeft(2, '0')}/${order.createdAt.month.toString().padLeft(2, '0')}/${order.createdAt.year} à ${order.createdAt.hour.toString().padLeft(2, '0')}:${order.createdAt.minute.toString().padLeft(2, '0')}",
-                            style: const TextStyle(fontSize: 12),
+                            style: TextStyle(
+                              fontSize: 12,
+                              color:
+                                  isDarkMode ? kPrimaryWhite : kSecondaryDark,
+                            ),
                           ),
                         ],
                       ),
@@ -70,7 +81,13 @@ class OrderCard extends StatelessWidget {
                           : const Icon(Icons.star, color: Colors.amber),
                       order.ratingBusns == 0 || order.ratingBusns == null
                           ? Text("")
-                          : Text("${order.ratingBusns ?? ""}"),
+                          : Text(
+                            "${order.ratingBusns ?? ""}",
+                            style: TextStyle(
+                              color:
+                                  isDarkMode ? kSecondaryWhite : kSecondaryDark,
+                            ),
+                          ),
                     ],
                   ),
               ],
@@ -81,14 +98,22 @@ class OrderCard extends StatelessWidget {
                 ? Container(
                   margin: EdgeInsets.only(left: 30),
                   child: Row(
-                    children: const [
+                    children: [
                       SizedBox(
                         width: 16,
                         height: 16,
-                        child: CircularProgressIndicator(strokeWidth: 2),
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          color: kPrimaryRed,
+                        ),
                       ),
                       SizedBox(width: 8),
-                      Text("En attente d'un livreur..."),
+                      Text(
+                        "En attente d'un livreur...",
+                        style: TextStyle(
+                          color: isDarkMode ? kSecondaryWhite : kSecondaryDark,
+                        ),
+                      ),
                     ],
                   ),
                 )
@@ -99,7 +124,7 @@ class OrderCard extends StatelessWidget {
                       const Icon(
                         Icons.delivery_dining,
                         size: 20,
-                        color: Colors.red,
+                        color: kPrimaryRed,
                       ),
                       const SizedBox(width: 6),
                       Expanded(
@@ -108,14 +133,24 @@ class OrderCard extends StatelessWidget {
                           children: [
                             Text(
                               "${order.deliverer!.firstName} ${order.deliverer!.lastName}",
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 14,
+                                color:
+                                    isDarkMode
+                                        ? kSecondaryWhite
+                                        : kSecondaryDark,
                               ),
                             ),
                             Text(
                               order.deliverer!.phoneNumber,
-                              style: const TextStyle(fontSize: 12),
+                              style: TextStyle(
+                                fontSize: 12,
+                                color:
+                                    isDarkMode
+                                        ? kSecondaryWhite
+                                        : kSecondaryDark,
+                              ),
                             ),
                           ],
                         ),
@@ -129,7 +164,15 @@ class OrderCard extends StatelessWidget {
                                 : const Icon(Icons.star, color: Colors.amber),
                             order.ratingDel == 0 || order.ratingDel == null
                                 ? Text("")
-                                : Text("${order.ratingDel ?? ""}"),
+                                : Text(
+                                  "${order.ratingDel ?? ""}",
+                                  style: TextStyle(
+                                    color:
+                                        isDarkMode
+                                            ? kSecondaryWhite
+                                            : kSecondaryDark,
+                                  ),
+                                ),
                           ],
                         ),
                     ],
@@ -144,15 +187,31 @@ class OrderCard extends StatelessWidget {
                   order.products.map((p) {
                     return Row(
                       children: [
-                        Text("x${p.quantity}"),
+                        Text(
+                          "x${p.quantity}",
+                          style: TextStyle(
+                            color:
+                                isDarkMode ? kSecondaryWhite : kSecondaryDark,
+                          ),
+                        ),
                         const SizedBox(width: 8),
                         Expanded(
                           child: Text(
                             p.name,
-                            style: const TextStyle(fontWeight: FontWeight.w500),
+                            style: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              color:
+                                  isDarkMode ? kSecondaryWhite : kSecondaryDark,
+                            ),
                           ),
                         ),
-                        Text("${p.price} DZD"),
+                        Text(
+                          "${p.price} DZD",
+                          style: TextStyle(
+                            color:
+                                isDarkMode ? kSecondaryWhite : kSecondaryDark,
+                          ),
+                        ),
                       ],
                     );
                   }).toList(),
@@ -162,7 +221,7 @@ class OrderCard extends StatelessWidget {
             Text(
               "${order.totalAmount} DZD",
               style: const TextStyle(
-                color: Colors.red,
+                color: kPrimaryRed,
                 fontWeight: FontWeight.bold,
                 fontSize: 16,
               ),

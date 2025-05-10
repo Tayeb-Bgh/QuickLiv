@@ -421,13 +421,14 @@ class OrderDeliveredPage extends StatelessWidget {
               ),
             ),
             _buildPointsEarned(),
-            _buildSectionTitle("Produits commandés"),
-            Padding(padding: const EdgeInsets.all(16), child: _buildProducts()),
             _buildSectionTitle("Livraison"),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: _buildDeliveryInfo(),
             ),
+            _buildSectionTitle("Produits commandés"),
+            Padding(padding: const EdgeInsets.all(16), child: _buildProducts()),
+
             _buildSectionTitle("Détails de paiement"),
             Padding(
               padding: const EdgeInsets.all(16),

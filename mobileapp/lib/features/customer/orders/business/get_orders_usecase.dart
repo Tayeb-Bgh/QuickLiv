@@ -90,7 +90,7 @@ List<Order> getMockOrders() {
     // 3 autres exemples similaires avec status: 1, 2, 3
     Order(
       id: 3,
-      status: 1,
+      status: 3,
       createdAt: DateTime.now(),
       totalAmount: 2500,
       deliveryPrice: 300,
