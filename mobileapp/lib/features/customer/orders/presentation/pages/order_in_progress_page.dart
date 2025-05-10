@@ -386,113 +386,127 @@ class OrderDetailsPage extends ConsumerWidget {
 
   Widget _buildProducts(WidgetRef ref) {
     final isDarkMode = ref.watch(darkModeProvider);
+
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withOpacity(isDarkMode ? 0.1 : 0.05),
             blurRadius: 10,
-            offset: Offset(0, 2),
+            offset: const Offset(0, 2),
           ),
         ],
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(8),
-        child: Container(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children:
-                order.products.asMap().entries.map((entry) {
-                  final index = entry.key;
-                  final p = entry.value;
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children:
+              order.products.asMap().entries.map((entry) {
+                final index = entry.key;
+                final p = entry.value;
 
-                  return Container(
-                    decoration: BoxDecoration(
-                      color: index.isEven ? Colors.white : Colors.grey[50],
-                    ),
-                    child: Container(
-                      color: isDarkMode ? kSecondaryDark : kPrimaryWhite,
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                          vertical: 12,
-                          horizontal: 16,
-                        ),
-                        child: Row(
-                          children: [
-                            Container(
-                              width: 28,
-                              height: 28,
-                              decoration: BoxDecoration(
-                                color: kPrimaryRed.withOpacity(0.1),
-                                borderRadius: BorderRadius.circular(14),
-                              ),
-                              child: Center(
-                                child: Text(
-                                  "x${p.quantity}",
-                                  style: TextStyle(
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.bold,
-                                    color: kPrimaryRed,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            const SizedBox(width: 14),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    p.name,
-                                    style: TextStyle(
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.w500,
-                                      color:
-                                          isDarkMode
-                                              ? kSecondaryWhite
-                                              : kSecondaryDark,
-                                    ),
-                                  ),
-                                  if (p.notice.isNotEmpty)
-                                    Padding(
-                                      padding: const EdgeInsets.only(top: 4),
-                                      child: Text(
-                                        p.notice,
-                                        style: TextStyle(
-                                          fontSize: 12,
-                                          color: Colors.grey[600],
-                                        ),
-                                      ),
-                                    ),
-                                ],
-                              ),
-                            ),
-                            Container(
-                              padding: EdgeInsets.symmetric(
-                                horizontal: 8,
-                                vertical: 4,
-                              ),
-                              decoration: BoxDecoration(
-                                color: isDarkMode ? kMediumGray : kLightGray,
-                                borderRadius: BorderRadius.circular(4),
-                              ),
-                              child: Text(
-                                "${p.price.toStringAsFixed(2)} DZD",
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black87,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
+                return Container(
+                  decoration: BoxDecoration(
+                    color:
+                        index.isEven
+                            ? (isDarkMode ? kSecondaryDark : Colors.white)
+                            : (isDarkMode ? kPrimaryDark : Colors.grey[50]),
+                    border: Border(
+                      bottom: BorderSide(
+                        color:
+                            index == order.products.length - 1
+                                ? Colors.transparent
+                                : isDarkMode
+                                ? Colors.grey[800]!
+                                : Colors.grey[200]!,
+                        width: 0.5,
                       ),
                     ),
-                  );
-                }).toList(),
-          ),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 12,
+                      horizontal: 16,
+                    ),
+                    child: Row(
+                      children: [
+                        Container(
+                          width: 28,
+                          height: 28,
+                          decoration: BoxDecoration(
+                            color: kPrimaryRed.withOpacity(0.1),
+                            borderRadius: BorderRadius.circular(14),
+                          ),
+                          child: Center(
+                            child: Text(
+                              "x${p.quantity}",
+                              style: const TextStyle(
+                                fontSize: 13,
+                                fontWeight: FontWeight.bold,
+                                color: kPrimaryRed,
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 14),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                p.name,
+                                style: TextStyle(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w500,
+                                  color:
+                                      isDarkMode
+                                          ? kSecondaryWhite
+                                          : kSecondaryDark,
+                                ),
+                              ),
+                              if (p.notice.isNotEmpty)
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 4),
+                                  child: Text(
+                                    p.notice,
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      color:
+                                          isDarkMode
+                                              ? kRegularGray
+                                              : Colors.grey[600],
+                                    ),
+                                  ),
+                                ),
+                            ],
+                          ),
+                        ),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 4,
+                          ),
+                          decoration: BoxDecoration(
+                            color: isDarkMode ? kMediumGray : Colors.grey[100],
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                          child: Text(
+                            "${p.price.toStringAsFixed(2)} DZD",
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                              color:
+                                  isDarkMode ? kSecondaryWhite : Colors.black87,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              }).toList(),
         ),
       ),
     );
@@ -504,9 +518,12 @@ class OrderDetailsPage extends ConsumerWidget {
       0,
       (sum, p) => sum + (p.price * p.quantity),
     );
-    final reduction = 400.00; // Exemple, à ajuster selon vos besoins
+    final reduction =
+        order.priceWithReduc == null || order.priceWithReduc == 0
+            ? 0
+            : order.totalAmount - (order.priceWithReduc ?? 0);
     final livraison = order.deliveryPrice;
-    final totalNet = order.totalAmount;
+    final totalNet = order.totalAmount + order.deliveryPrice - reduction;
 
     return Column(
       children: [
@@ -776,7 +793,7 @@ class OrderDetailsPage extends ConsumerWidget {
       ),
       body: SingleChildScrollView(
         child: Container(
-          height: height * 0.93,
+          height: order.status == 0 ? height * 0.9 : height * 1.16,
           color: isDarkMode ? kPrimaryDark : kSecondaryWhite,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
