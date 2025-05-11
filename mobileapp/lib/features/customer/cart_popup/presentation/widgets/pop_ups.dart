@@ -13,6 +13,8 @@ import 'package:mobileapp/features/customer/restaurants/business/entities/produc
     as restau;
 import 'package:mobileapp/features/customer/restaurant_opened/business/entities/product_entity.dart'
     as restau_op;
+import 'package:mobileapp/features/customer/research/business/entities/product_entity.dart'
+    as search_prod;
 
 Future<void> showQuantitySelectorDialog(
   BuildContext context,
@@ -21,6 +23,7 @@ Future<void> showQuantitySelectorDialog(
   ProductWithReduc? productWithRed,
   restau.Product? restauProduct,
   restau_op.Product? restauOpProduct,
+  search_prod.Product? searchProduct,
 }) async {
   final TextEditingController quantityController = TextEditingController();
 
@@ -206,6 +209,7 @@ Future<void> showQuantityWithUnitSelectorDialog(
   ProductWithReduc? productWithRed,
   restau.Product? restauProduct,
   restau_op.Product? restauOpProduct,
+  search_prod.Product? searchProduct,
 }) async {
   final TextEditingController quantityController = TextEditingController();
   String selectedUnit = 'g';
@@ -380,11 +384,12 @@ Future<void> showQuantityWithUnitSelectorDialog(
                                             if (!await _addToCart(
                                               ref,
                                               parsedQuantity,
-                                              // PASS UNIT
+
                                               product: product,
                                               productWithRed: productWithRed,
                                               restauOpProduct: restauOpProduct,
                                               restauProduct: restauProduct,
+                                              searchProduct: searchProduct,
                                             )) {
                                               showDialog(
                                                 context: context,
@@ -459,6 +464,7 @@ _addToCart(
   ProductWithReduc? productWithRed,
   restau.Product? restauProduct,
   restau_op.Product? restauOpProduct,
+  search_prod.Product? searchProduct,
 }) async {
   final addToCart = ref.read(addToCartUseCaseProvider);
 
@@ -510,6 +516,19 @@ _addToCart(
       productCart,
       parsedQuantity,
       restauOpProduct.idBusns,
+    );
+    await ref.read(cartsProvider.notifier).reload();
+    return isAdded;
+  }
+  if (searchProduct != null) {
+    final productCart = ToProductCart.fromSharedProduct(
+      searchProduct,
+      parsedQuantity,
+    );
+    bool isAdded = await addToCart.call(
+      productCart,
+      parsedQuantity,
+      searchProduct.idBusns,
     );
     await ref.read(cartsProvider.notifier).reload();
     return isAdded;

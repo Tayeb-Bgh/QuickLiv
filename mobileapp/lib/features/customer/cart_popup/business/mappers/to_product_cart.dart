@@ -40,7 +40,7 @@ class ToProductCart {
 
   static ProductCart fromProductRest({
     required product_rest.Product product,
-    required int quantity 
+    required int quantity,
   }) {
     return ProductCart(
       id: product.idProd,
@@ -56,8 +56,7 @@ class ToProductCart {
 
   static ProductCart fromProductOpRest({
     required product_op_rest.Product product,
-    required int quantity
-    
+    required int quantity,
   }) {
     return ProductCart(
       id: product.id,
@@ -70,15 +69,18 @@ class ToProductCart {
       notice: '',
     );
   }
+
   static ProductCart fromSharedProduct(Product product, int quantity) {
     return ProductCart(
       id: product.idProd,
       name: product.name,
-      description: '', // Add description if available in shared.Product
+      description:
+          product.descr,  
       imgUrl: product.imgUrl,
-      price: product.reducRate != null
-          ? product.price * (1 - product.reducRate!)
-          : product.price,
+      price:
+          product.reducRate != null
+              ? product.price * (1 - product.reducRate!)
+              : product.price,
       unitProd: product.unit,
       quantity: quantity,
       notice: '',
