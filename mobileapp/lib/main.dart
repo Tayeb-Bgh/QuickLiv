@@ -9,6 +9,8 @@ import 'package:mobileapp/features/customer/cart_popup/data/models/product_hive_
 import 'package:mobileapp/features/customer/home/presentation/pages/test_page.dart';
 import 'package:mobileapp/features/customer/skeleton/presentation/customer_skeleton.dart';
 import 'features/customer/cart_popup/data/models/cart_hive_object.dart';
+import 'package:mobileapp/features/customer/skeleton/presentation/customer_skeleton.dart';
+import 'package:mobileapp/features/deliverer/skeleton/presentation/deliverer_skeleton.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -41,7 +43,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: Scaffold(body: CustomerSkeleton()),
+      home: DelivererSkeleton(),
     );
   }
 }

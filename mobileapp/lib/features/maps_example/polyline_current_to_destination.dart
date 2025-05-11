@@ -3,14 +3,14 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mobileapp/core/utils/location_provider.dart';
 
-class GoogleMapsPage extends ConsumerStatefulWidget {
-  const GoogleMapsPage({super.key});
+class GoogleMapsPageToDest extends ConsumerStatefulWidget {
+  const GoogleMapsPageToDest({super.key});
 
   @override
-  ConsumerState<GoogleMapsPage> createState() => _GoogleMapsPageState();
+  ConsumerState<GoogleMapsPageToDest> createState() => _GoogleMapsPageToDestState();
 }
 
-class _GoogleMapsPageState extends ConsumerState<GoogleMapsPage> {
+class _GoogleMapsPageToDestState extends ConsumerState<GoogleMapsPageToDest> {
   final LatLng _destinationPos = LatLng(36.5448475773023, 4.609514253196802);
 
   @override
