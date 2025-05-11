@@ -51,22 +51,7 @@ class MapSection extends ConsumerWidget {
         SizedBox(height: height * 0.006),
         Divider(color: fontColor, thickness: 3, height: 0),
         SizedBox(height: height * 0.01),
-        Row(
-          children: [
-            Icon(Icons.radio_button_unchecked, size: 20, color: fontColor),
-            SizedBox(width: 4),
-            Expanded(
-              child: DottedLine(
-                direction: Axis.horizontal,
-                lineLength: double.infinity,
-                lineThickness: 4.0,
-                dashLength: 8.0,
-                dashColor: fontColor,
-              ),
-            ),
-            Icon(Icons.store_mall_directory, size: 24, color: Colors.red),
-          ],
-        ),
+
         SizedBox(height: height * 0.01),
         ClipRRect(
           borderRadius: BorderRadius.circular(20),
@@ -103,7 +88,7 @@ class MapSection extends ConsumerWidget {
           ),
         ),
         SizedBox(height: height * 0.01),
-        Row(
+        Column(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             Row(
@@ -113,7 +98,7 @@ class MapSection extends ConsumerWidget {
                   distanceAsync.when(
                     data:
                         (distance) =>
-                            "${toKilometers(distance)} Km à parcourir",
+                            "Km à parcourir: ${toKilometers(distance)} ",
                     error: (err, _) => "La distance n'a pu être claculée.",
                     loading: () => "Calcul de la distance en cours ...",
                   ),

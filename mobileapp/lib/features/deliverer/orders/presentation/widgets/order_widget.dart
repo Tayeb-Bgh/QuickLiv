@@ -13,6 +13,7 @@ import 'package:mobileapp/core/utils/location_provider.dart';
 import 'package:mobileapp/core/utils/utility_functions.dart';
 import 'package:mobileapp/features/deliverer/orders/business/entities/order_entity.dart';
 import 'package:mobileapp/features/deliverer/orders/presentation/widgets/order_details_modal.dart';
+import 'package:mobileapp/features/pick_location/providers/pick_location_providers.dart';
 
 class OrderWidget extends ConsumerWidget {
   OrderWidget({super.key, required this.ref, required this.order});
@@ -177,7 +178,13 @@ class OrderWidget extends ConsumerWidget {
                   Expanded(
                     flex: 1,
                     child: AutoSizeText(
-                      "Q229+V73, Béjaïa, Algérie",
+                      ref
+                          .watch(formattedAddressProvider(positionCust))
+                          .when(
+                            data: (address) => address,
+                            error: (error, _) => "Chargement ...",
+                            loading: () => "Chargement ...",
+                          ),
                       textAlign: TextAlign.end,
                       maxLines: 1,
                       minFontSize: 10,
