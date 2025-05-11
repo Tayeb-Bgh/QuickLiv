@@ -81,3 +81,16 @@ int remainingPointsForMilestone(int currentPoints) {
 double gramsToKilograms(num grams) {
   return grams / 1000;
 }
+
+String formatDurationInReadableText(int seconds) {
+  final int hours = seconds ~/ 3600;
+  final int minutes = (seconds % 3600) ~/ 60;
+
+  if (hours > 0 && minutes > 0) {
+    return '$hours h $minutes min';
+  } else if (hours > 0) {
+    return '$hours h';
+  } else {
+    return '$minutes min';
+  }
+}

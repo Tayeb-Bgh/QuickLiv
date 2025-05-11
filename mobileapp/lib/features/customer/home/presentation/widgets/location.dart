@@ -5,7 +5,6 @@ import 'package:mobileapp/core/config/dark_mode_provider.dart';
 import 'package:mobileapp/core/constants/constants.dart';
 import 'package:mobileapp/features/customer/home/presentation/widgets/position_popup.dart';
 import 'package:mobileapp/features/pick_location/providers/pick_location_providers.dart';
-import 'package:mobileapp/features/pick_location/widgets/location_picker_dialog.dart';
 
 class Location extends ConsumerWidget {
   const Location({super.key});
