@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mobileapp/core/config/dark_mode_provider.dart';
+import 'package:mobileapp/features/pick_location/providers/pick_location_providers.dart';
+import 'package:mobileapp/features/pick_location/widgets/location_picker_dialog.dart';
 
 class PositionPopup extends ConsumerWidget {
   const PositionPopup({super.key});
@@ -52,14 +54,18 @@ class PositionPopup extends ConsumerWidget {
                       backgroundColor: const Color.fromARGB(255, 35, 33, 33),
                       padding: const EdgeInsets.symmetric(vertical: 12),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(6),
+                        borderRadius: BorderRadius.circular(24),
                       ),
                     ),
                     onPressed: () {
-                      // Browse regions action
+                      Navigator.pop(context);
+                      showDialog(
+                        context: context,
+                        builder: (context) => const LocationPickerDialog(),
+                      );
                     },
                     child: const AutoSizeText(
-                      'Parcourir régions',
+                      'Choisir position',
                       maxLines: 1,
                       style: TextStyle(fontSize: 16, color: Colors.white),
                     ),
@@ -72,11 +78,12 @@ class PositionPopup extends ConsumerWidget {
                       backgroundColor: Colors.red[700],
                       padding: const EdgeInsets.symmetric(vertical: 12),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(6),
+                        borderRadius: BorderRadius.circular(24),
                       ),
                     ),
                     onPressed: () {
-                      // Current location action
+                      ref.read(isDefaultPositionSelected.notifier).state = true;
+                      Navigator.pop(context);
                     },
                     child: const AutoSizeText(
                       'Position actuelle',

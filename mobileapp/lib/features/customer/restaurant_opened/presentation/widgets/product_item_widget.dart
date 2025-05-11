@@ -144,17 +144,11 @@ class ProductListItem extends ConsumerWidget {
 
             GestureDetector(
               onTap: () async {
-                product.unit
-                    ? showQuantityWithUnitSelectorDialog(
-                      context,
-                      ref,
-                      restauOpProduct: product,
-                    )
-                    : showQuantitySelectorDialog(
-                      context,
-                      ref,
-                      restauOpProduct: product,
-                    );
+                showQuantitySelectorDialog(
+                  context,
+                  ref,
+                  restauOpProduct: product,
+                );
               },
               child: Container(
                 margin: const EdgeInsets.only(left: 8, top: 8),

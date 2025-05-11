@@ -8,7 +8,6 @@ import 'package:mobileapp/features/customer/home/presentation/providers/home_pro
 import 'package:mobileapp/features/customer/home/presentation/widgets/advertisement_card.dart';
 import 'package:mobileapp/features/customer/home/presentation/widgets/delivery_state_widget.dart';
 import 'package:mobileapp/features/customer/home/presentation/widgets/location.dart';
-import 'package:mobileapp/features/customer/home/presentation/widgets/region_selector.dart';
 import 'package:mobileapp/features/customer/groceries/presentation/widgets/groceries_list_view.dart';
 import 'package:mobileapp/features/customer/restaurants/presentation/providers/restaurants_provider.dart';
 import 'package:mobileapp/features/customer/restaurants/presentation/widgets/restaurants_list_view.dart';
@@ -40,7 +39,10 @@ class HomePage extends ConsumerWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 crossAxisAlignment: CrossAxisAlignment.center,
-                children: [Location(), DeliveryStateWidget(state: true)],
+                children: [
+                  SizedBox(width: 250, child: Location()),
+                  DeliveryStateWidget(state: true),
+                ],
               ),
             ),
             SizedBox(
@@ -73,16 +75,12 @@ class HomePage extends ConsumerWidget {
             RestaurantsListView(
               title: "Nos restaurants",
               restaurants: asyncRestaurantsList,
-              onRefresh: () {
-                print('');
-              },
+              onRefresh: () {},
             ),
             GroceriesListView(
               title: "Nos magasins",
               groceries: asyncGroceriesList,
-              onRefresh: () {
-                print('');
-              },
+              onRefresh: () {},
             ),
           ],
         ),
