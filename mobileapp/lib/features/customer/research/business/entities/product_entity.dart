@@ -7,7 +7,7 @@ class Product {
   final double? reducRate;
   final bool unit;
   final int? qttyStock;
-
+  final String descr;
   Product({
     required this.idProd,
     required this.idBusns,
@@ -15,6 +15,7 @@ class Product {
     required this.imgUrl,
     required this.price,
     required this.unit,
+    required this.descr,
     this.reducRate,
     this.qttyStock,
   });

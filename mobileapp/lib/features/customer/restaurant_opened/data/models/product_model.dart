@@ -1,6 +1,5 @@
 import 'package:mobileapp/features/customer/restaurant_opened/business/entities/product_entity.dart';
 
-
 class ProductModel {
   final int idProd;
   final String categoryProd;
@@ -11,7 +10,7 @@ class ProductModel {
   final double? reducProd;
   final bool unitProd; // <- ici, je l'ai mis à false par défaut
   ProductModel({
-  required this.unitProd,
+    required this.unitProd,
     required this.idProd,
     required this.nameProd,
     required this.categoryProd,
@@ -22,18 +21,17 @@ class ProductModel {
   });
 
   factory ProductModel.fromJson(Map<String, dynamic> json) {
-  return ProductModel(
-    idProd: json["idProd"],
-    unitProd: json["unitProd"] == 0 ? false : true, // <- ici
-    nameProd: json["nameProd"],
-    categoryProd: json["secondCategoryProd"], // <- ici
-    descProd: json["descProd"],
-    imgUrlProd: json["imgUrlProd"],
-    priceProd: json["priceProdBusns"]?.toDouble() ?? 0.0, // <- ici
-    reducProd: json["reducRateProdBusns"]?.toDouble(), // <- ici
-  );
-}
-
+    return ProductModel(
+      idProd: json["idProd"],
+      unitProd: json["unitProd"] == 0 ? false : true, // <- ici
+      nameProd: json["nameProd"],
+      categoryProd: json["secondCategoryProd"], // <- ici
+      descProd: json["descProd"],
+      imgUrlProd: json["imgUrlProd"],
+      priceProd: json["priceProdBusns"]?.toDouble() ?? 0.0, // <- ici
+      reducProd: json["reducRateProdBusns"]?.toDouble(), // <- ici
+    );
+  }
 
   Map<String, dynamic> toJson() {
     return {
@@ -41,13 +39,12 @@ class ProductModel {
       "categoryProd": categoryProd,
       "descProd": descProd,
       "imgUrlProd": imgUrlProd,
-      
     };
   }
 
   Product toEntity(int idBusns) {
     return Product(
-       unit: unitProd,
+      unit: unitProd,
       id: idProd,
       idBusns: idBusns,
       category: categoryProd,
@@ -55,13 +52,14 @@ class ProductModel {
       desc: descProd,
       imgUrl: imgUrlProd,
       price: priceProd,
-      priceWithReduc: reducProd == null ? null : Product.calculPriceWithReduc(priceProd, reducProd ?? 0),
+      priceWithReduc:
+          reducProd == null
+              ? null
+              : Product.calculPriceWithReduc(priceProd, reducProd ?? 0),
     );
   }
-
 
   String toStringg() {
     return 'ProductModel{idProd: $idProd, categoryProd: $categoryProd, nameProd: $nameProd, descProd: $descProd, imgUrlProd: $imgUrlProd, priceProd: $priceProd, reducProd: $reducProd}';
   }
-  
-  }
+}

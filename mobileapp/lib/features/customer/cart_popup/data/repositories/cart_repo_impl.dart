@@ -23,13 +23,14 @@ class CartRepoImpl implements CartRepo {
       nom: productCart.name,
       id: productCart.id.toString(),
       pic: productCart.imgUrl,
-      poidQuantity: productCart.quantity,
+      poidQuantity: quantity,
       prix: productCart.price,
       unitProd: productCart.unitProd,
     );
     log(
       'product is rep imp is working just fine and to prove this to u : ${product.id}',
     );
+
     return cartService.addToCart(productCart, busns: busns, product: product);
   }
 

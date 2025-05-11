@@ -7,8 +7,9 @@ class ProductModel {
   final String secondCategoryProd;
   final String imgUrlProd;
   final bool unitProd;
-
-  ProductModel({
+  final String descr;
+  ProductModel(
+    this.descr, {
     required this.idProd,
     required this.nameProd,
     required this.categoryProd,
@@ -19,6 +20,7 @@ class ProductModel {
 
   factory ProductModel.fromJson(Map<String, dynamic> json) {
     return ProductModel(
+      json["descr"],
       idProd: json["idProd"],
       nameProd: json["nameProd"],
       categoryProd: json["categoryProd"],
@@ -35,6 +37,7 @@ class ProductModel {
     int? qttyStock,
   ) {
     return Product(
+      descr: descr,
       idProd: idProd,
       idBusns: idBusns,
       name: nameProd,

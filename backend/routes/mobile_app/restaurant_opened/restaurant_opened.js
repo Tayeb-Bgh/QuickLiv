@@ -30,7 +30,7 @@ router.get("/:idRestaurant/products/", (req, res) => {
     const { idRestaurant } = req.params;
 
     let query = `
-        SELECT p.idProd, p.nameProd, pb.priceProdBusns, pb.reducRateProdBusns, p.descProd, p.imgUrlProd, p.secondCategoryProd 
+        SELECT p.idProd,p.unitProd, p.nameProd, pb.priceProdBusns, pb.reducRateProdBusns, p.descProd, p.imgUrlProd, p.secondCategoryProd 
         FROM Product p 
         JOIN ProductBusiness pb ON p.idProd = pb.idProd 
         JOIN Business b ON pb.idBusns = b.idBusns 

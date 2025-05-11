@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:dio/dio.dart';
 import 'package:mobileapp/core/config/backend_api_config.dart';
 import 'package:mobileapp/features/customer/restaurant_opened/data/models/product_model.dart';
@@ -150,8 +152,9 @@ class RestaurantOpenedService {
       response.data,
     );
     print("data repondu : ${data[0]}");
-    final List<ProductModel> products = data.map((item) => ProductModel.fromJson(item)).toList();
-    print(products[0].toStringg());
+    final List<ProductModel> products =
+        data.map((item) => ProductModel.fromJson(item)).toList();
+    log(products[0].unitProd.toString());
     return products;
   }
 }

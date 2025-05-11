@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mobileapp/core/utils/cart_box_utils.dart';
 import 'package:mobileapp/features/customer/cart_popup/business/entities/business.dart';
@@ -17,8 +19,8 @@ class AddToCart {
   ) async {
     Future<Business> busns = CartBoxUtils.findBusinessById(idBusns, ref);
     try {
+      log('this log is for the usecase  $quantity');
       return cartRepoImpl.addToCart(await busns, productCart, quantity);
-
     } catch (e) {
       rethrow;
     }

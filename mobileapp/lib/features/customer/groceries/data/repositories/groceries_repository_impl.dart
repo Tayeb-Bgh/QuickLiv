@@ -150,6 +150,7 @@ class GroceriesRepositoryImpl implements GroceriesRepository {
       for (final productBusiness in productBusinessList) {
         final productId = productBusiness.idProd;
         final product = await groceriesService.fetchProductById(productId);
+       
         productsList.add(product);
       }
 

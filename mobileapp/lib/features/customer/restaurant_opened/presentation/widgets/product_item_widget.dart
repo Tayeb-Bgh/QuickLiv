@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mobileapp/core/config/dark_mode_provider.dart';
@@ -144,6 +146,7 @@ class ProductListItem extends ConsumerWidget {
 
             GestureDetector(
               onTap: () async {
+                log('${product.unit}');
                 showQuantitySelectorDialog(
                   context,
                   ref,

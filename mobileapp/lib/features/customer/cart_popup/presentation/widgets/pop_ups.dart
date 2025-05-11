@@ -488,7 +488,10 @@ _addToCart(
   }
 
   if (restauProduct != null) {
-    final productCart = ToProductCart.fromProductRest(product: restauProduct);
+    final productCart = ToProductCart.fromProductRest(
+      product: restauProduct,
+      quantity: parsedQuantity,
+    );
     bool isAdded = await addToCart.call(
       productCart,
       parsedQuantity,
@@ -501,6 +504,7 @@ _addToCart(
   if (restauOpProduct != null) {
     final productCart = ToProductCart.fromProductOpRest(
       product: restauOpProduct,
+      quantity: parsedQuantity,
     );
     bool isAdded = await addToCart.call(
       productCart,
