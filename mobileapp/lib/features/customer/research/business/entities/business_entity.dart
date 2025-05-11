@@ -14,6 +14,10 @@ class Business {
   final String description;
   final double distance;
 
+  final String? insta;
+  final String? fcb;
+  final String? phone;
+
   final List<Product> products;
 
   static final Map<int, int> datesMap = {
@@ -39,6 +43,9 @@ class Business {
     required this.rating,
     required this.open,
     required this.products,
+    required this.insta,
+    required this.fcb,
+    required this.phone,
   });
 
   static bool isOpen(int dayOff, DateTime hourOpen, DateTime hourClose) {

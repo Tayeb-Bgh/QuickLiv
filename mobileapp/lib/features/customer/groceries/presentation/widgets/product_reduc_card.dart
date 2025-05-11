@@ -160,7 +160,7 @@ class ProductReducCard extends ConsumerWidget {
             child: Row(
               children: [
                 Text(
-                  '${product.price} DZD',
+                  '${product.price.toStringAsFixed(2)} DZD',
                   style: TextStyle(
                     decoration: TextDecoration.lineThrough,
                     decorationThickness:
@@ -178,9 +178,9 @@ class ProductReducCard extends ConsumerWidget {
             child: Row(
               children: [
                 Text(
-                  '${product.priceWithReduc} DZD',
+                  '${product.priceWithReduc.toStringAsFixed(2)} DZD',
                   style: TextStyle(
-                    fontSize: width * 0.035,
+                    fontSize: 12,
                     color: bannerBgColor,
                     fontWeight: FontWeight.bold,
                   ),
@@ -191,7 +191,7 @@ class ProductReducCard extends ConsumerWidget {
                 Text(
                   parseTime(product.delivDuration),
                   style: TextStyle(
-                    fontSize: width * 0.024,
+                    fontSize: 8,
                     color: footerTxtColor,
                     fontWeight: FontWeight.bold,
                   ),

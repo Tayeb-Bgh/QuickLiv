@@ -10,7 +10,9 @@ router.get("/", (req, res) => {
 
     let query = `
         SELECT idBusns, nameBusns, descBusns, categoryBusns,
-               imgUrlBusns, vidUrlBusns, latBusns, lngBusns, wilayaBusns
+               imgUrlBusns, vidUrlBusns, latBusns, lngBusns, wilayaBusns,
+               instaUrlBusns,fcbUrlBusns, phoneBusns
+
         FROM Business
         WHERE typeBusns = ? AND dayOffBusns != ? AND wilayaBusns = ?
     `;
@@ -54,7 +56,7 @@ router.get("/products-business/:idBusns", (req, res) => {
             return res.status(500).json({ error: "Database error" });
         }
 
-        
+
 
         if (results.length > 0) {
             res.status(200).json(results);
@@ -77,8 +79,8 @@ router.get("/products/:idProd", (req, res) => {
         if (err) {
             console.error("[SQL ERROR]", err);
             return res.status(500).json({ error: "Database error" });
-        } 
-        
+        }
+
         if (results) {
             //console.log("[DEBUG] SQL results", results);
             res.status(200).json(results);

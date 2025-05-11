@@ -64,7 +64,7 @@ class _OverviewCartState extends State<OverviewCart> {
           children: [
             Container(
               height: height * 0.13,
-              width: width * 0.5,
+              width: width * 0.4,
               padding: EdgeInsets.symmetric(
                 horizontal: width * 0.02,
                 vertical: height * 0.02,
@@ -77,7 +77,7 @@ class _OverviewCartState extends State<OverviewCart> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   _createTextRow(
-                    'Prix des produits :',
+                    'Produits :',
                     widget.prodPrice,
                     false,
                     width,
@@ -85,7 +85,7 @@ class _OverviewCartState extends State<OverviewCart> {
                     fontColor,
                   ),
                   _createTextRow(
-                    'Frais de livraison :',
+                    'Livraison :',
                     widget.delPrice,
                     false,
                     width,
@@ -124,7 +124,7 @@ class _OverviewCartState extends State<OverviewCart> {
           text,
           style: TextStyle(
             color: isTotal ? kPrimaryRed : fontColor,
-            fontSize: isTotal ? 16 : 14,
+            fontSize: isTotal ? 12 : 10,
             fontWeight: isTotal ? FontWeight.w900 : FontWeight.w500,
           ),
         ),
@@ -132,7 +132,7 @@ class _OverviewCartState extends State<OverviewCart> {
           '$price DZD',
           style: TextStyle(
             color: isTotal ? kPrimaryRed : fontColor,
-            fontSize: isTotal ? 14 : 12,
+            fontSize: isTotal ? 10 : 8,
             fontWeight: isTotal ? FontWeight.w900 : FontWeight.w500,
           ),
         ),

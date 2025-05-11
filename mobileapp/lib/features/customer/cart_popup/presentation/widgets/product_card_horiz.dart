@@ -34,7 +34,7 @@ class ProductCardHoriz extends ConsumerWidget {
         color: backgroundColor,
         borderRadius: BorderRadius.circular(12),
       ),
-      height: height * 0.14,
+      height: height * 0.15,
       child: Row(
         children: [
           ClipRRect(
@@ -78,7 +78,6 @@ class ProductCardHoriz extends ConsumerWidget {
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(fontSize: 14, color: fontColor),
                     ),
-                    const SizedBox(height: 4),
                   ],
                 ),
 

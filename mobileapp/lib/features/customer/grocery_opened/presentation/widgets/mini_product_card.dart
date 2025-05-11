@@ -88,7 +88,7 @@ class MiniProductCard extends ConsumerWidget {
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 8, vertical: 0),
             child: AutoSizeText(
-              '${product.price} DZD',
+              '${product.price.toStringAsFixed(2)} DZD',
               style: TextStyle(color: iconColor, fontWeight: FontWeight.bold),
               minFontSize: 10,
               maxFontSize: 12,

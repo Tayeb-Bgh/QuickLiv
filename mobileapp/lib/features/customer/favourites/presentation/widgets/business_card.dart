@@ -15,12 +15,7 @@ class BusinessCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final height = MediaQuery.of(context).size.height;
-    final width = MediaQuery.of(context).size.width;
-    final coverHeight = height * 0.216;
-
     final isDarkMode = ref.watch(darkModeProvider);
-    // final favIdsAsync = ref.watch(userFavouritesProvider);
     final isLiked = ref.watch(favouriteProvider).contains(grocery.id);
 
     final Color likeBtnColor = isDarkMode ? kSecondaryDark : kSecondaryWhite;
@@ -30,71 +25,68 @@ class BusinessCard extends ConsumerWidget {
     final Color iconColor = kPrimaryRed;
     final Color isOpenTxtColor = kPrimaryGreen;
     final Color isOpenBgColor = kPrimaryGreen.withOpacity(0.2);
-
     final Color isCloseTxtColor = kPrimaryRed;
     final Color isCloseBgColor = kPrimaryRed.withOpacity(0.2);
 
     return Container(
-      child: Container(
-        height: height * 0.33,
-        width: width * 0.9,
-        margin: EdgeInsets.only(bottom: 10),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            ClipRRect(
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(10),
-                topRight: Radius.circular(10),
-              ),
-              child: Stack(
-                children: [
-                  Image.network(
-                    grocery.imgUrlBusns!,
-                    width: double.infinity,
-                    height: coverHeight,
-                    fit: BoxFit.cover,
-                  ),
-                  Positioned(
-                    top: 8,
-                    right: 8,
-                    child: Container(
-                      height: 43,
-                      width: 43,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: likeBtnColor,
+      margin: const EdgeInsets.only(bottom: 20),
+      width: 370,
+      height: 270,
+      child: Column(
+        children: [
+          ClipRRect(
+            borderRadius: const BorderRadius.only(
+              topLeft: Radius.circular(10),
+              topRight: Radius.circular(10),
+            ),
+            child: Stack(
+              children: [
+                Image.network(
+                  grocery.imgUrlBusns!,
+                  width: 370,
+                  height: 178,
+                  fit: BoxFit.cover,
+                ),
+                Positioned(
+                  top: 8,
+                  right: 8,
+                  child: Container(
+                    height: 43,
+                    width: 43,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: likeBtnColor,
+                    ),
+                    child: IconButton(
+                      icon: Icon(
+                        isLiked ? Icons.favorite : Icons.favorite_border,
+                        color: isLiked ? kPrimaryRed : kMediumGray,
+                        size: 26,
                       ),
-                      child: IconButton(
-                        icon: Icon(
-                          isLiked ? Icons.favorite : Icons.favorite_border,
-                          color: isLiked ? kPrimaryRed : kMediumGray,
-                          size: 26,
-                        ),
-                        onPressed: () {
-                          // Afficher le dialogue de confirmation avant la suppression
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return AlertDialog(
-                                title: Text("Confirmer la suppression"),
-                                content: Text(
+                      onPressed: () {
+                        showDialog(
+                          context: context,
+                          builder:
+                              (context) => AlertDialog(
+                                title: const Text("Confirmer la suppression"),
+                                content: const Text(
                                   "Êtes-vous sûr de vouloir supprimer cet élément ?",
                                 ),
                                 actions: [
                                   IconButton(
-                                    icon: Icon(Icons.cancel, color: Colors.red),
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    },
+                                    icon: const Icon(
+                                      Icons.cancel,
+                                      color: Colors.red,
+                                    ),
+                                    onPressed:
+                                        () => Navigator.of(context).pop(),
                                   ),
                                   IconButton(
-                                    icon: Icon(
+                                    icon: const Icon(
                                       Icons.delete,
                                       color: Colors.green,
                                     ),
                                     onPressed: () {
-                                      // Supprimer l'élément si l'utilisateur confirme
                                       if (isLiked) {
                                         ref
                                             .read(favouriteProvider.notifier)
@@ -104,180 +96,155 @@ class BusinessCard extends ConsumerWidget {
                                             .read(favouriteProvider.notifier)
                                             .addFavourite(grocery.id);
                                       }
-
-                                      // Si un callback onRemove est passé, on l'appelle
                                       if (onRemove != null && isLiked) {
                                         onRemove!();
                                       }
-
                                       Navigator.of(context).pop();
                                     },
                                   ),
                                 ],
-                              );
-                            },
-                          );
-                        },
-                      ),
+                              ),
+                        );
+                      },
                     ),
                   ),
-                ],
-              ),
-            ),
-            Container(
-              height: height * 0.11,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(10),
-                  bottomRight: Radius.circular(10),
                 ),
-                color: footerBgColor,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.4),
-                    blurRadius: 6,
-                    offset: const Offset(0, 4),
-                  ),
-                ],
+              ],
+            ),
+          ),
+          Container(
+            height: 92,
+            decoration: BoxDecoration(
+              borderRadius: const BorderRadius.only(
+                bottomLeft: Radius.circular(10),
+                bottomRight: Radius.circular(10),
               ),
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    // Affichage du titre
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        AutoSizeText(
+              color: footerBgColor,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.4),
+                  blurRadius: 6,
+                  offset: const Offset(0, 4),
+                ),
+              ],
+            ),
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(10, 10, 10, 5),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Title and open/close
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      SizedBox(
+                        width: 200,
+                        child: AutoSizeText(
                           grocery.name,
                           style: TextStyle(
                             color: footerTitleColor,
-                            fontSize: width * 0.049,
+                            fontSize: 20,
                             fontWeight: FontWeight.w900,
                           ),
-                          maxLines: 2,
+                          maxLines: 1,
                           minFontSize: 10,
                         ),
-                        Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20),
-                            color:
-                                grocery.open ? isOpenBgColor : isCloseBgColor,
-                            border: Border.all(
-                              color:
-                                  grocery.open
-                                      ? isOpenTxtColor
-                                      : isCloseTxtColor,
-                              width: 1.5,
-                            ),
-                          ),
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 10,
-                            vertical: 5,
-                          ),
-                          child: AutoSizeText(
-                            grocery.open ? "Ouvert" : "Fermé",
-                            style: TextStyle(
-                              color:
-                                  grocery.open
-                                      ? isOpenTxtColor
-                                      : isCloseTxtColor,
-                              fontWeight: FontWeight.bold,
-                            ),
-                            maxLines: 1,
-                            minFontSize: 10,
-                            maxFontSize: 12,
-                          ),
-                        ),
-                      ],
-                    ),
-
-                    SizedBox(
-                      width: double.infinity,
-                      child: AutoSizeText(
-                        grocery.desc,
-                        style: TextStyle(
-                          fontSize: width * 0.033,
-                          color: footerTextColor,
-                        ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
                       ),
-                    ),
-
-                    const SizedBox(height: 3),
-
-                    // Informations de livraison, heure, et note
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Row(
-                          spacing: width * 0.01,
-                          children: [
-                            Icon(
-                              Icons.delivery_dining,
-                              size: width * 0.06,
-                              color: iconColor,
-                            ),
-                            Text(
-                              "${grocery.deliveryPrice.toStringAsFixed(2)} DA",
-
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: width * 0.04,
-                                color: footerTextColor,
-                              ),
-                            ),
-                          ],
+                      Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                          color: grocery.open ? isOpenBgColor : isCloseBgColor,
+                          border: Border.all(
+                            color:
+                                grocery.open ? isOpenTxtColor : isCloseTxtColor,
+                            width: 1.5,
+                          ),
                         ),
-                        const SizedBox(width: 2),
-                        Row(
-                          spacing: width * 0.01,
-                          children: [
-                            Icon(
-                              Icons.access_time,
-                              size: width * 0.06,
-                              color: iconColor,
-                            ),
-                            Text(
-                              parseTime(grocery.deliveryTime),
-                              style: TextStyle(
-                                fontSize: width * 0.04,
-                                fontWeight: FontWeight.bold,
-                                color: footerTextColor,
-                              ),
-                            ),
-                          ],
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 10,
+                          vertical: 5,
                         ),
-                        const SizedBox(width: 2),
-                        Row(
-                          spacing: width * 0.01,
-                          children: [
-                            Icon(
-                              Icons.star,
-                              size: width * 0.06,
-                              color: iconColor,
-                            ),
-                            Text(
-                              grocery.rating.toString(),
-                              style: TextStyle(
-                                fontSize: width * 0.04,
-                                fontWeight: FontWeight.bold,
-                                color: footerTextColor,
-                              ),
-                            ),
-                          ],
+                        child: AutoSizeText(
+                          grocery.open ? "Ouvert" : "Fermé",
+                          style: TextStyle(
+                            color:
+                                grocery.open ? isOpenTxtColor : isCloseTxtColor,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          maxLines: 1,
+                          minFontSize: 10,
+                          maxFontSize: 12,
                         ),
-                      ],
-                    ),
-                  ],
-                ),
+                      ),
+                    ],
+                  ),
+                  AutoSizeText(
+                    grocery.desc,
+                    style: TextStyle(fontSize: 13, color: footerTextColor),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(height: 3),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.delivery_dining,
+                            size: 22,
+                            color: iconColor,
+                          ),
+                          const SizedBox(width: 4),
+                          Text(
+                            "${grocery.deliveryPrice.toStringAsFixed(2)} DA",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                              color: footerTextColor,
+                            ),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Icon(Icons.timer, size: 19, color: iconColor),
+                          const SizedBox(width: 4),
+                          Text(
+                            parseTime(grocery.deliveryTime),
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: footerTextColor,
+                            ),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+
+                        children: [
+                          Icon(Icons.star, size: 22, color: iconColor),
+                          const SizedBox(width: 4),
+                          Text(
+                            grocery.rating.toString(),
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: footerTextColor,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ],
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

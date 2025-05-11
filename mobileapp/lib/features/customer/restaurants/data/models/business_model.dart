@@ -12,6 +12,10 @@ class BusinessModel {
   final String? imgUrlBusns;
   final String? vidUrlBusns;
 
+  final String? instaUrlBusns;
+  final String? fcbUrlBusns;
+  final String? phoneBusns;
+
   BusinessModel({
     required this.idBusns,
     required this.nameBusns,
@@ -22,6 +26,9 @@ class BusinessModel {
     required this.wilayaBusns,
     required this.imgUrlBusns,
     required this.vidUrlBusns,
+    this.instaUrlBusns,
+    this.fcbUrlBusns,
+    this.phoneBusns,
   });
 
   factory BusinessModel.fromJson(Map<String, dynamic> json) {
@@ -35,6 +42,9 @@ class BusinessModel {
       wilayaBusns: json["wilayaBusns"],
       imgUrlBusns: json["imgUrlBusns"],
       vidUrlBusns: json["vidUrlBusns"],
+      instaUrlBusns: json["instaUrlBusns"],
+      fcbUrlBusns: json["fcbUrlBusns"],
+      phoneBusns: json["fcbUrlBusns"],
     );
   }
 
@@ -49,6 +59,9 @@ class BusinessModel {
       "imgUrlBusns": imgUrlBusns,
       "vidUrlBusns": vidUrlBusns,
       "wilayaBusns": wilayaBusns,
+      "instaUrlBusns": "instaUrlBusns",
+      "fcbUrlBusns": "fcbUrlBusns",
+      "phoneBusns": "fcbUrlBusns",
     };
   }
 
@@ -71,6 +84,9 @@ class BusinessModel {
       delivPrice: deliveryPrice,
       rating: rating,
       distance: distance,
+      insta: imgUrlBusns,
+      fcb: fcbUrlBusns,
+      phone: phoneBusns,
     );
   }
 }

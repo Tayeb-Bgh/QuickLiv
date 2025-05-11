@@ -147,9 +147,9 @@ class BestProductCard extends ConsumerWidget {
             child: Row(
               children: [
                 Text(
-                  '${product.price} DZD',
+                  '${product.price.toStringAsFixed(2)} DZD',
                   style: TextStyle(
-                    fontSize: width * 0.035,
+                    fontSize: 12,
                     color: priceTxtColor,
                     fontWeight: FontWeight.bold,
                   ),
@@ -160,7 +160,7 @@ class BestProductCard extends ConsumerWidget {
                 Text(
                   parseTime(product.delivDuration),
                   style: TextStyle(
-                    fontSize: width * 0.024,
+                    fontSize: 8,
                     color: footerTxtColor,
                     fontWeight: FontWeight.bold,
                   ),
