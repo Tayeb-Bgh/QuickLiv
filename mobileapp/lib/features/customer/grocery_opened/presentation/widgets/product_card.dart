@@ -102,7 +102,7 @@ class ProductCard extends ConsumerWidget {
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 8, vertical: 0),
             child: Text(
-              '${product.price} DZD',
+              '${product.price.toStringAsFixed(2)} DZD',
               style: TextStyle(
                 fontSize: width * 0.035,
                 color: priceTxtColor,

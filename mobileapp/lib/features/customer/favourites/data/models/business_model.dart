@@ -14,6 +14,10 @@ class BusinessModel {
   final String hourCloseBusns;
   final int dayOffBusns;
 
+  final String? instaUrlBusns;
+  final String? fcbUrlBusns;
+  final String? phoneBusns;
+
   BusinessModel({
     required this.idBusns,
     required this.nameBusns,
@@ -26,6 +30,9 @@ class BusinessModel {
     required this.hourOpenBusns,
     required this.hourCloseBusns,
     required this.dayOffBusns,
+    this.instaUrlBusns,
+    this.fcbUrlBusns,
+    this.phoneBusns,
   });
 
   factory BusinessModel.fromJson(Map<String, dynamic> json) {
@@ -47,6 +54,9 @@ class BusinessModel {
       hourOpenBusns: json['hourOpenBusns'] as String,
       hourCloseBusns: json['hourCloseBusns'] as String,
       dayOffBusns: json['dayOffBusns'] as int,
+      instaUrlBusns: json["instaUrlBusns"],
+      fcbUrlBusns: json["fcbUrlBusns"],
+      phoneBusns: json["fcbUrlBusns"],
     );
   }
 
@@ -84,6 +94,9 @@ class BusinessModel {
       rating: rating,
       open: isOpen(),
       imgUrlBusns: imgUrlBusns,
+      insta: imgUrlBusns,
+      fcb: fcbUrlBusns,
+      phone: phoneBusns,
     );
   }
 

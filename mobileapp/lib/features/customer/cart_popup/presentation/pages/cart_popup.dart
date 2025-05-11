@@ -174,13 +174,13 @@ class _CartPopupState extends ConsumerState<CartPopup> {
                                       imgUrl: cart.imgUrl,
                                       name: cart.nameBusns,
                                       delPrice: cart.delivPrice.toStringAsFixed(
-                                        0,
+                                        2,
                                       ),
                                       totalPrice: (cart.prodPrice +
                                               cart.delivPrice)
                                           .toStringAsFixed(2),
                                       prodPrice: cart.prodPrice.toStringAsFixed(
-                                        0,
+                                        2,
                                       ),
                                     ),
                                     const SizedBox(height: 16),

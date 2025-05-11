@@ -43,7 +43,12 @@ class StaticTopBar extends ConsumerWidget {
                         AdditionalInformations(
                           width: additionalInformationsWidth,
                         ),
-                        SocialMediasButtons(width: additionalInformationsWidth),
+                        SocialMediasButtons(
+                          width: additionalInformationsWidth,
+                          onClickFcb: () {},
+                          onClickInsta: () {},
+                          onClickPhone: () {},
+                        ),
                       ],
                     ),
                   ],

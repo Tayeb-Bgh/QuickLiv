@@ -1,4 +1,4 @@
-class Business{
+class Business {
   final int id;
   final String name;
   final String desc;
@@ -10,6 +10,9 @@ class Business{
   final bool open;
   final String? imgUrlBusns;
 
+  final String? insta;
+  final String? fcb;
+  final String? phone;
   Business({
     required this.id,
     required this.name,
@@ -21,5 +24,8 @@ class Business{
     required this.rating,
     required this.open,
     required this.imgUrlBusns,
+    required this.insta,
+    required this.fcb,
+    required this.phone,
   });
 }

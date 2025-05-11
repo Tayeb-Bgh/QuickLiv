@@ -21,9 +21,6 @@ class RestaurantCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final height = MediaQuery.of(context).size.height;
-    final width = MediaQuery.of(context).size.width;
-    final coverHeight = isFull ? height * 0.216 : height * 0.131;
     final bool isDarkMode = ref.watch(darkModeProvider);
 
     final Color likeBtnColor = isDarkMode ? kSecondaryDark : kSecondaryWhite;
@@ -48,13 +45,13 @@ class RestaurantCard extends ConsumerWidget {
     final isLiked = favIds.contains(restaurant.id);
 
     return SizedBox(
-      height: isFull ? height * 0.33 : height * 0.31,
-      width: isFull ? width * 0.9 : width * 0.6,
+      height: isFull ? 260 : 240,
+      width: isFull ? 360 : 250,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           ClipRRect(
-            borderRadius: BorderRadius.only(
+            borderRadius: const BorderRadius.only(
               topLeft: Radius.circular(10),
               topRight: Radius.circular(10),
             ),
@@ -63,7 +60,7 @@ class RestaurantCard extends ConsumerWidget {
                 Image.network(
                   restaurant.imgUrl,
                   width: double.infinity,
-                  height: coverHeight,
+                  height: isFull ? 160 : 100,
                   fit: BoxFit.cover,
                 ),
                 Positioned(
@@ -96,7 +93,7 @@ class RestaurantCard extends ConsumerWidget {
                           }
                         },
                         padding: EdgeInsets.zero,
-                        constraints: BoxConstraints(),
+                        constraints: const BoxConstraints(),
                       ),
                     ),
                   ),
@@ -104,25 +101,24 @@ class RestaurantCard extends ConsumerWidget {
               ],
             ),
           ),
-
           Container(
-            height: isFull ? height * 0.11 : height * 0.099,
+            height: isFull ? 85 : 75,
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.only(
+              borderRadius: const BorderRadius.only(
                 bottomLeft: Radius.circular(10),
                 bottomRight: Radius.circular(10),
               ),
               color: footerBgColor,
-              boxShadow: [
+              boxShadow: const [
                 BoxShadow(
                   color: kPrimaryBlur,
                   blurRadius: 6,
-                  offset: const Offset(0, 4),
+                  offset: Offset(0, 4),
                 ),
               ],
             ),
             child: Padding(
-              padding: EdgeInsets.only(top: 10, right: 10, left: 10),
+              padding: const EdgeInsets.only(top: 10, right: 10, left: 10),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
@@ -131,7 +127,7 @@ class RestaurantCard extends ConsumerWidget {
                     restaurant.name,
                     style: TextStyle(
                       color: footerTitleColor,
-                      fontSize: isFull ? width * 0.049 : width * 0.036,
+                      fontSize: isFull ? 18 : 14,
                       fontWeight: FontWeight.w900,
                     ),
                     maxLines: 1,
@@ -142,71 +138,66 @@ class RestaurantCard extends ConsumerWidget {
                     child: AutoSizeText(
                       restaurant.description,
                       style: TextStyle(
-                        fontSize: isFull ? width * 0.033 : width * 0.026,
+                        fontSize: isFull ? 12 : 10,
                         color: footerTextColor,
                       ),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
-                  SizedBox(height: height * 0.0039),
+                  const SizedBox(height: 3),
                   Row(
-                    spacing: isFull ? width * 0.028 : width * 0.019,
                     children: [
                       Row(
-                        spacing: width * 0.01,
                         children: [
                           Icon(
                             Icons.delivery_dining,
-                            size: isFull ? width * 0.06 : width * 0.038,
+                            size: isFull ? 22 : 16,
                             color: iconColor,
                           ),
+                          const SizedBox(width: 4),
                           Text(
-                            "${restaurant.delivPrice}",
+                            "${restaurant.delivPrice.toStringAsFixed(2)} DZD",
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
-                              fontSize: isFull ? width * 0.04 : width * 0.031,
+                              fontSize: isFull ? 14 : 12,
                               color: footerTextColor,
                             ),
                           ),
                         ],
                       ),
-                      const SizedBox(width: 2),
-
+                      const SizedBox(width: 10),
                       Row(
-                        spacing: width * 0.01,
                         children: [
                           Icon(
                             Icons.timer,
-                            size: isFull ? width * 0.055 : width * 0.035,
+                            size: isFull ? 20 : 15,
                             color: iconColor,
                           ),
-
+                          const SizedBox(width: 4),
                           Text(
                             parseTime(restaurant.delivTime),
                             style: TextStyle(
-                              fontSize: isFull ? width * 0.04 : width * 0.031,
+                              fontSize: isFull ? 14 : 12,
                               fontWeight: FontWeight.bold,
                               color: footerTextColor,
                             ),
                           ),
                         ],
                       ),
-                      const SizedBox(width: 2),
-
+                      const SizedBox(width: 10),
                       Row(
-                        spacing: width * 0.01,
                         children: [
                           Icon(
                             Icons.star,
-                            size: isFull ? width * 0.06 : width * 0.038,
+                            size: isFull ? 22 : 16,
                             color: iconColor,
                           ),
-
+                          const SizedBox(width: 4),
                           Text(
-                            restaurant.rating.toString(),
+                            restaurant.rating.toStringAsFixed(1),
                             style: TextStyle(
-                              fontSize: isFull ? width * 0.04 : width * 0.031,
+                              fontSize: isFull ? 14 : 12,
                               fontWeight: FontWeight.bold,
                               color: footerTextColor,
                             ),

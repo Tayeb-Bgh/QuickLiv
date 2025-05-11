@@ -21,7 +21,9 @@ class ProductReducCard extends ConsumerWidget {
     final Color footerTitleColor = isDarkMode ? kSecondaryWhite : kPrimaryBlack;
     final Color reducTxtColor = isDarkMode ? kLightGray : kDarkGray;
     final Color bannerTxtColor = kPrimaryWhite;
-    final Color iconColor = kPrimaryRed;
+    final Color bannerColor = kPrimaryRed;
+    final Color iconColor = isDarkMode ? kSecondaryWhite : kPrimaryRed;
+    final Color btnBgColor = isDarkMode ? kSecondaryDark : kSecondaryWhite;
 
     return Container(
       width: width * 0.3,
@@ -63,7 +65,7 @@ class ProductReducCard extends ConsumerWidget {
                   child: Container(
                     padding: EdgeInsets.all(4),
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: btnBgColor,
                       shape: BoxShape.circle,
                       border: Border.all(color: iconColor, width: 2),
                     ),
@@ -80,7 +82,7 @@ class ProductReducCard extends ConsumerWidget {
                     vertical: 3,
                   ),
                   decoration: BoxDecoration(
-                    color: iconColor,
+                    color: bannerColor,
                     borderRadius: const BorderRadius.only(
                       topRight: Radius.circular(5),
                       bottomLeft: Radius.circular(5),
@@ -129,7 +131,7 @@ class ProductReducCard extends ConsumerWidget {
                   '${getPriceWithReduction(product.price, product.reducRate ?? 0)} DZD',
                   style: TextStyle(
                     fontSize: width * 0.035,
-                    color: iconColor,
+                    color: bannerColor,
                     fontWeight: FontWeight.bold,
                   ),
                 ),

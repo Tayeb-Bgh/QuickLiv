@@ -34,7 +34,10 @@ class BusinessProducts extends ConsumerWidget {
         delivTime: business.delivDuration,
         rating: business.rating,
         liked: false,
-        distance: 1231312,
+        distance: business.distance,
+        insta: business.insta,
+        fcb: business.fcb,
+        phone: business.phone,
       );
 
       Navigator.push(
@@ -62,6 +65,9 @@ class BusinessProducts extends ConsumerWidget {
                 rating: business.rating,
                 liked: false,
                 distance: business.distance,
+                insta: business.insta,
+                fcb: business.fcb,
+                phone: business.phone,
               ),
             ),
       );
