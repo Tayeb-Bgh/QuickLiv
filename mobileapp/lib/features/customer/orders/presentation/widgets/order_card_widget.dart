@@ -13,7 +13,12 @@ class OrderCard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final isDarkMode = ref.watch(darkModeProvider);
     final isDelivered = order.status == 4;
-
+    final reduction =
+        order.priceWithReduc == null || order.priceWithReduc == 0
+            ? 0
+            : order.totalAmount - (order.priceWithReduc ?? 0);
+    final livraison = order.deliveryPrice;
+    final totalNet = order.totalAmount + livraison - reduction;
     return Card(
       color: isDarkMode ? kSecondaryDark : kPrimaryWhite,
       elevation: 4,
@@ -219,7 +224,7 @@ class OrderCard extends ConsumerWidget {
             const SizedBox(height: 8),
             // Total
             Text(
-              "${order.totalAmount} DZD",
+              "${totalNet} DZD",
               style: const TextStyle(
                 color: kPrimaryRed,
                 fontWeight: FontWeight.bold,

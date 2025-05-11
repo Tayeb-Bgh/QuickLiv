@@ -35,11 +35,14 @@ final customerFullOrdersProvider = FutureProvider.autoDispose<List<Order>>((
 
   // 1. Récupérer les IDs des commandes
   final orderIds = await ordersService.getCustomerOrderIds(token);
-  log("le nombre d id : ${orderIds.length}");
+
   // 2. Pour chaque ID, récupérer les détails complets
   final orders = await Future.wait(
     orderIds.map((id) => ordersService.getOrderDetails(id)),
   );
-  log("le nombre d oooooordre : ${orders.length}");
+  log("le nombre d ordres : ${orders.length}");
   return orders;
 });
+
+// Dans votre fichier providers.dart (ou un fichier similaire)
+final currentOrderProvider = StateProvider<Order?>((ref) => null);

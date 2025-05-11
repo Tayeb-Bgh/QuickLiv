@@ -45,7 +45,7 @@ router.get("/:idRestaurant/products/", (req, res) => {
         }
 
         if (results.length > 0) {
-            console.log("Results:", results);
+            
             return res.status(200).json(results);
         } else {
             return res.status(404).json({ message: 'No products found' });

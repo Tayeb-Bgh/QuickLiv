@@ -38,6 +38,26 @@ class Order {
     this.pointWon,
   });
 
+  Order copyWithStatus(int newStatus) {
+    return Order(
+      id: id,
+      status: newStatus, // Seul champ modifié
+      createdAt: createdAt,
+      totalAmount: totalAmount,
+      priceWithReduc: priceWithReduc,
+      deliveryPrice: deliveryPrice,
+      paymentMethod: paymentMethod,
+      business: business,
+      deliverer: deliverer,
+      products: products,
+      ratingBusns: ratingBusns,
+      ratingDel: ratingDel,
+      delivererLocation: delivererLocation,
+      customerLocation: customerLocation,
+      pointWon: pointWon,
+    );
+  }
+
   @override
   String toString() {
     return 'Order{id: $id, status: $status, createdAt: $createdAt, totalAmount: $totalAmount, priceWithReduc: $priceWithReduc, business: $business, deliverer: $deliverer, products: $products, ratingBusns: $ratingBusns, ratingDel: $ratingDel}';

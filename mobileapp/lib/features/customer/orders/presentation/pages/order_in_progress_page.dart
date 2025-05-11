@@ -1,15 +1,48 @@
+import 'dart:developer';
+
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:mobileapp/core/config/dark_mode_provider.dart';
 import 'package:mobileapp/core/constants/constants.dart';
 import 'package:mobileapp/features/customer/orders/business/entities/order_entity.dart';
+import 'package:mobileapp/features/customer/orders/presentation/pages/sockets.dart';
 import 'package:mobileapp/features/customer/orders/presentation/widgets/animated_progress.dart';
 
-class OrderDetailsPage extends ConsumerWidget {
+class OrderDetailsPage extends ConsumerStatefulWidget {
   final Order order;
 
   const OrderDetailsPage({super.key, required this.order});
+
+  @override
+  ConsumerState<OrderDetailsPage> createState() => _OrderDetailsPageState();
+}
+
+class _OrderDetailsPageState extends ConsumerState<OrderDetailsPage> {
+  late Order _currentOrder;
+  final SocketService _socketService = SocketService();
+
+  @override
+  void initState() {
+    super.initState();
+    _currentOrder = widget.order;
+    _setupSocketConnection();
+  }
+
+  void _setupSocketConnection() {
+    _socketService.connect();
+    _socketService.joinOrderRoom(_currentOrder.id.toString());
+
+    _socketService.listenForOrderUpdates((data) {
+      log("la je peut reload ${data['status']}");
+      if (mounted && data['commandeId'] == _currentOrder.id) {
+        setState(() {
+          _currentOrder = _currentOrder.copyWithStatus(data['status']);
+        });
+      }
+    });
+  }
 
   String getStatusLabel(int status) {
     switch (status) {
@@ -48,13 +81,14 @@ class OrderDetailsPage extends ConsumerWidget {
       padding: const EdgeInsets.symmetric(horizontal: 15),
       child: Column(
         children: [
-          Container(
-            height: 45,
+          SizedBox(
+            height: 50, // Hauteur explicite pour que Stack puisse se mesurer
             child: Stack(
               alignment: Alignment.center,
               children: [
                 // Ligne de base
                 Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Container(
                       width: 30,
@@ -106,35 +140,35 @@ class OrderDetailsPage extends ConsumerWidget {
 
                 // Animations selon le statut
                 if (status == 1)
-                  // Animation du livreur en route vers le commerce
-                  Positioned(
-                    left: 0,
-                    right: 0,
+                  Positioned.fill(
                     child: Row(
                       children: [
-                        SizedBox(width: 12), // Espace pour le premier point
-                        Expanded(
+                        const SizedBox(width: 12),
+                        const Expanded(
                           child: Stack(
-                            children: [MovingDot(color: kPrimaryRed, size: 8)],
+                            children: [MovingDot(color: kPrimaryRed, size: 0)],
                           ),
                         ),
-                        SizedBox(width: 20), // Espace pour l'icône du commerce
-                        Expanded(
-                          child: SizedBox(),
-                        ), // Espace pour la deuxième ligne
-                        SizedBox(width: 12), // Espace pour le dernier point
+                        const SizedBox(width: 20),
+                        const Expanded(child: SizedBox()),
+                        const SizedBox(width: 12),
                       ],
                     ),
                   ),
 
-                if (status == 2)
-                  // Animation du livreur récupérant les produits - Centrage parfait
-                  Center(
-                    child: Positioned(
-                      left: 169,
+                /* if (status == 2)
+                  Positioned(
+                    left: 169,
+                    top:
+                        12, // pour l'aligner verticalement au centre approximatif
+                    child: SizedBox(
+                      width: 36,
+                      height: 36,
                       child: PulsatingCircle(
-                        color: kPrimaryRed.withOpacity(0.1),
-                        size: 36,
+                        color: Color(
+                          0x1AFF0000,
+                        ), // kPrimaryRed avec .withOpacity(0.1)
+                        size: 56,
                         child: Icon(
                           Icons.shopping_bag,
                           color: kPrimaryRed,
@@ -143,20 +177,15 @@ class OrderDetailsPage extends ConsumerWidget {
                       ),
                     ),
                   ),
-
-                if (status == 3)
-                  // Animation du livreur en route vers le client
-                  Positioned(
-                    left: 0,
-                    right: 0,
+ */
+                /* if (status == 3)
+                  Positioned.fill(
                     child: Row(
                       children: [
-                        SizedBox(width: 12), // Espace pour le premier point
-                        Expanded(
-                          child: SizedBox(),
-                        ), // Espace pour la première ligne
-                        SizedBox(width: 20), // Espace pour l'icône du commerce
-                        Expanded(
+                        const SizedBox(width: 12),
+                        const Expanded(child: SizedBox()),
+                        const SizedBox(width: 20),
+                        const Expanded(
                           child: Stack(
                             children: [
                               MovingDot(
@@ -167,10 +196,11 @@ class OrderDetailsPage extends ConsumerWidget {
                             ],
                           ),
                         ),
-                        SizedBox(width: 12), // Espace pour le dernier point
+                        const SizedBox(width: 12),
                       ],
                     ),
                   ),
+               */
               ],
             ),
           ),
@@ -180,96 +210,99 @@ class OrderDetailsPage extends ConsumerWidget {
   }
 
   Widget _buildLocationInfo(int status) {
-    return Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Column(
-                children: [
-                  Text(
-                    "Position du livreur",
-                    style: TextStyle(
-                      fontSize: 10,
-                      fontWeight: FontWeight.bold,
-                      color: status == 1 ? kPrimaryRed : Colors.grey[600],
+    return SizedBox(
+      width: double.infinity,
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(
+                  children: [
+                    Text(
+                      "Position du livreur",
+                      style: TextStyle(
+                        fontSize: 10,
+                        fontWeight: FontWeight.bold,
+                        color: status == 1 ? kPrimaryRed : Colors.grey[600],
+                      ),
+                      textAlign: TextAlign.center,
                     ),
-                    textAlign: TextAlign.center,
-                  ),
-                ],
-              ),
-              Column(
-                children: [
-                  Text(
-                    "Burger King, Algérie",
-                    style: TextStyle(
-                      fontSize: 10,
-                      fontWeight: FontWeight.bold,
-                      color:
-                          status == 2 || status == 3
-                              ? kPrimaryRed
-                              : Colors.grey[600],
+                  ],
+                ),
+                Column(
+                  children: [
+                    Text(
+                      "Burger King, Algérie",
+                      style: TextStyle(
+                        fontSize: 10,
+                        fontWeight: FontWeight.bold,
+                        color:
+                            status == 2 || status == 3
+                                ? kPrimaryRed
+                                : Colors.grey[600],
+                      ),
+                      textAlign: TextAlign.center,
                     ),
-                    textAlign: TextAlign.center,
-                  ),
-                ],
-              ),
-              Column(
-                children: [
-                  Text(
-                    "Votre position  ",
-                    style: TextStyle(
-                      fontSize: 10,
-                      fontWeight: FontWeight.bold,
-                      color: status > 3 ? kPrimaryRed : Colors.grey[600],
+                  ],
+                ),
+                Column(
+                  children: [
+                    Text(
+                      "Votre position  ",
+                      style: TextStyle(
+                        fontSize: 10,
+                        fontWeight: FontWeight.bold,
+                        color: status > 3 ? kPrimaryRed : Colors.grey[600],
+                      ),
+                      textAlign: TextAlign.center,
                     ),
-                    textAlign: TextAlign.center,
-                  ),
-                ],
+                  ],
+                ),
+              ],
+            ),
+          ),
+          SizedBox(height: 16),
+          if (status == 1)
+            Text(
+              "Le livreur est en route vers le restaurant",
+              style: TextStyle(
+                color: kPrimaryRed,
+                fontWeight: FontWeight.bold,
+                fontSize: 12,
               ),
-            ],
-          ),
-        ),
-        SizedBox(height: 16),
-        if (status == 1)
-          Text(
-            "Le livreur est en route vers le restaurant",
-            style: TextStyle(
-              color: kPrimaryRed,
-              fontWeight: FontWeight.bold,
-              fontSize: 12,
+              textAlign: TextAlign.center,
             ),
-            textAlign: TextAlign.center,
-          ),
-        if (status == 2)
-          Text(
-            "Le livreur récupère votre commande",
-            style: TextStyle(
-              color: kPrimaryRed,
-              fontWeight: FontWeight.bold,
-              fontSize: 12,
+          if (status == 2)
+            Text(
+              "Le livreur récupère votre commande",
+              style: TextStyle(
+                color: kPrimaryRed,
+                fontWeight: FontWeight.bold,
+                fontSize: 12,
+              ),
+              textAlign: TextAlign.center,
             ),
-            textAlign: TextAlign.center,
-          ),
-        if (status == 3)
-          Text(
-            "Le livreur est en route vers vous",
-            style: TextStyle(
-              color: kPrimaryRed,
-              fontWeight: FontWeight.bold,
-              fontSize: 15,
+          if (status == 3)
+            Text(
+              "Le livreur est en route vers vous",
+              style: TextStyle(
+                color: kPrimaryRed,
+                fontWeight: FontWeight.bold,
+                fontSize: 15,
+              ),
+              textAlign: TextAlign.center,
             ),
-            textAlign: TextAlign.center,
-          ),
-      ],
+        ],
+      ),
     );
   }
 
   Widget _buildDeliveryInfo(WidgetRef ref) {
     final isDarkMode = ref.watch(darkModeProvider);
-    if (order.status == 0) {
+    if (_currentOrder.status == 0) {
       return Row(
         children: [
           Container(
@@ -318,8 +351,8 @@ class OrderDetailsPage extends ConsumerWidget {
     }
     return Column(
       children: [
-        _buildProgressTracker(order.status),
-        if (order.status >= 1) _buildLocationInfo(order.status),
+        _buildProgressTracker(_currentOrder.status),
+        if (_currentOrder.status >= 1) _buildLocationInfo(_currentOrder.status),
         const SizedBox(height: 16),
         Row(
           children: [
@@ -327,11 +360,11 @@ class OrderDetailsPage extends ConsumerWidget {
               radius: 24,
               backgroundColor: Colors.grey.shade300,
               backgroundImage:
-                  order.deliverer?.imgUrl != null
-                      ? NetworkImage(order.deliverer!.imgUrl!)
+                  _currentOrder.deliverer?.imgUrl != null
+                      ? NetworkImage(_currentOrder.deliverer!.imgUrl!)
                       : null,
               child:
-                  order.deliverer?.imgUrl == null
+                  _currentOrder.deliverer?.imgUrl == null
                       ? const Icon(Icons.person, color: Colors.grey)
                       : null,
             ),
@@ -341,14 +374,14 @@ class OrderDetailsPage extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "${order.deliverer?.firstName ?? ''} ${order.deliverer?.lastName ?? ''}",
+                    "${_currentOrder.deliverer?.firstName ?? ''} ${_currentOrder.deliverer?.lastName ?? ''}",
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       color: isDarkMode ? kSecondaryWhite : kSecondaryDark,
                     ),
                   ),
                   Text(
-                    order.deliverer?.phoneNumber ?? '',
+                    _currentOrder.deliverer?.phoneNumber ?? '',
                     style: TextStyle(
                       color: isDarkMode ? kSecondaryWhite : kSecondaryDark,
                     ),
@@ -403,7 +436,7 @@ class OrderDetailsPage extends ConsumerWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children:
-              order.products.asMap().entries.map((entry) {
+              _currentOrder.products.asMap().entries.map((entry) {
                 final index = entry.key;
                 final p = entry.value;
 
@@ -416,7 +449,7 @@ class OrderDetailsPage extends ConsumerWidget {
                     border: Border(
                       bottom: BorderSide(
                         color:
-                            index == order.products.length - 1
+                            index == _currentOrder.products.length - 1
                                 ? Colors.transparent
                                 : isDarkMode
                                 ? Colors.grey[800]!
@@ -514,16 +547,17 @@ class OrderDetailsPage extends ConsumerWidget {
 
   Widget _buildPaymentDetails(WidgetRef ref) {
     final isDarkMode = ref.watch(darkModeProvider);
-    final totalProduits = order.products.fold<double>(
+    final totalProduits = _currentOrder.products.fold<double>(
       0,
       (sum, p) => sum + (p.price * p.quantity),
     );
     final reduction =
-        order.priceWithReduc == null || order.priceWithReduc == 0
+        _currentOrder.priceWithReduc == null ||
+                _currentOrder.priceWithReduc == 0
             ? 0
-            : order.totalAmount - (order.priceWithReduc ?? 0);
-    final livraison = order.deliveryPrice;
-    final totalNet = order.totalAmount + order.deliveryPrice - reduction;
+            : _currentOrder.totalAmount - (_currentOrder.priceWithReduc ?? 0);
+    final livraison = _currentOrder.deliveryPrice;
+    final totalNet = _currentOrder.totalAmount + livraison - reduction;
 
     return Column(
       children: [
@@ -563,16 +597,16 @@ class OrderDetailsPage extends ConsumerWidget {
                 color: isDarkMode ? kSecondaryWhite : kSecondaryDark,
               ),
             ),
-            Spacer(),
+            const Spacer(),
             Container(
-              padding: EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
               decoration: BoxDecoration(
                 border: Border.all(color: Colors.grey),
                 borderRadius: BorderRadius.circular(16),
               ),
               child: Row(
                 children: [
-                  order.paymentMethod
+                  _currentOrder.paymentMethod
                       ? Icon(
                         Icons.credit_card,
                         size: 16,
@@ -583,8 +617,8 @@ class OrderDetailsPage extends ConsumerWidget {
                         size: 16,
                         color: isDarkMode ? kSecondaryWhite : kSecondaryDark,
                       ),
-                  SizedBox(width: 4),
-                  order.paymentMethod
+                  const SizedBox(width: 4),
+                  _currentOrder.paymentMethod
                       ? Text(
                         "Carte",
                         style: TextStyle(
@@ -625,7 +659,7 @@ class OrderDetailsPage extends ConsumerWidget {
               color: isDarkMode ? kSecondaryWhite : kPrimaryBlack,
             ),
           ),
-          Spacer(),
+          const Spacer(),
           Text(
             value,
             style: TextStyle(
@@ -639,28 +673,28 @@ class OrderDetailsPage extends ConsumerWidget {
   }
 
   Widget _buildCancelNote() {
-    if (order.status == 0) {
+    if (_currentOrder.status == 0) {
       return Container(
         width: double.infinity,
         child: ElevatedButton(
           style: ElevatedButton.styleFrom(
             backgroundColor: kPrimaryRed,
-            padding: EdgeInsets.symmetric(vertical: 12),
+            padding: const EdgeInsets.symmetric(vertical: 12),
           ),
           onPressed: () {
             // Annulation possible
           },
-          child: Text(
+          child: const Text(
             "Annuler",
             style: TextStyle(color: kPrimaryWhite, fontSize: 16),
           ),
         ),
       );
-    } else if (order.status == 1) {
+    } else if (_currentOrder.status == 1) {
       return Column(
         children: [
           Container(
-            padding: EdgeInsets.all(12),
+            padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
               border: Border.all(color: Colors.grey.shade300),
               borderRadius: BorderRadius.circular(8),
@@ -670,18 +704,18 @@ class OrderDetailsPage extends ConsumerWidget {
               style: TextStyle(color: Colors.grey.shade700, fontSize: 14),
             ),
           ),
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
           Container(
             width: double.infinity,
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
                 backgroundColor: kPrimaryRed,
-                padding: EdgeInsets.symmetric(vertical: 12),
+                padding: const EdgeInsets.symmetric(vertical: 12),
               ),
               onPressed: () {
                 // Annulation possible
               },
-              child: Text(
+              child: const Text(
                 "Annuler",
                 style: TextStyle(color: kPrimaryWhite, fontSize: 16),
               ),
@@ -689,9 +723,9 @@ class OrderDetailsPage extends ConsumerWidget {
           ),
         ],
       );
-    } else if (order.status == 2) {
+    } else if (_currentOrder.status == 2) {
       return Container(
-        padding: EdgeInsets.all(12),
+        padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
           border: Border.all(color: Colors.grey.shade300),
           borderRadius: BorderRadius.circular(8),
@@ -700,19 +734,22 @@ class OrderDetailsPage extends ConsumerWidget {
           text: TextSpan(
             style: TextStyle(color: Colors.grey.shade700, fontSize: 14),
             children: [
-              TextSpan(
+              const TextSpan(
                 text:
                     "La livraison est déjà en route, et il est deja arrivé au commerce correspondant vous ne pouvez plus ",
               ),
-              TextSpan(text: "annuler", style: TextStyle(color: kPrimaryRed)),
-              TextSpan(text: " votre commande."),
+              TextSpan(
+                text: "annuler",
+                style: const TextStyle(color: kPrimaryRed),
+              ),
+              const TextSpan(text: " votre commande."),
             ],
           ),
         ),
       );
     } else {
       return Container(
-        padding: EdgeInsets.all(12),
+        padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
           border: Border.all(color: Colors.grey.shade300),
           borderRadius: BorderRadius.circular(8),
@@ -721,12 +758,15 @@ class OrderDetailsPage extends ConsumerWidget {
           text: TextSpan(
             style: TextStyle(color: Colors.grey.shade700, fontSize: 14),
             children: [
-              TextSpan(
+              const TextSpan(
                 text:
                     "La livraison est déjà en route, le livreur est en route vers vous avec les produits commander. Vous ne pouvez plus ",
               ),
-              TextSpan(text: "annuler", style: TextStyle(color: kPrimaryRed)),
-              TextSpan(text: " votre commande."),
+              TextSpan(
+                text: "annuler",
+                style: const TextStyle(color: kPrimaryRed),
+              ),
+              const TextSpan(text: " votre commande."),
             ],
           ),
         ),
@@ -756,7 +796,7 @@ class OrderDetailsPage extends ConsumerWidget {
                   ),
                   textAlign: TextAlign.center,
                 ),
-                SizedBox(height: 4),
+                const SizedBox(height: 4),
                 Container(
                   height: 6,
                   width: 350,
@@ -774,10 +814,17 @@ class OrderDetailsPage extends ConsumerWidget {
   }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  void dispose() {
+    _socketService.disconnect();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final isDarkMode = ref.watch(darkModeProvider);
-    final date = DateFormat("dd/MM/yyyy à HH:mm").format(order.createdAt);
-    final height = MediaQuery.of(context).size.height;
+    final date = DateFormat(
+      "dd/MM/yyyy à HH:mm",
+    ).format(_currentOrder.createdAt);
 
     return Scaffold(
       appBar: AppBar(
@@ -787,13 +834,15 @@ class OrderDetailsPage extends ConsumerWidget {
         ),
         backgroundColor: kPrimaryRed,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: kPrimaryWhite),
+          icon: const Icon(Icons.arrow_back, color: kPrimaryWhite),
           onPressed: () => Navigator.of(context).pop(),
         ),
       ),
       body: SingleChildScrollView(
         child: Container(
-          height: order.status == 0 ? height * 0.9 : height * 1.16,
+          constraints: BoxConstraints(
+            minHeight: MediaQuery.of(context).size.height,
+          ),
           color: isDarkMode ? kPrimaryDark : kSecondaryWhite,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -804,34 +853,38 @@ class OrderDetailsPage extends ConsumerWidget {
                   children: [
                     CircleAvatar(
                       radius: 24,
-                      backgroundImage: NetworkImage(order.business.imgUrl),
+                      backgroundImage: NetworkImage(
+                        _currentOrder.business.imgUrl,
+                      ),
                     ),
                     const SizedBox(width: 12),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          order.business.name,
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18,
-                            color:
-                                isDarkMode ? kSecondaryWhite : kSecondaryDark,
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            _currentOrder.business.name,
+                            maxLines: 2,
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18,
+                              color:
+                                  isDarkMode ? kSecondaryWhite : kSecondaryDark,
+                            ),
                           ),
-                        ),
-                        Text(
-                          "${getStatusLabel(order.status)}",
-                          style: TextStyle(color: Colors.green),
-                        ),
-                      ],
+                          Text(
+                            getStatusLabel(_currentOrder.status),
+                            style: const TextStyle(color: Colors.green),
+                          ),
+                        ],
+                      ),
                     ),
-                    Spacer(),
-                    Text(
+                    AutoSizeText(
                       date,
                       style: TextStyle(
-                        fontSize: 12,
                         color: isDarkMode ? kSecondaryWhite : kMediumGray,
                       ),
+                      minFontSize: 6,
                     ),
                   ],
                 ),
@@ -855,6 +908,7 @@ class OrderDetailsPage extends ConsumerWidget {
                 padding: const EdgeInsets.all(16),
                 child: _buildCancelNote(),
               ),
+              SizedBox(height: 20), // Espace supplémentaire en bas
             ],
           ),
         ),

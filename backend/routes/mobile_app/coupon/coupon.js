@@ -45,7 +45,7 @@ router.post('/create-coupon', authenticate, async (req, res) => {
         }
 
         const couponId = results.insertId;
-        console.log("Coupon créé avec ID:", couponId);
+        
 
 
         const updatedCode = `${reducCodeCoupon}${couponId}`;

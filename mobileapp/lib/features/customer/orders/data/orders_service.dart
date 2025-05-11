@@ -66,20 +66,6 @@ class OrdersService {
   }
 
   Order _parseOrder(Map<String, dynamic> data) {
-    data.forEach((key, value) {
-      if (value is Map) {
-        log('$key: ${value.toString()} (Type: Map)');
-      } else if (value is List) {
-        log('$key: ${value.toString()} (Type: List)');
-      } else {
-        log('$key: $value (Type: ${value.runtimeType})');
-      }
-    });
-
-    // Log spécifique pour paymentMethod
-    log('Valeur et type de paymentMethod avant conversion:');
-    log('paymentMethod value: ${data['paymentMethod']}');
-    log('paymentMethod type: ${data['paymentMethod']?.runtimeType}');
     try {
       return Order(
         id: data['id'],

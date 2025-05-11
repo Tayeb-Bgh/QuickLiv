@@ -26,4 +26,3 @@ const url = cloudinary.url("cld-sample",{
         }
     ]
 });
-console.log(url)

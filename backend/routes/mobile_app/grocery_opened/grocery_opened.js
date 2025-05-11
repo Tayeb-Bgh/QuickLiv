@@ -80,8 +80,7 @@ router.get('/:id/categories', (req, res) => {
 
     db.query(query,params,(err,results)=>{
         
-        console.log(`[RESULTS] ${results}`)
-
+        
         if (err) {
             console.error("Database error:", err);
             return res.status(500).json({ error: "Internal server error" });
@@ -98,7 +97,7 @@ router.get('/:id/categories', (req, res) => {
 router.get('/:id/categories/:category/second-categories', (req, res) => {
 
     const { params: { id, category } } = req
-    console.log("caaaaaaaalling")
+    
     if(!id || !category)
         res.status(400).send({err:"Bad Request"})
 

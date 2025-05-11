@@ -8,8 +8,7 @@ function generateJWT({ id, role, phone }) {
     role,
     phone
   };
-   console.log("Payload for JWT: ", payload); // 👈 Log the payload for debugging
-
+  
   const token = jwt.sign(payload, process.env.JWT_SECRET, {
     expiresIn: '7d',
   });

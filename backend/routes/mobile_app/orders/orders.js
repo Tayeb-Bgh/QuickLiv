@@ -132,7 +132,7 @@ router.get("/details/:id", (req, res) => {
                 }
 
                 function sendResponse() {
-                    console.log(order)
+                    
                     const completeOrder = {
                         id: order.id,
                         status: order.status,
@@ -155,7 +155,7 @@ router.get("/details/:id", (req, res) => {
                         },
                         pointWon: null
                     };
-                    console.log(completeOrder)
+                    
                     res.json(completeOrder);
                 }
             });
