@@ -74,7 +74,7 @@ class AdvertisementCard extends ConsumerWidget {
             final width =
                 constraints.maxWidth > 600
                     ? 500.0
-                    : MediaQuery.of(context).size.width * 0.85;
+                    : MediaQuery.of(context).size.width * 0.93;
             final double height = 150;
 
             return Card(

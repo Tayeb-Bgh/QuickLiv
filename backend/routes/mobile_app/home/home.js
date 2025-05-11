@@ -43,7 +43,7 @@ router.get('/products/:idProd', (req, res) => {
                     WHERE p.idProd = ? AND p.deleteProd = ?`
 
     const params = [idProd,0]
-    console.log(idProd)
+    
 
     db.query(query,params,(err,results)=>{
         if (err) {

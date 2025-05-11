@@ -279,6 +279,9 @@ class _CartPopupState extends ConsumerState<CartPopup> {
                                         .state = "";
                                     ref.read(owernNameControllerProvider).text =
                                         "";
+                                    ref
+                                        .watch(actualCartProvider.notifier)
+                                        .state = cart;
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(

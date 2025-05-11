@@ -18,6 +18,7 @@ class StoryPage extends StatelessWidget {
             ? (grocery?.vidUrl ?? '')
             : (restaurant?.vidUrl ?? ''),
         controller: controller,
+        imageFit: BoxFit.cover,
       ),
     ];
 
@@ -28,18 +29,20 @@ class StoryPage extends StatelessWidget {
       backgroundColor: Colors.black,
       body: Stack(
         children: [
-          StoryView(
-            storyItems: storyItems,
-            controller: controller,
-            inline: false,
-            repeat: true,
-            indicatorForegroundColor: kPrimaryWhite,
-            onComplete: () {},
-            onVerticalSwipeComplete: (direction) {
-              if (direction == Direction.down) {
-                Navigator.pop(context);
-              }
-            },
+          Positioned.fill(
+            child: StoryView(
+              storyItems: storyItems,
+              controller: controller,
+              inline: false,
+              repeat: true,
+              indicatorForegroundColor: kPrimaryWhite,
+              onComplete: () {},
+              onVerticalSwipeComplete: (direction) {
+                if (direction == Direction.down) {
+                  Navigator.pop(context);
+                }
+              },
+            ),
           ),
 
           Positioned(
@@ -95,11 +98,10 @@ class StoryPage extends StatelessWidget {
                         ),
                       ),
                       isScrollControlled: true,
-                      builder: (_) => RestaurantBottomSheet(restaurant: restaurant!),
+                      builder:
+                          (_) => RestaurantBottomSheet(restaurant: restaurant!),
                     );
-                  } else if (grocery != null) {
-                 
-                  }
+                  } else if (grocery != null) {}
                 },
                 child: Text(
                   "Decouvrir le Menu",

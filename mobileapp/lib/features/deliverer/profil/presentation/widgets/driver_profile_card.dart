@@ -78,7 +78,7 @@ class DriverProfileCard extends StatelessWidget {
                       const Icon(Icons.star, color: Colors.amber, size: 18),
                       const SizedBox(width: 4),
                       AutoSizeText(
-                         (savedDeliverer?.rating.toString() ?? 'N/A'),
+                        (savedDeliverer?.rating.toString() ?? 'N/A'),
                         maxLines: 1,
                         minFontSize: 12,
                         style: const TextStyle(
@@ -88,7 +88,7 @@ class DriverProfileCard extends StatelessWidget {
                       ),
                       const SizedBox(width: 16),
                       AutoSizeText(
-                        (savedDeliverer?.deliveryNbr.toString() ?? 'N/A'),
+                        ('${savedDeliverer?.deliveryNbr.toString()} livraison au total'),
                         maxLines: 1,
                         minFontSize: 12,
                         style: TextStyle(fontSize: 14, color: Colors.grey[600]),

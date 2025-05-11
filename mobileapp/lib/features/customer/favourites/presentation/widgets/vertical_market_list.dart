@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart'; /* 
 import 'package:mobileapp/core/config/dark_mode_provider.dart';
-import 'package:mobileapp/core/constants/constants.dart';
+import 'package:mobileapp/core/constants/constants.dart'; */
 import 'package:mobileapp/features/customer/favourites/business/entities/business_entity.dart';
 import 'package:mobileapp/features/customer/favourites/presentation/widgets/business_card.dart';
 import 'package:mobileapp/features/customer/groceries/business/entities/grocery_entity.dart';
@@ -24,8 +24,7 @@ class VerticalMarketList extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isDarkMode = ref.watch(darkModeProvider);
-    final titleColor = isDarkMode ? kSecondaryWhite : kPrimaryRed;
+    /* final isDarkMode = ref.watch(darkModeProvider); */
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -36,8 +35,7 @@ class VerticalMarketList extends ConsumerWidget {
               children: [
                 const SizedBox(height: 10),
                 SizedBox(
-                  height:
-                      MediaQuery.of(context).size.height *0.74, 
+                  height: MediaQuery.of(context).size.height * 0.74,
                   child: ListView.builder(
                     itemCount: bsnss.length,
                     itemBuilder: (context, index) {

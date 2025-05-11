@@ -10,7 +10,7 @@ router.use(bodyParser.json());
 
 router.get('/home', authenticate, (req, res) => {
   const { id } = req.user;
-  console.log(req.user); // Extract the deliverer ID from the JWT token
+   
   console.log('Deliverer ID from JWT:', id); // 👈 Log the deliverer ID for debugging
   const query = `
     SELECT COUNT(Delivery.idOrd) AS totalOrders,

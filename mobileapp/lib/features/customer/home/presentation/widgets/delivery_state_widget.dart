@@ -12,7 +12,7 @@ class DeliveryStateWidget extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final bool isDarkMode = ref.watch(darkModeProvider);
-    final Color textColor = isDarkMode ? kLightGray : kPrimaryBlack;
+    final Color textColor = isDarkMode ? kSecondaryWhite : kPrimaryBlack;
 
     return Row(
       children: [
@@ -31,14 +31,14 @@ class DeliveryStateWidget extends ConsumerWidget {
               "Livraison",
               style: TextStyle(color: textColor, fontWeight: FontWeight.bold),
               maxLines: 1,
-              maxFontSize: 11,
-              minFontSize: 9,
+              maxFontSize: 13,
+              minFontSize: 11,
             ),
             AutoSizeText(
               state ? "Disponible" : "Indisponible",
               style: TextStyle(color: kPrimaryRed, fontWeight: FontWeight.bold),
               maxLines: 1,
-              maxFontSize: 11,
+              maxFontSize: 10,
               minFontSize: 9,
             ),
           ],

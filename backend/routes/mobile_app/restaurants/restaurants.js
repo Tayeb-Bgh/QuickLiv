@@ -54,7 +54,7 @@ router.get("/products-business/:idBusns", (req, res) => {
             return res.status(500).json({ error: "Database error" });
         }
 
-        console.log("[DEBUG] SQL results", results);
+        
 
         if (results.length > 0) {
             res.status(200).json(results);

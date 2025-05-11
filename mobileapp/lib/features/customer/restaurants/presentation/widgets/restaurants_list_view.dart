@@ -42,7 +42,7 @@ class RestaurantsListView extends ConsumerWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Text(
-                  title,
+                  "Nos meilleurs restaurants",
                   textAlign: TextAlign.left,
 
                   style: TextStyle(
