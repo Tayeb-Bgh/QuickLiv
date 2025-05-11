@@ -5,6 +5,7 @@ import 'package:mobileapp/core/config/backend_api_config.dart';
 import 'package:mobileapp/core/config/dark_mode_provider.dart';
 import 'package:mobileapp/core/constants/constants.dart';
 import 'package:mobileapp/features/auth/presentation/providers/auth_provider.dart';
+import 'package:mobileapp/features/customer/about/presentation/pages/about_page.dart';
 import 'package:mobileapp/features/customer/gesProfil/DevCommercant/presentation/pages/be_trader_skeleton.dart';
 import 'package:mobileapp/features/customer/gesProfil/DevLivreur/presentation/pages/be_deliverer_skeleton.dart';
 import 'package:mobileapp/features/customer/profile/presentation/widgets/log_out.dart';
@@ -220,7 +221,10 @@ class _ProfilePopupState extends ConsumerState<ProfilePopup> {
                 } else if (text == 'Devenier Partenaire') {
                   checkDelivererStatus2();
                 } else if (text == 'A propos de nous') {
-                  print('A propos de nous pressed');
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => AboutPage()),
+                  );
                 }
               },
               child: Row(

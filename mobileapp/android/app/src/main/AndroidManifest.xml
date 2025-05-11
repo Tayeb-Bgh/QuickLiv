@@ -7,7 +7,8 @@
         android:label="mobileapp"
         android:usesCleartextTraffic="true"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/ic_launcher"
+        android:enableOnBackInvokedCallback="true"> <!-- Removed the duplicate line -->
         <activity
             android:name=".MainActivity"
             android:exported="true"
