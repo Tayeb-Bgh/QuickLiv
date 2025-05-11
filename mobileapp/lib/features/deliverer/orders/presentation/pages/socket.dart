@@ -1,12 +1,12 @@
 // lib/core/socket_service.dart
 import 'dart:developer';
-
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 class SocketService {
   late IO.Socket socket;
   static final SocketService _instance = SocketService._internal();
-  final String _serverUrl = 'http://192.168.54.89:3000';
+  final String _serverUrl = 'http://192.168.54.114:3000';
+
   factory SocketService() => _instance;
 
   SocketService._internal() {
@@ -26,11 +26,15 @@ class SocketService {
   void connect() => socket.connect();
   void disconnect() => socket.disconnect();
 
-  void joinOrderRoom(String orderId) {
-    socket.emit('join_commande_room', orderId);
+  void joinDelivererRoom() {
+    socket.emit('join_deliverer_room', 7);
   }
 
-  void listenForOrderUpdates(void Function(dynamic) callback) {
-    socket.on('commande_status_update', callback);
+  void listenForNewOrders(void Function() callback) {
+    socket.on('new_orders_available', (_) => callback());
+  }
+
+  void listenForRemovedOrders(void Function(List<dynamic>) callback) {
+    socket.on('orders_removed', (data) => callback(data));
   }
 }

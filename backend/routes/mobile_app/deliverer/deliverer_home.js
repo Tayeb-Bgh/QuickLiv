@@ -73,7 +73,7 @@ router.get('/orders',authenticate, (req, res) => {
   const query = `SELECT idOrd,custLatOrd,custLngOrd,createdAtOrd,weightCatOrd
   ,delivPriceOrd,transNbrOrd,idCust,firstNameCust,lastNameCust,phoneCust,
   idBusns,nameBusns,phoneBusns,latBusns,lngBusns,imgUrlBusns
-  
+   
   FROM CustomerOrder join Cart on idCartOrd = idCart 
   join Customer on idCustCart = idCust 
   join  Business on idBusnsCart = idBusns

@@ -9,7 +9,6 @@ import 'package:mobileapp/features/deliverer/orders/presentation/widgets/at_busi
 import 'package:mobileapp/features/deliverer/orders/presentation/widgets/at_client_card.dart';
 import 'package:mobileapp/features/deliverer/orders/presentation/widgets/business_rendezvous_card.dart';
 import 'package:mobileapp/features/deliverer/orders/presentation/widgets/buttons_row.dart';
-
 import 'package:mobileapp/features/deliverer/orders/presentation/widgets/order_widget.dart';
 import 'package:mobileapp/features/deliverer/orders/presentation/widgets/to_client_card.dart';
 
@@ -18,14 +17,19 @@ class OrdersPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // Initialise les mises à jour temps réel
+    ref.read(realTimeOrdersProvider);
+
     final selectedIndex = ref.watch(selectedCategoryIndexProvider);
     final isDarkMode = ref.watch(darkModeProvider);
     final fontColor = isDarkMode ? kPrimaryWhite : kPrimaryBlack;
     final backgroundColor = isDarkMode ? kPrimaryBlack : kPrimaryWhite;
     final currentIndex = ref.watch(currentCardIndexProvider);
     final height = MediaQuery.sizeOf(context).height;
+
+    // Utilise la liste synchronisée en temps réel
+    final orders = ref.watch(ordersListProvider);
     final ordersAsync = ref.watch(fetchOrdersProvider);
-    log('$ordersAsync');
 
     return Container(
       color: backgroundColor,
@@ -36,25 +40,26 @@ class OrdersPage extends ConsumerWidget {
             HorizontalRadioButtons(),
             SizedBox(height: height * 0.02),
             selectedIndex
-                ? ordersAsync.when(
-                  data:
-                      (orders) => Expanded(
-                        child: SingleChildScrollView(
-                          child: Column(
-                            spacing: 15,
-                            children:
-                                orders
-                                    .map(
-                                      (order) =>
-                                          OrderWidget(order: order, ref: ref),
-                                    )
-                                    .toList(),
+                ? Expanded(
+                  child: RefreshIndicator(
+                    onRefresh: () => ref.refresh(fetchOrdersProvider.future),
+                    child: ordersAsync.when(
+                      data:
+                          (_) => ListView.builder(
+                            itemCount: orders.length,
+                            itemBuilder: (context, index) {
+                              return OrderWidget(
+                                order: orders[index],
+                                ref: ref,
+                              );
+                            },
                           ),
-                        ),
-                      ),
-                  loading:
-                      () => const Center(child: CircularProgressIndicator()),
-                  error: (err, stack) => Center(child: Text('Error: $err')),
+                      loading:
+                          () =>
+                              const Center(child: CircularProgressIndicator()),
+                      error: (err, stack) => Center(child: Text('Error: $err')),
+                    ),
+                  ),
                 )
                 : Expanded(child: _buildCard(ref, currentIndex)),
           ],
