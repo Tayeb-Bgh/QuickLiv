@@ -59,7 +59,7 @@ class ProductCard extends ConsumerWidget {
                 bottom: 5,
                 right: 5,
                 child: GestureDetector(
-                   onTap: () async {
+                  onTap: () async {
                     product.unit
                         ? showQuantityWithUnitSelectorDialog(
                           context,

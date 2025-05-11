@@ -23,6 +23,7 @@ class ProductCart {
     return {
       "idProd": id,
       "idCart": idCart,
+      "unitProd": unitProd,
       "unitPriceProdCart": price,
       "qttyProdCart": quantity,
       "noteProdCart": notice,

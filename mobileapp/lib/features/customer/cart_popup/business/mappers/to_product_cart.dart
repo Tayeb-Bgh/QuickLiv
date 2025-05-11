@@ -74,8 +74,7 @@ class ToProductCart {
     return ProductCart(
       id: product.idProd,
       name: product.name,
-      description:
-          product.descr,  
+      description: product.descr,
       imgUrl: product.imgUrl,
       price:
           product.reducRate != null

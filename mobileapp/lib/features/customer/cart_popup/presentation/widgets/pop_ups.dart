@@ -26,7 +26,6 @@ Future<void> showQuantitySelectorDialog(
   search_prod.Product? searchProduct,
 }) async {
   final TextEditingController quantityController = TextEditingController();
-
   await showDialog(
     context: context,
     builder: (context) {
@@ -134,6 +133,7 @@ Future<void> showQuantitySelectorDialog(
                                               productWithRed: productWithRed,
                                               restauOpProduct: restauOpProduct,
                                               restauProduct: restauProduct,
+                                              searchProduct: searchProduct,
                                             )) {
                                               showDialog(
                                                 context: context,
@@ -165,8 +165,9 @@ Future<void> showQuantitySelectorDialog(
                                               context,
                                             ).showSnackBar(
                                               SnackBar(
+                                                duration: Duration(seconds: 10),
                                                 content: Text(
-                                                  "Erreur: ${e.toString()}",
+                                                  "idP: ${searchProduct!.idProd}  \n idB:${searchProduct.idBusns}  \n name:${searchProduct.name}  \n desc:${searchProduct.descr} \n img: ${searchProduct.imgUrl} \n qtty: ${searchProduct.qttyStock} \n reduc:${searchProduct.reducRate} \n unit:${searchProduct.unit} \n Erreur: ${e.toString()}",
                                                 ),
                                               ),
                                             );
@@ -384,7 +385,6 @@ Future<void> showQuantityWithUnitSelectorDialog(
                                             if (!await _addToCart(
                                               ref,
                                               parsedQuantity,
-
                                               product: product,
                                               productWithRed: productWithRed,
                                               restauOpProduct: restauOpProduct,
@@ -484,6 +484,7 @@ _addToCart(
       productWithRed,
       parsedQuantity,
     );
+
     bool isAdded = await addToCart.call(
       productCart,
       parsedQuantity,
