@@ -138,9 +138,11 @@ class ClientSection extends ConsumerWidget {
                     ),
                     const SizedBox(height: 2), // petit espace entre les lignes
                     AutoSizeText(
-                      formatPositionAsDMS(
+                      /* formatPositionAsDMS(
                         ref.watch(confirmedPositionProvider)!,
-                      ),
+                      ), */
+                      formatPositionAsDMS(positionCust),
+
                       maxLines: 1,
 
                       minFontSize: 8,
