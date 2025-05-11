@@ -21,7 +21,7 @@ class _favouritesPageTestState extends ConsumerState<FavouritesPageTest> {
   @override
   Widget build(BuildContext context) {
     final selectedType = ref.watch(selectedTypeProvider);
-    final asyncFavouritesList = ref.watch(prov(selectedType)); 
+    final asyncFavouritesList = ref.watch(prov(selectedType));
     final isDarkMode = ref.watch(darkModeProvider);
     final bgColor = isDarkMode ? kPrimaryDark : kSecondaryWhite;
     final tc = isDarkMode ? kSecondaryWhite : kPrimaryDark;
@@ -31,7 +31,7 @@ class _favouritesPageTestState extends ConsumerState<FavouritesPageTest> {
       if (next != previous) {
         //ref.invalidate(favouritesListProvider); // Rafraîchit la liste
         ref.invalidate(prov(ref.read(selectedTypeProvider)));
-        ref.invalidate(prov(null)); 
+        ref.invalidate(prov(null));
       }
     });
 
@@ -42,7 +42,7 @@ class _favouritesPageTestState extends ConsumerState<FavouritesPageTest> {
           SliverToBoxAdapter(child: SizedBox(height: 10)),
           SliverPersistentHeader(
             pinned: true,
-            delegate: _StickyRadioButtonsDelegate(isDarkMode: isDarkMode),
+            delegate: _StickyRadioButtonsDelegate(ref: ref),
           ),
           SliverToBoxAdapter(child: SizedBox(height: 8)),
           asyncFavouritesList.when(
@@ -72,12 +72,14 @@ class _favouritesPageTestState extends ConsumerState<FavouritesPageTest> {
                 );
               }
             },
-            loading: () => const SliverFillRemaining(
-              child: Center(child: CircularProgressIndicator()),
-            ),
-            error: (err, stack) => SliverFillRemaining(
-              child: Center(child: Text('Erreur : $err')),
-            ),
+            loading:
+                () => const SliverFillRemaining(
+                  child: Center(child: CircularProgressIndicator()),
+                ),
+            error:
+                (err, stack) => SliverFillRemaining(
+                  child: Center(child: Text('Erreur : $err')),
+                ),
           ),
         ],
       ),
@@ -86,9 +88,8 @@ class _favouritesPageTestState extends ConsumerState<FavouritesPageTest> {
 }
 
 class _StickyRadioButtonsDelegate extends SliverPersistentHeaderDelegate {
-  final bool isDarkMode;
-  _StickyRadioButtonsDelegate({required this.isDarkMode});
-
+  WidgetRef ref;
+  _StickyRadioButtonsDelegate({required this.ref});
   @override
   Widget build(
     BuildContext context,
@@ -98,7 +99,7 @@ class _StickyRadioButtonsDelegate extends SliverPersistentHeaderDelegate {
     return SizedBox(
       height: maxExtent,
       child: ColoredBox(
-        color: isDarkMode ? kPrimaryDark : kSecondaryWhite,
+        color: ref.watch(darkModeProvider) ? kPrimaryDark : kSecondaryWhite,
         child: const Padding(
           padding: EdgeInsets.symmetric(vertical: 8.0),
           child: HorizontalRadioButtons(),
@@ -114,5 +115,5 @@ class _StickyRadioButtonsDelegate extends SliverPersistentHeaderDelegate {
   double get minExtent => 50;
 
   @override
-  bool shouldRebuild(_StickyRadioButtonsDelegate oldDelegate) => false;
+  bool shouldRebuild(_StickyRadioButtonsDelegate oldDelegate) => true;
 }

@@ -36,7 +36,10 @@ class BusinessInformations extends ConsumerWidget {
         delivTime: business.delivDuration,
         rating: business.rating,
         liked: false,
-        distance: 1231312,
+        distance: business.distance,
+        insta: business.insta,
+        fcb: business.fcb,
+        phone: business.phone,
       );
 
       Navigator.push(
@@ -64,6 +67,9 @@ class BusinessInformations extends ConsumerWidget {
                 rating: business.rating,
                 liked: false,
                 distance: business.distance,
+                insta: business.insta,
+                fcb: business.fcb,
+                phone: business.phone,
               ),
             ),
       );
@@ -141,7 +147,7 @@ class BusinessInformations extends ConsumerWidget {
                         maxLines: 1,
                       ),
                       AutoSizeText(
-                        "Frais de livraison: ${business.delivPrice}0 DZD",
+                        "Frais de livraison: ${business.delivPrice.toStringAsFixed(2)} DZD",
                         style: TextStyle(color: additionnalInfosColor),
                         minFontSize: additionalInfosMinSize,
                         maxFontSize: additionalInfosMaxSize,

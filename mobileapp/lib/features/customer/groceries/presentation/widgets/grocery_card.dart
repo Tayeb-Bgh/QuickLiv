@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mobileapp/core/config/dark_mode_provider.dart';
 import 'package:mobileapp/core/constants/constants.dart';
+import 'package:mobileapp/core/utils/utility_functions.dart';
 import 'package:mobileapp/features/customer/favourites/presentation/providers/favourites_provider.dart';
 import 'package:mobileapp/features/customer/groceries/business/entities/grocery_entity.dart';
-import 'package:mobileapp/core/utils/utility_functions.dart';
+import 'package:mobileapp/features/customer/groceries/presentation/providers/groceries_provider.dart';
 import 'package:mobileapp/features/customer/grocery_opened/presentation/pages/grocery_opened_page.dart';
 import 'package:mobileapp/features/customer/grocery_opened/presentation/providers/grocery_opened_provider.dart';
-import 'package:mobileapp/features/customer/restaurants/presentation/providers/restaurants_provider.dart';
 
 class GroceryCard extends ConsumerWidget {
   final bool isFull;
@@ -24,10 +24,13 @@ class GroceryCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final height = MediaQuery.of(context).size.height;
-    final width = MediaQuery.of(context).size.width;
-    final coverHeight = isFull ? height * 0.216 : height * 0.131;
     final bool isDarkMode = ref.watch(darkModeProvider);
+
+    final Color likeBtnColor = isDarkMode ? kSecondaryDark : kSecondaryWhite;
+    final Color footerBgColor = isDarkMode ? kSecondaryDark : kPrimaryWhite;
+    final Color footerTitleColor = isDarkMode ? kSecondaryWhite : kPrimaryBlack;
+    final Color footerTextColor = isDarkMode ? kLightGray : kMediumGray;
+    final Color iconColor = kPrimaryRed;
 
     final favIds = ref.watch(favouriteProvider);
 
@@ -44,12 +47,6 @@ class GroceryCard extends ConsumerWidget {
 
     final isLiked = favIds.contains(grocery.id);
 
-    final Color likeBtnColor = isDarkMode ? kSecondaryDark : kSecondaryWhite;
-    final Color footerBgColor = isDarkMode ? kSecondaryDark : kPrimaryWhite;
-    final Color footerTitleColor = isDarkMode ? kSecondaryWhite : kPrimaryBlack;
-    final Color footerTextColor = isDarkMode ? kLightGray : kMediumGray;
-    final Color iconColor = kPrimaryRed;
-
     return GestureDetector(
       onTap: () {
         ref.read(searchTextProvider.notifier).state = "";
@@ -64,13 +61,13 @@ class GroceryCard extends ConsumerWidget {
         );
       },
       child: SizedBox(
-        height: isFull ? height * 0.33 : height * 0.31,
-        width: isFull ? width * 0.9 : width * 0.6,
+        height: isFull ? 260 : 240,
+        width: isFull ? 360 : 250,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             ClipRRect(
-              borderRadius: BorderRadius.only(
+              borderRadius: const BorderRadius.only(
                 topLeft: Radius.circular(10),
                 topRight: Radius.circular(10),
               ),
@@ -79,7 +76,7 @@ class GroceryCard extends ConsumerWidget {
                   Image.network(
                     grocery.imgUrl,
                     width: double.infinity,
-                    height: coverHeight,
+                    height: isFull ? 160 : 100,
                     fit: BoxFit.cover,
                   ),
                   Positioned(
@@ -112,7 +109,7 @@ class GroceryCard extends ConsumerWidget {
                             }
                           },
                           padding: EdgeInsets.zero,
-                          constraints: BoxConstraints(),
+                          constraints: const BoxConstraints(),
                         ),
                       ),
                     ),
@@ -121,23 +118,23 @@ class GroceryCard extends ConsumerWidget {
               ),
             ),
             Container(
-              height: isFull ? height * 0.11 : height * 0.099,
+              height: isFull ? 85 : 75,
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.only(
+                borderRadius: const BorderRadius.only(
                   bottomLeft: Radius.circular(10),
                   bottomRight: Radius.circular(10),
                 ),
                 color: footerBgColor,
-                boxShadow: [
+                boxShadow: const [
                   BoxShadow(
                     color: kPrimaryBlur,
                     blurRadius: 6,
-                    offset: const Offset(0, 4),
+                    offset: Offset(0, 4),
                   ),
                 ],
               ),
               child: Padding(
-                padding: EdgeInsets.only(top: 10, right: 10, left: 10),
+                padding: const EdgeInsets.only(top: 10, right: 10, left: 10),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
@@ -146,7 +143,7 @@ class GroceryCard extends ConsumerWidget {
                       grocery.name,
                       style: TextStyle(
                         color: footerTitleColor,
-                        fontSize: isFull ? width * 0.049 : width * 0.036,
+                        fontSize: isFull ? 18 : 14,
                         fontWeight: FontWeight.w900,
                       ),
                       maxLines: 1,
@@ -157,63 +154,66 @@ class GroceryCard extends ConsumerWidget {
                       child: AutoSizeText(
                         grocery.description,
                         style: TextStyle(
-                          fontSize: isFull ? width * 0.033 : width * 0.026,
+                          fontSize: isFull ? 12 : 10,
                           color: footerTextColor,
                         ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
-                    SizedBox(height: height * 0.0039),
+                    const SizedBox(height: 3),
                     Row(
                       children: [
                         Row(
                           children: [
                             Icon(
                               Icons.delivery_dining,
-                              size: isFull ? width * 0.06 : width * 0.038,
+                              size: isFull ? 22 : 16,
                               color: iconColor,
                             ),
+                            const SizedBox(width: 4),
                             Text(
-                              "${grocery.delivPrice}",
+                              "${grocery.delivPrice.toStringAsFixed(2)} DZD",
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
-                                fontSize: isFull ? width * 0.04 : width * 0.031,
+                                fontSize: isFull ? 14 : 12,
                                 color: footerTextColor,
                               ),
                             ),
                           ],
                         ),
-                        const SizedBox(width: 8),
+                        const SizedBox(width: 10),
                         Row(
                           children: [
                             Icon(
-                              Icons.access_time,
-                              size: isFull ? width * 0.06 : width * 0.038,
+                              Icons.timer,
+                              size: isFull ? 20 : 15,
                               color: iconColor,
                             ),
+                            const SizedBox(width: 4),
                             Text(
                               parseTime(grocery.delivTime),
                               style: TextStyle(
-                                fontSize: isFull ? width * 0.04 : width * 0.031,
+                                fontSize: isFull ? 14 : 12,
                                 fontWeight: FontWeight.bold,
                                 color: footerTextColor,
                               ),
                             ),
                           ],
                         ),
-                        const SizedBox(width: 8),
+                        const SizedBox(width: 10),
                         Row(
                           children: [
                             Icon(
                               Icons.star,
-                              size: isFull ? width * 0.06 : width * 0.038,
+                              size: isFull ? 22 : 16,
                               color: iconColor,
                             ),
+                            const SizedBox(width: 4),
                             Text(
-                              grocery.rating.toString(),
+                              grocery.rating.toStringAsFixed(1),
                               style: TextStyle(
-                                fontSize: isFull ? width * 0.04 : width * 0.031,
+                                fontSize: isFull ? 14 : 12,
                                 fontWeight: FontWeight.bold,
                                 color: footerTextColor,
                               ),

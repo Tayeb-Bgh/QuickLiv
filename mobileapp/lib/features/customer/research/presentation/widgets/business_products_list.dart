@@ -27,7 +27,7 @@ class BusinessProductsList extends ConsumerWidget {
 
       padding: const EdgeInsets.only(left: 10, top: 5, bottom: 5),
       child: Container(
-        height: height * 0.175, // or whatever height fits your product cards
+        height: 140, // or whatever height fits your product cards
         child: ListView.builder(
           scrollDirection: Axis.horizontal,
           itemCount: products.length,

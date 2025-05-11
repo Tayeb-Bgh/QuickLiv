@@ -7,21 +7,21 @@ class ProductModel {
   final String secondCategoryProd;
   final String imgUrlProd;
   final bool unitProd;
-  final String descr;
-  ProductModel(
-    this.descr, {
+  final String descProd;
+  ProductModel({
     required this.idProd,
     required this.nameProd,
     required this.categoryProd,
     required this.secondCategoryProd,
     required this.imgUrlProd,
     required this.unitProd,
+    required this.descProd,
   });
 
   factory ProductModel.fromJson(Map<String, dynamic> json) {
     return ProductModel(
-      json["descr"],
       idProd: json["idProd"],
+      descProd: json["descProd"],
       nameProd: json["nameProd"],
       categoryProd: json["categoryProd"],
       secondCategoryProd: json["secondCategoryProd"],
@@ -37,8 +37,8 @@ class ProductModel {
     int? qttyStock,
   ) {
     return Product(
-      descr: descr,
       idProd: idProd,
+      descr: descProd,
       idBusns: idBusns,
       name: nameProd,
       imgUrl: imgUrlProd,

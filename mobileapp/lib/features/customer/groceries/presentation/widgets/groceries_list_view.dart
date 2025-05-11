@@ -77,7 +77,7 @@ class GroceriesListView extends ConsumerWidget {
                   (groceries) => RefreshIndicator(
                     onRefresh: () => onRefresh(),
                     child: SizedBox(
-                      height: height * 0.243,
+                      height: 185,
                       child: ListView.builder(
                         scrollDirection: Axis.horizontal,
                         itemCount: groceries.length,

@@ -12,6 +12,10 @@ class Grocery {
   final bool liked;
   final double distance;
 
+  final String? insta;
+  final String? fcb;
+  final String? phone;
+
   Grocery({
     required this.id,
     required this.name,
@@ -24,5 +28,8 @@ class Grocery {
     required this.rating,
     required this.liked,
     required this.distance,
+    required this.insta,
+    required this.fcb,
+    required this.phone,
   });
 }

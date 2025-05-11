@@ -6,7 +6,16 @@ import 'package:mobileapp/features/customer/grocery_opened/presentation/provider
 
 class SocialMediasButtons extends ConsumerWidget {
   final double width;
-  const SocialMediasButtons({super.key, required this.width});
+  final VoidCallback onClickPhone;
+  final VoidCallback onClickFcb;
+  final VoidCallback onClickInsta;
+  const SocialMediasButtons({
+    super.key,
+    required this.width,
+    required this.onClickFcb,
+    required this.onClickInsta,
+    required this.onClickPhone,
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -30,7 +39,9 @@ class SocialMediasButtons extends ConsumerWidget {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           TextButton(
-            onPressed: () {},
+            onPressed: () {
+              onClickPhone();
+            },
             style: TextButton.styleFrom(
               padding: EdgeInsets.zero,
               minimumSize: Size(iconsSize, iconsSize),
@@ -40,7 +51,9 @@ class SocialMediasButtons extends ConsumerWidget {
             child: Icon(Icons.phone, color: iconsColor, size: iconsSize),
           ),
           TextButton(
-            onPressed: () {},
+            onPressed: () {
+              onClickFcb();
+            },
             style: TextButton.styleFrom(
               padding: EdgeInsets.zero,
               minimumSize: Size(iconsSize + 5, iconsSize + 5),
@@ -50,7 +63,9 @@ class SocialMediasButtons extends ConsumerWidget {
             child: Icon(Icons.facebook, color: iconsColor, size: iconsSize),
           ),
           TextButton(
-            onPressed: () {},
+            onPressed: () {
+              onClickInsta();
+            },
             style: TextButton.styleFrom(
               padding: EdgeInsets.zero,
               minimumSize: Size(iconsSize + 5, iconsSize + 5),

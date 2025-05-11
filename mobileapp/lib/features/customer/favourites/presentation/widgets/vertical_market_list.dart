@@ -71,7 +71,10 @@ class VerticalMarketList extends ConsumerWidget {
                               delivTime: grocer.deliveryTime,
                               rating: grocer.rating,
                               liked: true,
-                              distance: 1231312,
+                              distance: 1,
+                              insta: grocer.insta,
+                              fcb: grocer.fcb,
+                              phone: grocer.phone,
                             );
 
                             Navigator.push(
@@ -102,7 +105,10 @@ class VerticalMarketList extends ConsumerWidget {
                                       delivTime: grocer.deliveryTime,
                                       rating: grocer.rating,
                                       liked: true,
-                                      distance: 5,
+                                      distance: 1,
+                                      insta: grocer.insta,
+                                      fcb: grocer.fcb,
+                                      phone: grocer.phone,
                                     ),
                                   ),
                             );

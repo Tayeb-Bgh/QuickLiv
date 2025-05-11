@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:mobileapp/core/params/origin_dest_params.dart';
 import 'package:mobileapp/core/utils/location_provider.dart';
@@ -51,7 +53,7 @@ class GroceriesRepositoryImpl implements GroceriesRepository {
           false,
           calculateDelivPrice(distanceInKilometers),
           durationInSeconds,
-          4.5,
+          Random().nextDouble() * 2 + 3,
           distanceInKilometers,
         );
       }),
@@ -104,9 +106,9 @@ class GroceriesRepositoryImpl implements GroceriesRepository {
 
         return grocery.toEntity(
           false,
-          distanceInKilometers,
+          calculateDelivPrice(distanceInKilometers),
           durationInSeconds,
-          4.5,
+          Random().nextDouble() * 2 + 3,
           distanceInKilometers,
         );
       }),

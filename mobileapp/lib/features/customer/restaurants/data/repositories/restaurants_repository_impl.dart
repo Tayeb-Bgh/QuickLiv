@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:mobileapp/core/params/origin_dest_params.dart';
@@ -52,9 +54,9 @@ class RestaurantsRepositoryImpl implements RestaurantsRepository {
         final double distanceInKilometers = toKilometers(distanceInMeters);
         return restaurant.toEntity(
           false,
-          distanceInKilometers,
+          calculateDelivPrice(distanceInKilometers),
           durationInSeconds,
-          4.5,
+          Random().nextDouble() * 2 + 3,
           distanceInKilometers,
         );
       }),
@@ -106,9 +108,9 @@ class RestaurantsRepositoryImpl implements RestaurantsRepository {
         final double distanceInKilometers = toKilometers(distanceInMeters);
         return restaurant.toEntity(
           false,
-          distanceInKilometers,
+          calculateDelivPrice(distanceInKilometers),
           durationInSeconds,
-          4.5,
+          Random().nextDouble() * 2 + 3,
           distanceInKilometers,
         );
       }),

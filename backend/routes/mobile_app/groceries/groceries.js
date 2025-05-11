@@ -10,7 +10,8 @@ router.get("/", (req, res) => {
 
     let query = `
         SELECT idBusns, nameBusns, descBusns, categoryBusns,
-               imgUrlBusns, vidUrlBusns, latBusns, lngBusns, wilayaBusns
+               imgUrlBusns, vidUrlBusns, latBusns, lngBusns, wilayaBusns,
+               instaUrlBusns,fcbUrlBusns, phoneBusns
         FROM Business
         WHERE typeBusns = ? AND dayOffBusns != ? AND wilayaBusns = ?
     `;
