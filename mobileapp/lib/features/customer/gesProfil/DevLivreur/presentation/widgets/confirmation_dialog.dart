@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mobileapp/core/config/dark_mode_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mobileapp/core/constants/constants.dart';
 
 class ConfirmationDialog extends ConsumerWidget {
   final VoidCallback onConfirm;
@@ -12,8 +13,8 @@ class ConfirmationDialog extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
 
     final isDarkMode = ref.watch(darkModeProvider);
-    final Color backColor = isDarkMode ? Color(0xFF282525) : Colors.white;
-    final Color textColor = isDarkMode ? Colors.white : Colors.black;
+    final Color backColor = isDarkMode ? kPrimaryDark : kPrimaryWhite;
+    final Color textColor = isDarkMode ? kPrimaryWhite : kPrimaryDark;
 
     return Dialog(
       backgroundColor: backColor,
@@ -29,7 +30,7 @@ class ConfirmationDialog extends ConsumerWidget {
               'Confirmer l\'envoi',
               style: TextStyle(
                 fontSize: 25,
-                color: const Color.fromARGB(255, 222, 71, 60),
+                color: kPrimaryRed,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -38,7 +39,7 @@ class ConfirmationDialog extends ConsumerWidget {
               'Une fois avoir soumis le formulaire vous recevrez après quelques jours un rendez-vous pour passer un entretien afin de devenir livreur.',
               style: TextStyle(
                 fontSize: 17,
-                color: textColor, // Apply text color dynamically
+                color: textColor,
               ),
               textAlign: TextAlign.center,
             ),
@@ -58,7 +59,7 @@ class ConfirmationDialog extends ConsumerWidget {
                         width: 50,
                         height: 45,
                         decoration: BoxDecoration(
-                          color: const Color.fromARGB(255, 90, 89, 89),
+                          color: kDarkGray,
                           shape: BoxShape.circle,
                         ),
                         child: Padding(
@@ -67,7 +68,7 @@ class ConfirmationDialog extends ConsumerWidget {
                             scale: 0.7,
                             child: SvgPicture.asset(
                               'assets/images/cross.svg',
-                              color: Colors.white,
+                              color: kPrimaryWhite,
                               width: 20,
                               height: 20,
                             ),
@@ -92,7 +93,7 @@ class ConfirmationDialog extends ConsumerWidget {
                         width: 50,
                         height: 45,
                         decoration: BoxDecoration(
-                          color: const Color.fromARGB(255, 219, 52, 52),
+                          color: kPrimaryRed,
                           shape: BoxShape.circle,
                         ),
                         child: Padding(
@@ -101,7 +102,7 @@ class ConfirmationDialog extends ConsumerWidget {
                             scale: 1.1,
                             child: SvgPicture.asset(
                               'assets/images/done.svg',
-                              color: Colors.white,
+                              color: kPrimaryWhite,
                               width: 20,
                               height: 20,
                             ),

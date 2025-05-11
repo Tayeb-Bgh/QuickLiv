@@ -46,7 +46,7 @@ class HomePage extends ConsumerWidget {
               ),
             ),
             SizedBox(
-              height: 200, // ou ce que tu veux
+              height: 230, // ou ce que tu veux
               child: asyncReductionsList.when(
                 data: (reductionsList) {
                   return Swiper(

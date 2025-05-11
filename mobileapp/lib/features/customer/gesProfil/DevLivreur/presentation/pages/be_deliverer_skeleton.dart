@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:mobileapp/core/constants/constants.dart';
 import 'package:mobileapp/features/auth/presentation/pages/login_page.dart';
 import 'package:mobileapp/features/customer/gesProfil/DevLivreur/presentation/pages/deliverer_first_page.dart';
 import 'package:mobileapp/features/customer/gesProfil/DevLivreur/presentation/pages/deliverer_second_page.dart';
@@ -48,7 +49,7 @@ class _BeDelivererSkeletonState extends State<BeDelivererSkeleton> {
       appBar: AppBar(
         toolbarHeight: MediaQuery.of(context).size.height * 0.08,
         centerTitle: true,
-        backgroundColor: Colors.redAccent,
+        backgroundColor: kPrimaryRed,
         leading: IconButton(
           icon: Container(
             decoration: BoxDecoration(
@@ -66,7 +67,7 @@ class _BeDelivererSkeletonState extends State<BeDelivererSkeleton> {
               padding: const EdgeInsets.all(7.0),
               child: SvgPicture.asset(
                 'assets/images/Vector.svg',
-                color: Colors.white,
+                color: kPrimaryWhite,
                 width: 20,
                 height: 20,
               ),
@@ -87,7 +88,7 @@ class _BeDelivererSkeletonState extends State<BeDelivererSkeleton> {
               Shadow(
                 offset: Offset(0, 3),
                 blurRadius: 5,
-                color: Colors.black45,
+                color: kPrimaryDark,
               ),
             ],
           ),

@@ -1,4 +1,5 @@
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mobileapp/core/config/dark_mode_provider.dart';
@@ -6,10 +7,11 @@ import 'package:mobileapp/core/constants/constants.dart';
 import 'package:mobileapp/features/auth/presentation/pages/otp_code_page.dart';
 import 'package:mobileapp/features/auth/presentation/pages/register_page.dart';
 import 'package:mobileapp/features/auth/presentation/providers/auth_provider.dart';
+import 'package:mobileapp/features/confidentiality/presentation/pages/confidentialiy_page.dart';
 
 class LoginWidget extends ConsumerStatefulWidget {
   const LoginWidget({super.key});
-                       
+
   @override
   ConsumerState<LoginWidget> createState() => _LoginWidgetState();
 }
@@ -17,7 +19,7 @@ class LoginWidget extends ConsumerStatefulWidget {
 class _LoginWidgetState extends ConsumerState<LoginWidget> {
   final TextEditingController _phoneController = TextEditingController();
   bool isLoading = false;
-  
+
   @override
   Widget build(BuildContext context) {
     final isDarkMode = ref.watch(darkModeProvider);
@@ -101,50 +103,59 @@ class _LoginWidgetState extends ConsumerState<LoginWidget> {
                           borderRadius: BorderRadius.circular(10),
                         ),
                       ),
-                      onPressed: isLoading
-                          ? null
-                          : () async {
-                              setState(() => isLoading = true); // On active le chargement
-                              final phone = _phoneController.text.trim();
-                              final checkPhone = ref.read(checkPhoneUseCaseProvider);
-                              final exists = await checkPhone(phone);
+                      onPressed:
+                          isLoading
+                              ? null
+                              : () async {
+                                setState(
+                                  () => isLoading = true,
+                                ); // On active le chargement
+                                final phone = _phoneController.text.trim();
+                                final checkPhone = ref.read(
+                                  checkPhoneUseCaseProvider,
+                                );
+                                final exists = await checkPhone(phone);
 
-                              if (!mounted) return;
-                              setState(() => isLoading = false); // On désactive
+                                if (!mounted) return;
+                                setState(
+                                  () => isLoading = false,
+                                ); // On désactive
 
-                              if (exists) {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => OtpCodePage(
-                                      phoneNumber: int.parse(phone),
+                                if (exists) {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder:
+                                          (context) => OtpCodePage(
+                                            phoneNumber: int.parse(phone),
+                                          ),
                                     ),
-                                  ),
-                                );
-                              } else {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    content: Text("Ce numéro n'existe pas."),
-                                  ),
-                                );
-                              }
-                            },
-                      child: isLoading
-                          ? const SizedBox(
-                              width: 22,
-                              height: 22,
-                              child: CircularProgressIndicator(
-                                color: Colors.white,
-                                strokeWidth: 2.5,
+                                  );
+                                } else {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      content: Text("Ce numéro n'existe pas."),
+                                    ),
+                                  );
+                                }
+                              },
+                      child:
+                          isLoading
+                              ? const SizedBox(
+                                width: 22,
+                                height: 22,
+                                child: CircularProgressIndicator(
+                                  color: Colors.white,
+                                  strokeWidth: 2.5,
+                                ),
+                              )
+                              : const Text(
+                                'Se connecter',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  color: Color(0xFFF5F5F5),
+                                ),
                               ),
-                            )
-                          : const Text(
-                              'Se connecter',
-                              style: TextStyle(
-                                fontSize: 16,
-                                color: Color(0xFFF5F5F5),
-                              ),
-                            ),
                     ),
                   ),
 
@@ -214,7 +225,23 @@ class _LoginWidgetState extends ConsumerState<LoginWidget> {
                       TextSpan(
                         text:
                             "conditions d’utilisation et notre politique de confidentialité.",
-                        style: TextStyle(color: Colors.red), // Texte en rouge
+                        style: TextStyle(
+                          color: Colors.red,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        recognizer:
+                            TapGestureRecognizer()
+                              ..onTap = () {
+                                // Naviguer vers la page des conditions d'utilisation
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder:
+                                        (context) =>
+                                            ConfidentialiyPage(), // Remplacez par votre page de conditions
+                                  ),
+                                );
+                              },
                       ),
                     ],
                   ),

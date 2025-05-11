@@ -39,7 +39,7 @@ class Location extends ConsumerWidget {
           ],
         ),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
             const Icon(Icons.location_pin, color: kPrimaryRed),

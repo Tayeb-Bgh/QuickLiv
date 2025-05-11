@@ -75,7 +75,7 @@ class AdvertisementCard extends ConsumerWidget {
                 constraints.maxWidth > 600
                     ? 500.0
                     : MediaQuery.of(context).size.width * 0.93;
-            final double height = 150;
+            final double height = 180;
 
             return Card(
               shape: RoundedRectangleBorder(

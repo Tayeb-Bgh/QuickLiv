@@ -2,6 +2,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mobileapp/core/constants/constants.dart';
 import 'package:mobileapp/features/customer/gesProfil/DevLivreur/business/entities/deliverer.dart';
 import 'package:mobileapp/features/customer/gesProfil/DevLivreur/business/usercases/save_deliverer_usecase.dart';
 import 'package:mobileapp/features/customer/gesProfil/DevLivreur/data/repositories/deliverer_repository_impl.dart';
@@ -145,10 +146,10 @@ class _DelivererThirdPageState extends ConsumerState<DelivererThirdPage> {
 
     final isDarkMode = ref.watch(darkModeProvider);
 
-    final Color backColor = isDarkMode ? Color(0xFF282525) : Colors.white;
-    final Color textColor = isDarkMode ? Colors.white : Colors.black;
+    final Color backColor = isDarkMode ? kPrimaryDark : kSecondaryWhite;
+    final Color textColor = isDarkMode ? kPrimaryWhite : kPrimaryBlack;
     final Color buttonColor =
-        isDarkMode ? Color(0xFF363333) : Color(0xFFD9D9D9);
+        isDarkMode ? kDarkGray : kWhiteGray;
 
     return Scaffold(
       backgroundColor: backColor,
@@ -169,20 +170,20 @@ class _DelivererThirdPageState extends ConsumerState<DelivererThirdPage> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         CircleAvatar(
-                          backgroundColor: Colors.redAccent,
+                          backgroundColor: kPrimaryRed,
                           radius: 17,
                           child: AutoSizeText(
                             '1',
                             style: TextStyle(
                               fontFamily: 'Roboto',
-                              color: Colors.white,
+                              color: kPrimaryWhite,
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
                               shadows: [
                                 Shadow(
                                   offset: Offset(0, 3),
                                   blurRadius: 5,
-                                  color: Colors.black45,
+                                  color: kPrimaryDark,
                                 ),
                               ],
                             ),
@@ -191,16 +192,16 @@ class _DelivererThirdPageState extends ConsumerState<DelivererThirdPage> {
                         Container(
                           width: width * 0.2,
                           height: height * 0.006,
-                          decoration: BoxDecoration(color: Colors.redAccent),
+                          decoration: BoxDecoration(color: kPrimaryRed),
                         ),
                         CircleAvatar(
-                          backgroundColor: Colors.redAccent,
+                          backgroundColor: kPrimaryRed,
                           radius: 17,
                           child: AutoSizeText(
                             '2',
                             style: TextStyle(
                               fontFamily: 'Roboto',
-                              color: Colors.white,
+                              color: kWhiteGray,
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
                             ),
@@ -209,16 +210,16 @@ class _DelivererThirdPageState extends ConsumerState<DelivererThirdPage> {
                         Container(
                           width: width * 0.2,
                           height: height * 0.006,
-                          decoration: BoxDecoration(color: Colors.redAccent),
+                          decoration: BoxDecoration(color: kPrimaryRed),
                         ),
                         CircleAvatar(
                           radius: 17,
-                          backgroundColor: Colors.redAccent,
+                          backgroundColor: kPrimaryRed,
                           child: AutoSizeText(
                             '3',
                             style: TextStyle(
                               fontFamily: 'Roboto',
-                              color: Colors.white,
+                              color: kPrimaryWhite,
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
                             ),
@@ -306,7 +307,7 @@ class _DelivererThirdPageState extends ConsumerState<DelivererThirdPage> {
                       child: ElevatedButton(
                         onPressed: widget.onPrevious,
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Color(0xFF504E4E),
+                          backgroundColor: kDarkGray,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10),
                           ),
@@ -319,7 +320,7 @@ class _DelivererThirdPageState extends ConsumerState<DelivererThirdPage> {
                           'Précédent',
                           style: TextStyle(
                             fontSize: 13,
-                            color: Colors.white,
+                            color: kPrimaryWhite,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -342,7 +343,7 @@ class _DelivererThirdPageState extends ConsumerState<DelivererThirdPage> {
                         },
 
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.redAccent,
+                          backgroundColor: kPrimaryRed,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10),
                           ),
@@ -355,7 +356,7 @@ class _DelivererThirdPageState extends ConsumerState<DelivererThirdPage> {
                           'Confirmer',
                           style: TextStyle(
                             fontSize: 13,
-                            color: Colors.white,
+                            color: kPrimaryWhite,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -391,7 +392,7 @@ class _DelivererThirdPageState extends ConsumerState<DelivererThirdPage> {
                 "*",
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
-                  color: Colors.red,
+                  color: kPrimaryRed,
                   fontSize: 20,
                 ),
               ),
@@ -410,7 +411,7 @@ class _DelivererThirdPageState extends ConsumerState<DelivererThirdPage> {
               style: ElevatedButton.styleFrom(
                 backgroundColor:
                     isDocumentSelected
-                        ? const Color.fromARGB(255, 253, 77, 77)
+                        ? kPrimaryRed
                         : buttonColor,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(5),
@@ -434,7 +435,7 @@ class _DelivererThirdPageState extends ConsumerState<DelivererThirdPage> {
 
   Widget _buildImagePreview(String label, String? imagePath) {
     final isDarkMode = ref.watch(darkModeProvider);
-    final Color textColor = isDarkMode ? Colors.white : Colors.black;
+    final Color textColor = isDarkMode ? kPrimaryWhite : kPrimaryDark;
     return Padding(
       padding: const EdgeInsets.only(bottom: 10),
       child: Column(

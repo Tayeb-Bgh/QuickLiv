@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mobileapp/core/config/dark_mode_provider.dart';
+import 'package:mobileapp/core/constants/constants.dart';
 
 class YearPickerDialog extends ConsumerStatefulWidget {
   final Function(int) onYearSelected;
@@ -20,9 +21,9 @@ class _YearPickerDialogState extends ConsumerState<YearPickerDialog> {
     List<int> years = List.generate(101, (index) => currentYear - index);
 
     final isDarkMode = ref.watch(darkModeProvider);
-    final Color backColor = isDarkMode ? Color(0xFF282525) : Colors.white;
-    final Color textColor = isDarkMode ? Colors.black : Colors.white;
-    final Color txtBackColor = isDarkMode ? Colors.white : Colors.black;
+    final Color backColor = isDarkMode ? kPrimaryDark : kPrimaryWhite;
+    final Color textColor = isDarkMode ? kPrimaryBlack : kPrimaryWhite;
+    final Color txtBackColor = isDarkMode ? kPrimaryWhite : kPrimaryBlack;
 
     return AlertDialog(
       backgroundColor: backColor,
@@ -56,7 +57,7 @@ class _YearPickerDialogState extends ConsumerState<YearPickerDialog> {
                   color:
                       index ==
                               selectedYearIndex
-                          ? Colors.red.withOpacity(0.3)
+                          ? kPrimaryRed.withOpacity(0.3)
                           : textColor,
                   borderRadius: BorderRadius.circular(8),
                 ),
@@ -67,7 +68,7 @@ class _YearPickerDialogState extends ConsumerState<YearPickerDialog> {
                     fontWeight: FontWeight.bold,
                     color:
                         index == selectedYearIndex
-                            ? Colors.red
+                            ? kPrimaryRed
                             : txtBackColor,
                   ),
                 ),
@@ -81,7 +82,7 @@ class _YearPickerDialogState extends ConsumerState<YearPickerDialog> {
           onPressed: () {
             Navigator.pop(context);
           },
-          child: Text('OK', style: TextStyle(color: Colors.red)),
+          child: Text('OK', style: TextStyle(color: kPrimaryRed)),
         ),
       ],
     );

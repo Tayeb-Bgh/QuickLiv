@@ -4,6 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mobileapp/core/config/dark_mode_provider.dart';
 import 'package:mobileapp/core/constants/constants.dart';
 import 'package:mobileapp/features/auth/presentation/pages/login_page.dart';
+import 'package:mobileapp/features/confidentiality/presentation/pages/confidentialiy_page.dart';
+import 'package:mobileapp/features/confidentiality/presentation/widgets/confidentiality.dart';
 
 class RegisterWidget extends ConsumerStatefulWidget {
   const RegisterWidget({super.key});
@@ -56,13 +58,23 @@ class _TestState extends ConsumerState<RegisterWidget> {
           ),
           const SizedBox(height: 24),
 
-          _buildInput(Icons.person, 'Nom',textColor1,textFieldColor),
+          _buildInput(Icons.person, 'Nom', textColor1, textFieldColor),
           SizedBox(height: height * 0.015),
-          _buildInput(Icons.person, 'Prénom',textColor1,textFieldColor),
+          _buildInput(Icons.person, 'Prénom', textColor1, textFieldColor),
           SizedBox(height: height * 0.015),
-          _buildInput(Icons.phone, 'Numéro de téléphone',textColor1,textFieldColor),
+          _buildInput(
+            Icons.phone,
+            'Numéro de téléphone',
+            textColor1,
+            textFieldColor,
+          ),
           SizedBox(height: height * 0.015),
-          _buildInput(Icons.calendar_today, 'Date de naissance',textColor1,textFieldColor),
+          _buildInput(
+            Icons.calendar_today,
+            'Date de naissance',
+            textColor1,
+            textFieldColor,
+          ),
           SizedBox(height: height * 0.015),
 
           Row(
@@ -77,19 +89,31 @@ class _TestState extends ConsumerState<RegisterWidget> {
                 activeColor: kPrimaryRed,
               ),
               Expanded(
-                child: RichText(
-                  text: TextSpan(
-                    style: TextStyle(color: textColor1),
-                    children: [
-                      TextSpan(text: 'Accepter les '),
-                      TextSpan(
-                        text: 'termes & politiques de confidentialité.',
-                        style: TextStyle(
-                          color: kPrimaryRed,
-                          fontWeight: FontWeight.w500,
-                        ),
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder:
+                            (context) =>
+                                ConfidentialiyPage(), // Remplacez par votre page de conditions
                       ),
-                    ],
+                    );
+                  },
+                  child: RichText(
+                    text: TextSpan(
+                      style: TextStyle(color: textColor1),
+                      children: [
+                        TextSpan(text: 'Accepter les '),
+                        TextSpan(
+                          text: 'termes & politiques de confidentialité.',
+                          style: TextStyle(
+                            color: kPrimaryRed,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -172,15 +196,18 @@ class _TestState extends ConsumerState<RegisterWidget> {
   }
 }
 
-Widget _buildInput(IconData icon, String hint,Color textColor1, textFieldColor) {
+Widget _buildInput(
+  IconData icon,
+  String hint,
+  Color textColor1,
+  textFieldColor,
+) {
   return TextField(
-    style: TextStyle(color: textColor1), 
+    style: TextStyle(color: textColor1),
     decoration: InputDecoration(
       prefixIcon: Icon(icon, color: textColor1), // Icône en blanc
       hintText: hint,
-      hintStyle: TextStyle(
-        color: textColor1,
-      ), // Hint en blanc semi-transparent
+      hintStyle: TextStyle(color: textColor1), // Hint en blanc semi-transparent
       filled: true,
       fillColor: textFieldColor, // Fond gris foncé
       contentPadding: const EdgeInsets.symmetric(vertical: 16),
