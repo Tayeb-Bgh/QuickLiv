@@ -34,7 +34,6 @@ class _DeliveriesHistoryState extends ConsumerState<DeliveriesHistory> {
       padding: const EdgeInsets.all(16),
       child: Column(
         children: [
-          const HorizontalRadioButtons(),
           SizedBox(
             height: height * 0.70,
             child:
