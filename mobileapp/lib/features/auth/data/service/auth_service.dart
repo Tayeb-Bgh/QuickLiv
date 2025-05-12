@@ -1,9 +1,9 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mobileapp/core/config/backend_api_config.dart';
+import 'package:mobileapp/features/auth/business/entities/customer_entity.dart';
+import 'package:mobileapp/features/auth/business/entities/custumere_entity.dart';
 import 'package:mobileapp/features/auth/data/models/customer_model.dart';
-import 'package:mobileapp/features/auth/data/models/deliverer_model.dart';
-import 'package:mobileapp/features/auth/data/models/vehicle_model.dart';
 import 'package:mobileapp/features/auth/data/models/verify_otp_result_model.dart';
 import 'package:mobileapp/features/auth/presentation/providers/auth_provider.dart';
 
@@ -81,6 +81,7 @@ class AuthService {
         pointsCust: 0,
         firstNameCust: "",
         lastNameCust: "",
+        birthDateCust: "",
         phoneCust: phoneNumber,
         registerDateCust: DateTime.now(),
         isSubmittedDelivererCust: false,
@@ -89,129 +90,27 @@ class AuthService {
     }
   }
 
-  Future<DelivererModel> getDelivererInfo({required String phoneNumber}) async {
+  Future<void> registerCustomer(Customere customer) async {
     final url = await ApiConfig.getBaseUrl();
     final token = await ref.read(jwtTokenProvider.future);
 
     try {
-      final response = await dio.get(
-        "$url/auth/deliverers/by-phone",
-        data: {'phoneNumber': phoneNumber},
+      final response = await dio.post(
+        // Changé de PUT à POST
+        "$url/auth/register",
+        data: customer.toJson(),
         options: Options(
           sendTimeout: Duration(seconds: 8),
-          receiveTimeout: Duration(seconds: 8),
-          headers: {
-            'Content-Type': 'application/json',
-            'authorization': 'Bearer $token',
-          },
+          receiveTimeout: Duration(seconds: 8)
         ),
       );
 
-      final responseData = Map<String, dynamic>.from(response.data);
-      responseData['phoneDel'] = phoneNumber;
-
-      final delivererModel = DelivererModel.fromJson(responseData);
-
-      return delivererModel;
+      if (response.statusCode != 200) {
+        throw Exception('Erreur lors de l\'inscription du client.');
+      }
     } catch (e) {
-      print("❌ Erreur dans getDelivererInfo: $e");
-      return DelivererModel(
-        idDel: 0,
-        firstNameDel: "",
-        lastNameDel: "",
-        phoneDel: phoneNumber,
-        registerDateDel: DateTime.now(),
-        emailDel: "",
-        adrsDel: "",
-        statusDel: false,
-      );
-    }
-  }
-
-  Future<VehicleModel> getVehicleInfo({required int idDel}) async {
-    final url = await ApiConfig.getBaseUrl();
-    final token = await ref.read(jwtTokenProvider.future);
-    try {
-      final response = await dio.get(
-        "$url/auth/deliverer/vehicle/by-deliverer-id",
-        data: {'idDel': idDel},
-        options: Options(
-          sendTimeout: Duration(seconds: 8),
-          receiveTimeout: Duration(seconds: 8),
-          headers: {
-            'Content-Type': 'application/json',
-            'authorization': 'Bearer $token',
-          },
-        ),
-      );
-      return VehicleModel.fromJson(response.data);
-    } catch (e) {
-      print("❌ Erreur dans getVehicleInfo: $e");
-      return VehicleModel(
-        idVehc: 0,
-        typeVehc: VehicleType.scooter,
-        brandVehc: "",
-        modelVehc: "",
-        colorVehc: "",
-        registerNbrVehc: "",
-        yearVehc: DateTime.now(),
-        insuranceExprVehc: DateTime.now(),
-      );
-    }
-  }
-
-  Future<double> getRating({required int idDel}) async {
-    final url = await ApiConfig.getBaseUrl();
-    final token = await ref.read(jwtTokenProvider.future);
-
-    try {
-      final response = await dio.get(
-        "$url/auth/deliverer/rating",
-        data: {'idDel': idDel},
-        options: Options(
-          sendTimeout: Duration(seconds: 8),
-          receiveTimeout: Duration(seconds: 8),
-          headers: {
-            'Content-Type': 'application/json',
-            'authorization': 'Bearer $token',
-          },
-        ),
-      );
-
-      final rating = response.data["rating"];
-      return rating is double
-          ? rating
-          : double.tryParse(rating.toString()) ?? 5;
-    } catch (e) {
-      print("❌ Erreur dans getRating: $e");
-      return 0;
-    }
-  }
-
-  Future<int> getDeliveryNbr({required int idDel}) async {
-    final url = await ApiConfig.getBaseUrl();
-    final token = await ref.read(jwtTokenProvider.future);
-
-    try {
-      final response = await dio.get(
-        "$url/auth/deliverer/delivery-number",
-        data: {'idDel': idDel},
-        options: Options(
-          sendTimeout: Duration(seconds: 8),
-          receiveTimeout: Duration(seconds: 8),
-          headers: {
-            'Content-Type': 'application/json',
-            'authorization': 'Bearer $token',
-          },
-        ),
-      );
-      final deliveryNbr = response.data["deliveryNbr"];
-      return deliveryNbr is int
-          ? deliveryNbr
-          : int.tryParse(deliveryNbr.toString()) ?? 5;
-    } catch (e) {
-      print("❌ Erreur dans getDeliveryNbr: $e");
-      return 0;
+      print("❌ Erreur dans registerCustomer: $e");
+      throw Exception('Erreur lors de l\'inscription du client.');
     }
   }
 }

@@ -7,7 +7,7 @@ import 'package:mobileapp/features/auth/presentation/widgets/otp_code_widget.dar
 
 class OtpCodePage extends ConsumerStatefulWidget {
   final int phoneNumber;
-  const OtpCodePage({super.key, required this.phoneNumber});
+  const OtpCodePage( {super.key, required this.phoneNumber});
 
   @override
   ConsumerState<OtpCodePage> createState() => _OtpCodePageState();

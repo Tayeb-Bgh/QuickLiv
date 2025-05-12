@@ -67,6 +67,7 @@ class _DelivererFirstPageState extends ConsumerState<DelivererFirstPage> {
   String? _permisError;
   String? _sexeError;
 
+
   bool _isFormValid() {
     bool isValid = true;
 

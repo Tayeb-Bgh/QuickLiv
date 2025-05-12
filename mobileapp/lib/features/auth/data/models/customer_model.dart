@@ -9,14 +9,16 @@ class CustomerModel {
   final int pointsCust;
   final bool isSubmittedDelivererCust;
   final bool isSubmittedPartnerCust;
+  final birthDateCust;
 
   CustomerModel({
     required this.idCust,
+    required this.pointsCust,
     required this.firstNameCust,
     required this.lastNameCust,
+    required this.birthDateCust,
     required this.phoneCust,
     required this.registerDateCust,
-    required this.pointsCust,
     required this.isSubmittedDelivererCust,
     required this.isSubmittedPartnerCust,
   });
@@ -25,11 +27,12 @@ class CustomerModel {
   factory CustomerModel.fromJson(Map<String, dynamic> json) {
     return CustomerModel(
       idCust: json['idCust'],
+      pointsCust: json['pointsCust'],
       firstNameCust: json['firstNameCust'],
       lastNameCust: json['lastNameCust'],
+      birthDateCust: json['birthDateCust'],
       phoneCust: json['phoneCust'],
       registerDateCust: DateTime.parse(json['registerDateCust']),
-      pointsCust: json['pointsCust'],
       isSubmittedDelivererCust:
           json['isSubmittedDelivererCust'] == 0 ? false : true,
       isSubmittedPartnerCust:
@@ -41,11 +44,12 @@ class CustomerModel {
   Map<String, dynamic> toJson() {
     return {
       'idCust': idCust,
+      'pointsCust': pointsCust,
       'firstNameCust': firstNameCust,
       'lastNameCust': lastNameCust,
       'phoneCust': phoneCust,
       'registerDateCust': registerDateCust.toIso8601String(),
-      'pointsCust': pointsCust,
+
       'isSubmittedDelivererCust': isSubmittedDelivererCust,
       'isSubmittedPartnerCust': isSubmittedPartnerCust,
     };
@@ -57,14 +61,11 @@ class CustomerModel {
       points: pointsCust,
       firstName: firstNameCust,
       lastName: lastNameCust,
+      birthDate: birthDateCust,
       phone: phoneCust,
       registerDate: registerDateCust,
       isSubmittedDeliverer: isSubmittedDelivererCust,
       isSubmittedPartner: isSubmittedPartnerCust,
-      carts: List.empty(),
-      favorites: List.empty(),
-      ordersHistory: List.empty(),
-      coupons: List.empty(),
     );
   }
 }

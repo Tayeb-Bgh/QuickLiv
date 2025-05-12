@@ -1,17 +1,20 @@
+import 'package:dio/dio.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mobileapp/features/auth/business/entities/customer_entity.dart';
-import 'package:mobileapp/features/auth/business/entities/deliverer_entity.dart';
+import 'package:mobileapp/features/auth/business/entities/custumere_entity.dart';
 import 'package:mobileapp/features/auth/business/entities/verify_otp_result.dart';
 import 'package:mobileapp/features/auth/business/repositories/auth_repository_abstr.dart';
+import 'package:mobileapp/features/auth/business/usecases/register_custumor_usecase.dart';
 import 'package:mobileapp/features/auth/data/models/customer_model.dart';
-import 'package:mobileapp/features/auth/data/models/deliverer_model.dart';
-import 'package:mobileapp/features/auth/data/models/vehicle_model.dart';
 import 'package:mobileapp/features/auth/data/models/verify_otp_result_model.dart';
 import 'package:mobileapp/features/auth/data/service/auth_service.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
   final AuthService service;
+  final Dio dio;
+  final Ref ref;
 
-  AuthRepositoryImpl(this.service);
+  AuthRepositoryImpl(this.dio, this.ref) : service = AuthService(dio, ref);
 
   @override
   Future<bool> checkPhoneNumber(String phoneNumber) async {
@@ -27,14 +30,12 @@ class AuthRepositoryImpl implements AuthRepository {
       phoneNumber: phoneNumber,
       otp: otp,
     );
-
     return VerifyOtpResult(
       success: verifyResult.success,
       role: verifyResult.role,
       token: verifyResult.token,
     );
   }
-
 
   @override
   Future<Customer> getCustomerInfo({required String phoneNumber}) async {
@@ -45,25 +46,10 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<Deliverer> getDelivererInfo({required String phoneNumber}) async {
-    final DelivererModel delivererModel = await service.getDelivererInfo(
-      phoneNumber: phoneNumber,
-    );
-    final VehicleModel vehicleModel = await service.getVehicleInfo(
-      idDel: delivererModel.idDel,
-    );
 
-    final double rating = await service.getRating(
-      idDel: delivererModel.idDel,
-    );
-    final int deliveryNbr = await service.getDeliveryNbr(
-      idDel: delivererModel.idDel,
-    );
-
-    return delivererModel.toEntity(
-      vehicle: vehicleModel.toEntity(),
-      rating: rating,
-      deliveryNbr: deliveryNbr,
-    );
+  Future<void> registerUser(Customere user) async {
+    await service.registerCustomer(user);
   }
+
+  
 }

@@ -6,13 +6,10 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:mobileapp/core/config/dark_mode_provider.dart';
 import 'package:mobileapp/core/constants/constants.dart';
 import 'package:mobileapp/core/hive_object/customer_hive_object.dart';
-import 'package:mobileapp/core/hive_object/deliverer_hive_object.dart';
-import 'package:mobileapp/core/hive_object/vehicle_hive_object.dart';
 import 'package:mobileapp/features/auth/business/entities/customer_entity.dart';
 import 'package:mobileapp/features/auth/presentation/providers/auth_provider.dart';
 import 'package:mobileapp/features/auth/presentation/widgets/count_down_timer.dart';
 import 'package:mobileapp/features/customer/skeleton/presentation/customer_skeleton.dart';
-import 'package:mobileapp/features/deliverer/skeleton/presentation/deliverer_skeleton.dart';
 
 class OtpCodeWidget extends ConsumerStatefulWidget {
   final int phoneNumber;
@@ -163,7 +160,7 @@ class _OtpCodeWidgetState extends ConsumerState<OtpCodeWidget> {
                           print(
                             "id : ${savedCustomer?.id}, ${savedCustomer?.firstName}, ${savedCustomer?.lastName}, ${savedCustomer?.phone}, ${savedCustomer?.registerDate}, ${savedCustomer?.points}, ${savedCustomer?.isSubmittedDeliverer}, ${savedCustomer?.isSubmittedPartner}",
                           );
-                        } else if (result.role == "deliverer") {
+                        } /* if (result.role == "deliverer") {
                           Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
@@ -209,7 +206,7 @@ class _OtpCodeWidgetState extends ConsumerState<OtpCodeWidget> {
 
                           print(
                             "id : ${savedDeliverer?.id}, ${savedDeliverer?.firstName}, ${savedDeliverer?.lastName}, ${savedDeliverer?.phone}, ${savedDeliverer?.registerDate}, ${savedDeliverer?.rating}, ${savedDeliverer?.deliveryNbr}, ${savedDeliverer?.email}, ${savedDeliverer?.adrs}, ${savedDeliverer?.status}, ${savedDeliverer?.nbrOrderThisDay}, ${savedDeliverer?.profitsThisDay}, ${savedVehicle?.id}, ${savedVehicle?.registerNbr}, ${savedVehicle?.brand}, ${savedVehicle?.model}, ${savedVehicle?.color}, ${savedVehicle?.year}, ${savedVehicle?.insuranceExpr}, ${savedVehicle?.type}",
-                          );
+                          )
                         } else {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
@@ -218,7 +215,7 @@ class _OtpCodeWidgetState extends ConsumerState<OtpCodeWidget> {
                               ),
                             ),
                           );
-                        }
+                        };*/
                       } else {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(content: Text("OTP invalide ou expiré")),

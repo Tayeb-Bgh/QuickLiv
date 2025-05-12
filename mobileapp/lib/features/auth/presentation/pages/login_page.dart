@@ -15,6 +15,7 @@ class LoginPage extends ConsumerStatefulWidget {
 
 class _LoginPageState extends ConsumerState<LoginPage> {
   bool isChecked = false;
+  
 
   @override
   Widget build(BuildContext context) {

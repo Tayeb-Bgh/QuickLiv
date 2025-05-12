@@ -41,7 +41,7 @@ class CustomerHiveObject extends HiveObject {
     required this.isSubmittedPartner,
   });
 
-  static CustomerHiveObject toHiveCustomer(Customer customer) {
+ static CustomerHiveObject toHiveCustomer(Customer customer) {
   return CustomerHiveObject(
     id: customer.id,
     firstName: customer.firstName,
