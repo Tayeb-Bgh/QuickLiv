@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mobileapp/core/config/dark_mode_provider.dart';
@@ -13,14 +14,26 @@ class HorizontalRadioButtons extends ConsumerWidget {
     final selected = ref.watch(selectedCategoryProvider);
     final isDarkMode = ref.watch(darkModeProvider);
     final categories = [
-      {'label': 'Kebabier', 'icon': Icons.kebab_dining},
-      {'label': "Pizzeria", 'icon': Icons.local_pizza},
-      {'label': 'Burguerie', 'icon': Icons.lunch_dining},
-      {'label': "Rôtisserie", 'icon': Icons.dinner_dining},
-      {'label': "Pâtisserie", 'icon': Icons.cake},
-      {'label': "Fast food", 'icon': Icons.fastfood},
-      {'label': "Restaurant", 'icon': Icons.restaurant},
-      {'label': "Grillades", 'icon': Icons.outdoor_grill},
+      {'value': 'Kebabier', 'label': '🍢 Kebabier', 'icon': Icons.kebab_dining},
+      {'value': 'Pizzeria', 'label': '🍕 Pizzeria', 'icon': Icons.local_pizza},
+      {'value': 'Burguerie', 'label': '🍔 Burguerie', 'icon': Icons.fastfood},
+      {
+        'value': 'Rôtisserie',
+        'label': '🍗 Rôtisserie',
+        'icon': Icons.dinner_dining,
+      },
+      {'value': 'Pâtisserie', 'label': '🍰 Pâtisserie', 'icon': Icons.cake},
+      {'value': 'Fast food', 'label': '🍟 Fast food', 'icon': Icons.set_meal},
+      {
+        'value': 'Restaurant',
+        'label': '🍽️ Restaurant',
+        'icon': Icons.restaurant,
+      },
+      {
+        'value': 'Grillades',
+        'label': '🔥 Grillades',
+        'icon': Icons.outdoor_grill,
+      },
     ];
     showDialog(
       context: context,
@@ -52,14 +65,14 @@ class HorizontalRadioButtons extends ConsumerWidget {
                     ),
                 itemBuilder: (context, index) {
                   final category = categories[index];
-                  final isSelected = selected == category['label'];
+                  final isSelected = selected == category['value'];
 
                   return ListTile(
-                    leading: Icon(
+                    /* leading: Icon(
                       category['icon'] as IconData,
                       color: kPrimaryRed,
                       size: 22,
-                    ),
+                    ), */
                     title: Text(
                       category['label'] as String,
                       style: TextStyle(
@@ -69,7 +82,7 @@ class HorizontalRadioButtons extends ConsumerWidget {
                       ),
                     ),
                     trailing: Radio<String>(
-                      value: category['label'] as String,
+                      value: category['value'] as String,
                       groupValue: selected,
                       onChanged: (value) {
                         ref.read(selectedCategoryProvider.notifier).state =
@@ -86,7 +99,7 @@ class HorizontalRadioButtons extends ConsumerWidget {
                     ),
                     onTap: () {
                       ref.read(selectedCategoryProvider.notifier).state =
-                          category['label'] as String;
+                          category['value'] as String;
                       Navigator.pop(context);
                     },
                     shape: RoundedRectangleBorder(
@@ -128,14 +141,26 @@ class HorizontalRadioButtons extends ConsumerWidget {
     final selected = ref.watch(selectedCategoryProvider);
     final scrollController = ref.read(scrollControllerProvider);
     final categories = [
-      {'label': '🍢 Kebabier', 'icon': Icons.kebab_dining},
-      {'label': '🍕 Pizzeria', 'icon': Icons.local_pizza},
-      {'label': '🍔 Burguerie', 'icon': Icons.fastfood},
-      {'label': '🍗 Rôtisserie', 'icon': Icons.dinner_dining},
-      {'label': '🍰 Pâtisserie', 'icon': Icons.cake},
-      {'label': '🍟 Fast food', 'icon': Icons.set_meal},
-      {'label': '🍽️ Restaurant', 'icon': Icons.restaurant},
-      {'label': '🔥 Grillades', 'icon': Icons.outdoor_grill},
+      {'value': 'Kebabier', 'label': '🍢 Kebabier', 'icon': Icons.kebab_dining},
+      {'value': 'Pizzeria', 'label': '🍕 Pizzeria', 'icon': Icons.local_pizza},
+      {'value': 'Burguerie', 'label': '🍔 Burguerie', 'icon': Icons.fastfood},
+      {
+        'value': 'Rôtisserie',
+        'label': '🍗 Rôtisserie',
+        'icon': Icons.dinner_dining,
+      },
+      {'value': 'Pâtisserie', 'label': '🍰 Pâtisserie', 'icon': Icons.cake},
+      {'value': 'Fast food', 'label': '🍟 Fast food', 'icon': Icons.set_meal},
+      {
+        'value': 'Restaurant',
+        'label': '🍽️ Restaurant',
+        'icon': Icons.restaurant,
+      },
+      {
+        'value': 'Grillades',
+        'label': '🔥 Grillades',
+        'icon': Icons.outdoor_grill,
+      },
     ];
 
     return SizedBox(
@@ -143,16 +168,14 @@ class HorizontalRadioButtons extends ConsumerWidget {
       child: ListView.separated(
         scrollDirection: Axis.horizontal,
         padding: EdgeInsets.symmetric(horizontal: width * kDefaultPadding),
-        itemCount: categories.length + 1, // +1 pour le bouton settings
+        itemCount: categories.length + 1,
         separatorBuilder: (_, __) => const SizedBox(width: 10),
         itemBuilder: (context, index) {
-          // Premier élément = bouton settings
           if (index == 0) {
             return GestureDetector(
               onTap: () => _showFilterDialog(context, ref),
               child: Container(
-                width:
-                    height * 0.039, // Carré de la même hauteur que les autres
+                width: height * 0.039,
                 decoration: BoxDecoration(
                   color: Colors.transparent,
                   border: Border.all(color: kPrimaryRed, width: 2),
@@ -167,16 +190,15 @@ class HorizontalRadioButtons extends ConsumerWidget {
             );
           }
 
-          // Les autres éléments normaux
           final category = categories[index - 1];
-          final isSelected = selected == category['label'];
+          final isSelected = selected == category['value'];
 
           return GestureDetector(
             onTap: () {
-              final selected = isSelected ? null : category['label'] as String;
-              ref.read(selectedCategoryProvider.notifier).state = selected;
+              final newValue = isSelected ? null : category['value'] as String;
+              ref.read(selectedCategoryProvider.notifier).state = newValue;
 
-              if (selected != null) {
+              if (newValue != null) {
                 Future.delayed(const Duration(milliseconds: 100), () {
                   scrollController.animateTo(
                     scrollController.position.maxScrollExtent * 0.50,
@@ -197,32 +219,17 @@ class HorizontalRadioButtons extends ConsumerWidget {
                 border: Border.all(color: kPrimaryRed, width: 2),
                 borderRadius: BorderRadius.circular(30),
               ),
-              child: Row(
-                children: [
-                  /* Icon(
-                    category['icon'] as IconData,
-                    color:
-                        isSelected
-                            ? kSecondaryWhite
-                            : isDarkMode
-                            ? kSecondaryWhite
-                            : kPrimaryRed,
-                    size: width * 0.05,
-                  ),
-                  SizedBox(width: width * 0.01), */
-                  Text(
-                    category['label'] as String,
-                    style: TextStyle(
-                      color:
-                          isSelected
-                              ? kSecondaryWhite
-                              : isDarkMode
-                              ? kSecondaryWhite
-                              : kPrimaryRed,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ],
+              child: Text(
+                category['label'] as String,
+                style: TextStyle(
+                  color:
+                      isSelected
+                          ? kSecondaryWhite
+                          : isDarkMode
+                          ? kSecondaryWhite
+                          : kPrimaryRed,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
           );

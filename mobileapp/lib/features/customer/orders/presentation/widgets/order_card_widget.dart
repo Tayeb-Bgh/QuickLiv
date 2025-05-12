@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mobileapp/core/config/dark_mode_provider.dart';
 import 'package:mobileapp/core/constants/constants.dart';
+import 'package:mobileapp/core/utils/utility_functions.dart';
 import 'package:mobileapp/features/customer/orders/business/entities/order_entity.dart';
 
 class OrderCard extends ConsumerWidget {
@@ -224,7 +225,7 @@ class OrderCard extends ConsumerWidget {
             const SizedBox(height: 8),
             // Total
             Text(
-              "${totalNet} DZD",
+              "${roundToTwoDecimals(totalNet)} DZD",
               style: const TextStyle(
                 color: kPrimaryRed,
                 fontWeight: FontWeight.bold,

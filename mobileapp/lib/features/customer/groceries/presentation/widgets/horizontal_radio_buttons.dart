@@ -10,15 +10,32 @@ class HorizontalRadioButtons extends ConsumerWidget {
   void _showFilterDialog(BuildContext context, WidgetRef ref) {
     final selected = ref.watch(selectedCategoryProvider);
     final isDarkMode = ref.watch(darkModeProvider);
+
     final categories = [
-      {'label': 'Superétte', 'icon': Icons.store},
-      {'label': "Supermarché", 'icon': Icons.store},
-      {'label': 'Boucherie', 'icon': Icons.set_meal},
-      {'label': "Fruits & Légumes", 'icon': Icons.local_grocery_store},
-      {'label': "Boulangerie", 'icon': Icons.breakfast_dining},
-      {'label': "Poissonnerie", 'icon': Icons.set_meal},
-      {'label': "Fromagerie", 'icon': Icons.lunch_dining},
-      {'label': "Épices", 'icon': Icons.eco},
+      {'value': 'Superétte', 'label': '🏪 Superétte', 'icon': Icons.store},
+      {'value': 'Supermarché', 'label': "🛒 Supermarché", 'icon': Icons.store},
+      {'value': 'Boucherie', 'label': '🍖 Boucherie', 'icon': Icons.set_meal},
+      {
+        'value': 'Fruits & Légumes',
+        'label': "🥬 Fruits & Légumes",
+        'icon': Icons.local_grocery_store,
+      },
+      {
+        'value': 'Boulangerie',
+        'label': "🥖 Boulangerie",
+        'icon': Icons.breakfast_dining,
+      },
+      {
+        'value': 'Poissonnerie',
+        'label': "🐟 Poissonnerie",
+        'icon': Icons.set_meal,
+      },
+      {
+        'value': 'Fromagerie',
+        'label': "🧀 Fromagerie",
+        'icon': Icons.lunch_dining,
+      },
+      {'value': 'Épices', 'label': "🌿 Épices", 'icon': Icons.eco},
     ];
 
     showDialog(
@@ -51,14 +68,14 @@ class HorizontalRadioButtons extends ConsumerWidget {
                     ),
                 itemBuilder: (context, index) {
                   final category = categories[index];
-                  final isSelected = selected == category['label'];
+                  final isSelected = selected == category['value'];
 
                   return ListTile(
-                    leading: Icon(
+                    /* leading: Icon(
                       category['icon'] as IconData,
                       color: kPrimaryRed,
                       size: 22,
-                    ),
+                    ), */
                     title: Text(
                       category['label'] as String,
                       style: TextStyle(
@@ -68,7 +85,7 @@ class HorizontalRadioButtons extends ConsumerWidget {
                       ),
                     ),
                     trailing: Radio<String>(
-                      value: category['label'] as String,
+                      value: category['value'] as String,
                       groupValue: selected,
                       onChanged: (value) {
                         ref.read(selectedCategoryProvider.notifier).state =
@@ -85,7 +102,7 @@ class HorizontalRadioButtons extends ConsumerWidget {
                     ),
                     onTap: () {
                       ref.read(selectedCategoryProvider.notifier).state =
-                          category['label'] as String;
+                          category['value'] as String;
                       Navigator.pop(context);
                     },
                     shape: RoundedRectangleBorder(
@@ -124,17 +141,33 @@ class HorizontalRadioButtons extends ConsumerWidget {
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
     final isDarkMode = ref.watch(darkModeProvider);
-
     final selected = ref.watch(selectedCategoryProvider);
+
     final categories = [
-      {'label': '🏪 Superétte', 'icon': Icons.store},
-      {'label': "🛒 Supermarché", 'icon': Icons.store},
-      {'label': '🍖 Boucherie', 'icon': Icons.set_meal},
-      {'label': "🥬 Fruits & Légumes", 'icon': Icons.local_grocery_store},
-      {'label': "🥖 Boulangerie", 'icon': Icons.breakfast_dining},
-      {'label': "🐟 Poissonnerie", 'icon': Icons.set_meal},
-      {'label': "🧀 Fromagerie", 'icon': Icons.lunch_dining},
-      {'label': "🌿 Épices", 'icon': Icons.eco},
+      {'value': 'Superétte', 'label': '🏪 Superétte', 'icon': Icons.store},
+      {'value': 'Supermarché', 'label': "🛒 Supermarché", 'icon': Icons.store},
+      {'value': 'Boucherie', 'label': '🍖 Boucherie', 'icon': Icons.set_meal},
+      {
+        'value': 'Fruits & Légumes',
+        'label': "🥬 Fruits & Légumes",
+        'icon': Icons.local_grocery_store,
+      },
+      {
+        'value': 'Boulangerie',
+        'label': "🥖 Boulangerie",
+        'icon': Icons.breakfast_dining,
+      },
+      {
+        'value': 'Poissonnerie',
+        'label': "🐟 Poissonnerie",
+        'icon': Icons.set_meal,
+      },
+      {
+        'value': 'Fromagerie',
+        'label': "🧀 Fromagerie",
+        'icon': Icons.lunch_dining,
+      },
+      {'value': 'Épices', 'label': "🌿 Épices", 'icon': Icons.eco},
     ];
 
     return SizedBox(
@@ -142,16 +175,14 @@ class HorizontalRadioButtons extends ConsumerWidget {
       child: ListView.separated(
         scrollDirection: Axis.horizontal,
         padding: EdgeInsets.symmetric(horizontal: width * kDefaultPadding),
-        itemCount: categories.length + 1, // +1 pour le bouton settings
+        itemCount: categories.length + 1,
         separatorBuilder: (_, __) => const SizedBox(width: 10),
         itemBuilder: (context, index) {
-          // Premier élément = bouton settings
           if (index == 0) {
             return GestureDetector(
               onTap: () => _showFilterDialog(context, ref),
               child: Container(
-                width:
-                    height * 0.039, // Carré de la même hauteur que les autres
+                width: height * 0.039,
                 decoration: BoxDecoration(
                   color: Colors.transparent,
                   border: Border.all(color: kPrimaryRed, width: 2),
@@ -166,14 +197,13 @@ class HorizontalRadioButtons extends ConsumerWidget {
             );
           }
 
-          // Les autres éléments normaux
           final category = categories[index - 1];
-          final isSelected = selected == category['label'];
+          final isSelected = selected == category['value'];
 
           return GestureDetector(
             onTap: () {
-              final selected = isSelected ? null : category['label'] as String;
-              ref.read(selectedCategoryProvider.notifier).state = selected;
+              final newValue = isSelected ? null : category['value'] as String;
+              ref.read(selectedCategoryProvider.notifier).state = newValue;
             },
             child: AnimatedContainer(
               duration: const Duration(milliseconds: 200),
@@ -186,31 +216,17 @@ class HorizontalRadioButtons extends ConsumerWidget {
                 border: Border.all(color: kPrimaryRed, width: 2),
                 borderRadius: BorderRadius.circular(30),
               ),
-              child: Row(
-                children: [
-                  /*  Icon(
-                    category['icon'] as IconData,
-                    color:
-                        isSelected
-                            ? kSecondaryWhite
-                            : isDarkMode
-                            ? kSecondaryWhite
-                            : kPrimaryRed,
-                    size: width * 0.05,
-                  ), */
-                  Text(
-                    category['label'] as String,
-                    style: TextStyle(
-                      color:
-                          isSelected
-                              ? kSecondaryWhite
-                              : isDarkMode
-                              ? kSecondaryWhite
-                              : kPrimaryRed,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ],
+              child: Text(
+                category['label'] as String,
+                style: TextStyle(
+                  color:
+                      isSelected
+                          ? kSecondaryWhite
+                          : isDarkMode
+                          ? kSecondaryWhite
+                          : kPrimaryRed,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
           );

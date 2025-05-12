@@ -99,3 +99,7 @@ dynamic gramsToKg(int quantity) {
   double result = quantity / 1000;
   return result % 1 == 0 ? result.toInt() : result;
 }
+
+double roundToTwoDecimals(double value) {
+  return double.parse(value.toStringAsFixed(2));
+}
