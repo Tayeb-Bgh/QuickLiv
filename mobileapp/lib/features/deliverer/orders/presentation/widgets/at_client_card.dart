@@ -5,14 +5,17 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/services.dart';
 import 'package:mobileapp/core/config/dark_mode_provider.dart';
 import 'package:mobileapp/core/constants/constants.dart';
+import 'package:mobileapp/features/deliverer/orders/business/entities/order_entity.dart';
+import 'package:mobileapp/features/deliverer/orders/presentation/providers/orders_providers.dart';
 import 'package:mobileapp/features/deliverer/orders/presentation/widgets/client_section.dart';
 import 'package:mobileapp/features/deliverer/orders/presentation/widgets/map_section.dart';
 import 'package:mobileapp/features/deliverer/orders/presentation/widgets/payment_section.dart';
 import 'package:mobileapp/features/deliverer/orders/presentation/widgets/row_counter.dart';
 
 class AtClientCard extends ConsumerWidget {
-  final VoidCallback reset;
-  AtClientCard({super.key, required this.reset});
+  final VoidCallback onFinish;
+  final OrderEntity order;
+  const AtClientCard({super.key, required this.order, required this.onFinish});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -32,7 +35,7 @@ class AtClientCard extends ConsumerWidget {
           child: Column(
             children: [
               Text(
-                'CMD N° - 62361 ',
+                'CMD N° - ${order.id} ',
                 style: TextStyle(
                   fontSize: 20,
                   color: fontColor,
@@ -58,7 +61,7 @@ class AtClientCard extends ConsumerWidget {
                   RowCounter.buildStepCircle(number: '4', isActive: true),
                 ],
               ),
-              SizedBox(height: height * 0.01),
+
               Text(
                 ' Livrez au client !',
                 style: TextStyle(
@@ -68,13 +71,17 @@ class AtClientCard extends ConsumerWidget {
                 ),
               ),
               SizedBox(height: height * 0.01),
-              ClientSection(),
+              ClientSection(order: order),
               SizedBox(height: height * 0.01),
-              PaymentSection(),
+              PaymentSection(order: order),
               SizedBox(height: height * 0.01),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(backgroundColor: kPrimaryRed),
-                onPressed: reset,
+                onPressed: () async {
+                  final putStatus = ref.read(updateOrderStatusUseCaseProvider);
+                  await putStatus(order.id, '4');
+                  onFinish();
+                },
                 child: AutoSizeText(
                   "Finaliser la commande",
                   style: TextStyle(

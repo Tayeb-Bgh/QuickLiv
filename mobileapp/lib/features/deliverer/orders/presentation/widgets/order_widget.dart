@@ -13,6 +13,7 @@ import 'package:mobileapp/core/utils/location_provider.dart';
 import 'package:mobileapp/core/utils/utility_functions.dart';
 import 'package:mobileapp/features/deliverer/orders/business/entities/order_entity.dart';
 import 'package:mobileapp/features/deliverer/orders/presentation/widgets/order_details_modal.dart';
+import 'package:mobileapp/features/pick_location/providers/pick_location_providers.dart';
 
 class OrderWidget extends ConsumerWidget {
   OrderWidget({super.key, required this.ref, required this.order});
@@ -24,12 +25,12 @@ class OrderWidget extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final screenHeight = MediaQuery.of(context).size.height;
-    final cardHeight = screenHeight * 0.4;
+    final cardHeight = screenHeight * 0.36;
     final cardWidth = MediaQuery.of(context).size.width * 0.9;
     final isDarkMode = ref.watch(darkModeProvider);
     final busns = order.busns;
 
-    LatLng? positionCust = LatLng(36.749915937615256, 5.0552245389692745);
+    LatLng? positionCust = LatLng(order.customer.latClt, order.customer.lngClt);
     final originDestParams = OriginDestParams(
       origin: ref
           .watch(locationProvider)
@@ -47,19 +48,35 @@ class OrderWidget extends ConsumerWidget {
     final fontColor = isDarkMode ? kPrimaryWhite : kPrimaryBlack;
     final backgroundColor = isDarkMode ? kSecondaryDark : kPrimaryWhite;
     log('text');
-    return Container(
-      height: cardHeight,
-      width: cardWidth,
-      decoration: BoxDecoration(
-        color: backgroundColor,
-        borderRadius: BorderRadius.circular(16),
-      ),
+    return GestureDetector(
+      onTap: () {
+        showDialog(
+          context: context,
+          barrierDismissible: true,
+          builder: (BuildContext context) {
+            return Dialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
+              ),
+              insetPadding: const EdgeInsets.symmetric(
+                horizontal: 16,
+                vertical: 60,
+              ),
+              child: OrderDetailsModal(
+                order: order,
+                originDestParams: originDestParams,
+              ),
+            );
+          },
+        );
+      },
       child: Card(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         elevation: 3,
+        margin: EdgeInsets.all(6),
         color: backgroundColor,
         child: Padding(
-          padding: const EdgeInsets.all(6),
+          padding: const EdgeInsets.all(10),
           child: Column(
             spacing: 10,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -98,45 +115,69 @@ class OrderWidget extends ConsumerWidget {
                 ],
               ),
 
-              Row(
+              Column(
                 children: [
-                  CircleAvatar(
-                    radius: cardHeight * 0.09,
-                    backgroundImage: NetworkImage(busns.imgUrl),
-                  ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: AutoSizeText(
-                      busns.name,
-                      maxLines: 1,
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: fontColor,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      CircleAvatar(
+                        radius: cardHeight * 0.09,
+                        backgroundImage: NetworkImage(busns.imgUrl),
                       ),
-                    ),
-                  ),
-                  Icon(Icons.location_on_outlined, size: 16, color: fontColor),
-                  SizedBox(width: 4),
-                  AutoSizeText(
-                    distanceAsync.when(
-                      data: (distance) => "${toKilometers(distance)} Km",
-                      error: (err, _) => "La distance n'a pu être claculée.",
-                      loading: () => "... Km",
-                    ),
-                    style: TextStyle(color: fontColor),
-                  ),
-                  SizedBox(width: 10),
-                  Icon(Icons.timer_outlined, size: 16, color: fontColor),
-                  SizedBox(width: 4),
-                  AutoSizeText(
-                    durationAsync.when(
-                      data:
-                          (seconds) =>
-                              "Durée estimée: ${formatDurationInReadableText(seconds)}",
-                      error: (err, _) => "La durée n'a pu être claculée.",
-                      loading: () => "... min",
-                    ),
-                    style: TextStyle(color: fontColor),
+                      const SizedBox(width: 8),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          AutoSizeText(
+                            busns.name,
+                            maxLines: 1,
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: fontColor,
+                            ),
+                          ),
+                          SizedBox(height: screenHeight * 0.01),
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.location_on_outlined,
+                                size: 16,
+                                color: fontColor,
+                              ),
+                              SizedBox(width: 4),
+                              AutoSizeText(
+                                distanceAsync.when(
+                                  data:
+                                      (distance) =>
+                                          "${toKilometers(distance)} Km",
+                                  error: (err, _) => "erreur API",
+                                  loading: () => "... Km",
+                                ),
+                                style: TextStyle(color: fontColor),
+                              ),
+                              SizedBox(width: 10),
+                              Icon(
+                                Icons.timer_outlined,
+                                size: 16,
+                                color: fontColor,
+                              ),
+                              SizedBox(width: 4),
+                              AutoSizeText(
+                                durationAsync.when(
+                                  data:
+                                      (seconds) =>
+                                          formatDurationInReadableText(seconds),
+                                  error: (err, _) => "erreur API",
+                                  loading: () => "... min",
+                                ),
+                                style: TextStyle(color: fontColor),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -163,7 +204,7 @@ class OrderWidget extends ConsumerWidget {
                   Expanded(
                     flex: 1,
                     child: AutoSizeText(
-                      "Burger King, Béjaïa, Algérie",
+                      busns.address,
                       maxLines: 1,
                       minFontSize: 10,
                       style: TextStyle(
@@ -177,7 +218,13 @@ class OrderWidget extends ConsumerWidget {
                   Expanded(
                     flex: 1,
                     child: AutoSizeText(
-                      "Q229+V73, Béjaïa, Algérie",
+                      ref
+                          .watch(formattedAddressProvider(positionCust))
+                          .when(
+                            data: (address) => address,
+                            error: (error, _) => "Chargement ...",
+                            loading: () => "Chargement ...",
+                          ),
                       textAlign: TextAlign.end,
                       maxLines: 1,
                       minFontSize: 10,
@@ -235,40 +282,12 @@ class OrderWidget extends ConsumerWidget {
                 maxLines: 1,
                 style: TextStyle(color: fontColor),
               ),
-              AutoSizeText(
-                " x ${order.products[1].quantity} ${order.products[1].name}",
-                maxLines: 1,
-                style: TextStyle(color: fontColor),
-              ),
-
-              Align(
-                alignment: Alignment.centerRight,
-                child: IconButton(
-                  icon: const Icon(
-                    Icons.keyboard_arrow_down,
-                    size: 30,
-                    color: Colors.red,
-                  ),
-                  onPressed: () {
-                    showDialog(
-                      context: context,
-                      barrierDismissible: true,
-                      builder: (BuildContext context) {
-                        return Dialog(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          insetPadding: const EdgeInsets.symmetric(
-                            horizontal: 16,
-                            vertical: 60,
-                          ),
-                          child: OrderDetailsModal(order: order),
-                        );
-                      },
-                    );
-                  },
+              if (order.products.length > 1)
+                AutoSizeText(
+                  " x ${order.products[1].quantity} ${order.products[1].name}",
+                  maxLines: 1,
+                  style: TextStyle(color: fontColor),
                 ),
-              ),
             ],
           ),
         ),

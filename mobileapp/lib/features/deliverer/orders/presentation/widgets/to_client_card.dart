@@ -5,13 +5,16 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/services.dart';
 import 'package:mobileapp/core/config/dark_mode_provider.dart';
 import 'package:mobileapp/core/constants/constants.dart';
+import 'package:mobileapp/features/deliverer/orders/business/entities/order_entity.dart';
+import 'package:mobileapp/features/deliverer/orders/presentation/providers/orders_providers.dart';
 import 'package:mobileapp/features/deliverer/orders/presentation/widgets/client_section.dart';
 import 'package:mobileapp/features/deliverer/orders/presentation/widgets/map_section.dart';
 import 'package:mobileapp/features/deliverer/orders/presentation/widgets/row_counter.dart';
 
 class ToClientCard extends ConsumerWidget {
   final VoidCallback onNext;
-  const ToClientCard({super.key, required this.onNext});
+  final OrderEntity order;
+  const ToClientCard({super.key, required this.onNext, required this.order});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -67,8 +70,8 @@ class ToClientCard extends ConsumerWidget {
                 ),
               ),
               SizedBox(height: height * 0.01),
-              ClientSection(),
-              MapSection(),
+              ClientSection(order: order),
+              MapSection(order: order, isClt: true),
               Expanded(
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -91,7 +94,14 @@ class ToClientCard extends ConsumerWidget {
                       style: ElevatedButton.styleFrom(
                         backgroundColor: kPrimaryRed,
                       ),
-                      onPressed: onNext,
+                      onPressed: () async {
+                        final putStatus = ref.read(
+                          updateOrderStatusUseCaseProvider,
+                        );
+                        await putStatus(order.id, '3');
+
+                        onNext();
+                      },
                       child: const AutoSizeText(
                         "Je suis arrivé ",
                         style: TextStyle(

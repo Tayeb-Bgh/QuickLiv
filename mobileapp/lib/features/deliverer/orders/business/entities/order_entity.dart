@@ -4,7 +4,7 @@ import 'package:mobileapp/features/deliverer/orders/business/entities/product_en
 
 class OrderEntity {
   final int id;
-  final String status;
+  final int status;
   List<Product> products;
   final Business busns;
   final double delPrice;

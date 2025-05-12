@@ -5,16 +5,23 @@ import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:mobileapp/core/config/dark_mode_provider.dart';
 import 'package:mobileapp/core/constants/constants.dart';
+import 'package:mobileapp/features/deliverer/orders/business/entities/order_entity.dart';
+import 'package:mobileapp/features/deliverer/orders/presentation/providers/orders_providers.dart';
 import 'package:mobileapp/features/deliverer/orders/presentation/widgets/client_section.dart';
 import 'package:mobileapp/features/deliverer/orders/presentation/widgets/map_section.dart';
 import 'package:mobileapp/features/deliverer/orders/presentation/widgets/row_counter.dart';
 
 class BusinessRendezvousCard extends ConsumerWidget {
   final VoidCallback onNext;
-
-  const BusinessRendezvousCard({super.key, required this.onNext});
+  final OrderEntity order;
+  const BusinessRendezvousCard({
+    super.key,
+    required this.onNext,
+    required this.order,
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -23,10 +30,11 @@ class BusinessRendezvousCard extends ConsumerWidget {
     final isDarkMode = ref.watch(darkModeProvider);
     final backgroundColor = isDarkMode ? kPrimaryDark : kPrimaryWhite;
     final fontColor = isDarkMode ? kPrimaryWhite : kPrimaryBlack;
+
     log('$isDarkMode');
     return Container(
       width: width * 0.85,
-      height: height * 0.7,
+      height: height * 0.8,
       child: Card(
         color: backgroundColor,
         child: Padding(
@@ -34,14 +42,14 @@ class BusinessRendezvousCard extends ConsumerWidget {
           child: Column(
             children: [
               Text(
-                'CMD N° - 62315 ',
+                'CMD N° - ${order.id} ',
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
                   color: fontColor,
                 ),
               ),
-              SizedBox(height: height * 0.01),
+
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -62,42 +70,32 @@ class BusinessRendezvousCard extends ConsumerWidget {
               ),
               SizedBox(height: height * 0.01),
 
-              SizedBox(height: height * 0.01),
               _buildBusinessRow(
-                businessName: 'Burger King',
-                imageUrl:
-                    'https://media.timeout.com/images/106194093/1920/1440/image.webp',
-                phoneNumber: '0551236050',
+                businessName: order.busns.name,
+                imageUrl: order.busns.imgUrl,
+                phoneNumber: order.busns.phone,
                 context: context,
                 fontColor: fontColor,
               ),
               SizedBox(height: height * 0.01),
-              MapSection(),
+              MapSection(order: order, isClt: false),
               SizedBox(height: height * 0.01),
-              ClientSection(),
+              ClientSection(order: order),
               SizedBox(height: height * 0.01),
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: kPrimaryDark,
-                    ),
-                    onPressed: () {},
-                    child: AutoSizeText(
-                      "Annuler",
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: kPrimaryWhite
-                      ),
-                    ),
-                  ),
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       backgroundColor: kPrimaryRed,
                     ),
-                    onPressed: onNext,
+                    onPressed: () async {
+                      final putStatus = ref.read(
+                        updateOrderStatusUseCaseProvider,
+                      );
+                      await putStatus(order.id, '2');
+                      onNext();
+                    },
                     child: const AutoSizeText(
                       "Je suis arrivé ",
                       style: TextStyle(
@@ -136,7 +134,7 @@ class BusinessRendezvousCard extends ConsumerWidget {
               Text(
                 businessName,
                 style: TextStyle(
-                  fontSize: 20,
+                  fontSize: 16,
                   fontWeight: FontWeight.bold,
                   color: fontColor,
                 ),
