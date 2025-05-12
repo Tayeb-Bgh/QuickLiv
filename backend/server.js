@@ -118,7 +118,7 @@ app.use("/api/home", homeRouter);
 app.use("/api/cart", cartRouter );
 app.use("/api/payment", paymentRouter );
 app.use("/api/orders", ordersRouter);
-app.use("/api/delivererH", delivererHistoryRouter)
+app.use("/api/deliverer", delivererHistoryRouter)
 
 
 // Démarrer le serveur
