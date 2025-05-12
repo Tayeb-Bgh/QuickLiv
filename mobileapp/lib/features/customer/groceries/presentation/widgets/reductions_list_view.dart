@@ -5,7 +5,7 @@ import 'package:mobileapp/core/constants/constants.dart';
 import 'package:mobileapp/features/customer/groceries/business/entities/product_with_reduc_entity.dart';
 import 'package:mobileapp/features/customer/groceries/presentation/widgets/product_reduc_card.dart';
 
-class ReductionsListView extends ConsumerWidget {
+class ReductionsListView extends ConsumerStatefulWidget {
   final AsyncValue<List<ProductWithReduc>> reductions;
   final String title = "Nos réductions du jour";
 
@@ -16,9 +16,34 @@ class ReductionsListView extends ConsumerWidget {
     required this.reductions,
     required this.onRefresh,
   });
+  @override
+  ConsumerState<ReductionsListView> createState() => _ReductionsListViewState();
+}
+
+class _ReductionsListViewState extends ConsumerState<ReductionsListView> {
+  final ScrollController _scrollController = ScrollController();
+
+  void _scrollToNextItem() {
+    if (_scrollController.hasClients) {
+      final cardWidth = MediaQuery.of(context).size.width * 0.39;
+
+      final nextPosition = _scrollController.offset + cardWidth + 10;
+      _scrollController.animateTo(
+        nextPosition,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
+    }
+  }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
 
@@ -41,7 +66,7 @@ class ReductionsListView extends ConsumerWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Text(
-                  title,
+                  widget.title,
                   textAlign: TextAlign.left,
 
                   style: TextStyle(
@@ -53,7 +78,7 @@ class ReductionsListView extends ConsumerWidget {
                 IconButton(
                   padding: EdgeInsets.zero,
                   constraints: const BoxConstraints(),
-                  onPressed: () {},
+                  onPressed: _scrollToNextItem,
                   icon: Container(
                     padding: const EdgeInsets.all(6),
                     decoration: BoxDecoration(
@@ -72,13 +97,14 @@ class ReductionsListView extends ConsumerWidget {
               ],
             ),
             SizedBox(height: height * 0.006),
-            reductions.when(
+            widget.reductions.when(
               data:
                   (reductions) => RefreshIndicator(
-                    onRefresh: () => onRefresh(),
+                    onRefresh: () => widget.onRefresh(),
                     child: SizedBox(
                       height: height * 0.203,
                       child: ListView.builder(
+                        controller: _scrollController,
                         scrollDirection: Axis.horizontal,
                         itemCount: reductions.length,
                         itemBuilder: (context, index) {
