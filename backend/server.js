@@ -15,6 +15,7 @@ const favouritesRouter = require("./routes/mobile_app/favourites/favourites")
 const homeRouter = require("./routes/mobile_app/home/home")
 const paymentRouter = require("./routes/mobile_app/payment/payment")
 const ordersRouter = require("./routes/mobile_app/orders/orders");
+const delivererHistoryRouter = require("./routes/mobile_app/deleverer_history/deleverer_history")
 const http = require("http"); // Ajouté pour Socket.IO
 const socketIo = require("socket.io"); // Ajouté
 const db = require("./dbConnexion");
@@ -117,7 +118,7 @@ app.use("/api/home", homeRouter);
 app.use("/api/cart", cartRouter );
 app.use("/api/payment", paymentRouter );
 app.use("/api/orders", ordersRouter);
-
+app.use("/api/delivererH", delivererHistoryRouter)
 
 
 // Démarrer le serveur

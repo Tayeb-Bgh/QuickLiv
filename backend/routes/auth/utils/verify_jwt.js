@@ -2,6 +2,7 @@ const jwt = require('jsonwebtoken');
 
 const authenticate = (req, res, next) => {
   const authHeader = req.headers['authorization'];
+  console.log("JE SUI RENTRE YOUPIaa");
 
   if (!authHeader) {
     return res.status(401).json({ message: 'No token provided' });
@@ -15,6 +16,7 @@ const authenticate = (req, res, next) => {
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     console.log("Decoded token: %j", decoded);
+    console.log(token)
     req.user = decoded;
     next();
   } catch (err) {
