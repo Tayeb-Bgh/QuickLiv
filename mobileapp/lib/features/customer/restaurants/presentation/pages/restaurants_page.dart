@@ -40,7 +40,6 @@ class _RestaurantsPageTestState extends ConsumerState<RestaurantsPageTest> {
     final bgColor = isDarkMode ? kPrimaryDark : kSecondaryWhite;
 
     final height = MediaQuery.of(context).size.height;
-
     return ColoredBox(
       color: bgColor,
       child: CustomScrollView(

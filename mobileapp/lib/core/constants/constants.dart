@@ -51,3 +51,4 @@ const double priceCoupon60 = 1000;
 const double priceCoupon100 = 1000;
 
 const String descriptionCoupon = "Bénificie d'une livraison gratuite";
+final GlobalKey verticalListKey = GlobalKey();

@@ -6,7 +6,7 @@ import 'package:mobileapp/features/customer/restaurant_opened/presentation/pages
 import 'package:mobileapp/features/customer/restaurants/presentation/widgets/restaurant_card.dart';
 import 'package:mobileapp/features/customer/restaurants/business/entities/restaurant_entity.dart';
 
-class RestaurantsListView extends ConsumerWidget {
+class RestaurantsListView extends ConsumerStatefulWidget {
   final AsyncValue<List<Restaurant>> restaurants;
   final String title;
   final Function onRefresh;
@@ -19,7 +19,37 @@ class RestaurantsListView extends ConsumerWidget {
   });
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<RestaurantsListView> createState() =>
+      _RestaurantsListViewState();
+}
+
+class _RestaurantsListViewState extends ConsumerState<RestaurantsListView> {
+  final ScrollController _scrollController = ScrollController();
+
+  void _scrollToNextItem() {
+    if (_scrollController.hasClients) {
+      
+      final cardWidth = MediaQuery.of(context).size.width * 0.6;
+
+      
+      final nextPosition =
+          _scrollController.offset + cardWidth + 10; 
+      _scrollController.animateTo(
+        nextPosition,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
+    }
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final isDarkMode = ref.watch(darkModeProvider);
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
@@ -44,7 +74,6 @@ class RestaurantsListView extends ConsumerWidget {
                 Text(
                   "Nos meilleurs restaurants",
                   textAlign: TextAlign.left,
-
                   style: TextStyle(
                     color: titleColor,
                     fontWeight: FontWeight.bold,
@@ -54,14 +83,12 @@ class RestaurantsListView extends ConsumerWidget {
                 IconButton(
                   padding: EdgeInsets.zero,
                   constraints: const BoxConstraints(),
-                  onPressed: () {},
+                  onPressed: _scrollToNextItem,
                   icon: Container(
                     padding: const EdgeInsets.all(6),
                     decoration: BoxDecoration(
                       color: btnBgColor,
-                      shape:
-                          BoxShape
-                              .circle, // ou BorderRadius.circular(...) si tu préfères
+                      shape: BoxShape.circle,
                     ),
                     child: Icon(
                       Icons.arrow_forward,
@@ -73,13 +100,14 @@ class RestaurantsListView extends ConsumerWidget {
               ],
             ),
             SizedBox(height: 6),
-            restaurants.when(
+            widget.restaurants.when(
               data:
                   (restaurants) => RefreshIndicator(
-                    onRefresh: () => onRefresh(),
+                    onRefresh: () => widget.onRefresh(),
                     child: SizedBox(
                       height: height * 0.243,
                       child: ListView.builder(
+                        controller: _scrollController,
                         scrollDirection: Axis.horizontal,
                         itemCount: restaurants.length,
                         itemBuilder: (context, index) {
@@ -104,7 +132,7 @@ class RestaurantsListView extends ConsumerWidget {
                               },
                               child: RestaurantCard(
                                 restaurant: restau,
-                                isFull: isFull,
+                                isFull: widget.isFull,
                               ),
                             ),
                           );

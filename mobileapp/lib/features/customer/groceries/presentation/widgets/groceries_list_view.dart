@@ -5,7 +5,7 @@ import 'package:mobileapp/core/constants/constants.dart';
 import 'package:mobileapp/features/customer/groceries/business/entities/grocery_entity.dart';
 import 'package:mobileapp/features/customer/groceries/presentation/widgets/grocery_card.dart';
 
-class GroceriesListView extends ConsumerWidget {
+class GroceriesListView extends ConsumerStatefulWidget {
   final AsyncValue<List<Grocery>> groceries;
   final String title;
   final Function onRefresh;
@@ -16,9 +16,34 @@ class GroceriesListView extends ConsumerWidget {
     required this.onRefresh,
     this.title = "Notre sélection du jour",
   });
+  @override
+  ConsumerState<GroceriesListView> createState() => _GroceriesListViewState();
+}
+
+class _GroceriesListViewState extends ConsumerState<GroceriesListView> {
+  final ScrollController _scrollController = ScrollController();
+
+  void _scrollToNextItem() {
+    if (_scrollController.hasClients) {
+      final cardWidth = MediaQuery.of(context).size.width * 0.6;
+
+      final nextPosition = _scrollController.offset + cardWidth + 10;
+      _scrollController.animateTo(
+        nextPosition,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
+    }
+  }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final isDarkMode = ref.watch(darkModeProvider);
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
@@ -53,7 +78,7 @@ class GroceriesListView extends ConsumerWidget {
                 IconButton(
                   padding: EdgeInsets.zero,
                   constraints: const BoxConstraints(),
-                  onPressed: () {},
+                  onPressed: _scrollToNextItem,
                   icon: Container(
                     padding: const EdgeInsets.all(6),
                     decoration: BoxDecoration(
@@ -72,20 +97,24 @@ class GroceriesListView extends ConsumerWidget {
               ],
             ),
             SizedBox(height: 6),
-            groceries.when(
+            widget.groceries.when(
               data:
                   (groceries) => RefreshIndicator(
-                    onRefresh: () => onRefresh(),
+                    onRefresh: () => widget.onRefresh(),
                     child: SizedBox(
                       height: height * 0.243,
                       child: ListView.builder(
+                        controller: _scrollController,
                         scrollDirection: Axis.horizontal,
                         itemCount: groceries.length,
                         itemBuilder: (context, index) {
                           final grocer = groceries[index];
                           return Container(
                             margin: EdgeInsets.only(right: 10),
-                            child: GroceryCard(grocery: grocer, isFull: isFull),
+                            child: GroceryCard(
+                              grocery: grocer,
+                              isFull: widget.isFull,
+                            ),
                           );
                         },
                       ),

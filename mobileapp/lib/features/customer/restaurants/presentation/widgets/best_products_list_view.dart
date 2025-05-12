@@ -5,7 +5,7 @@ import 'package:mobileapp/core/constants/constants.dart';
 import 'package:mobileapp/features/customer/restaurants/business/entities/product_entity.dart';
 import 'package:mobileapp/features/customer/restaurants/presentation/widgets/best_product_card.dart';
 
-class BestProductsListView extends ConsumerWidget {
+class BestProductsListView extends ConsumerStatefulWidget {
   final AsyncValue<List<Product>> bestProducts;
   final String title = "Nos meilleurs produits";
 
@@ -16,9 +16,35 @@ class BestProductsListView extends ConsumerWidget {
     required this.bestProducts,
     required this.onRefresh,
   });
+  @override
+  ConsumerState<BestProductsListView> createState() =>
+      _BestProductsListViewState();
+}
+
+class _BestProductsListViewState extends ConsumerState<BestProductsListView> {
+  final ScrollController _scrollController = ScrollController();
+
+  void _scrollToNextItem() {
+    if (_scrollController.hasClients) {
+      final cardWidth = MediaQuery.of(context).size.width * 0.39;
+
+      final nextPosition = _scrollController.offset + cardWidth + 10;
+      _scrollController.animateTo(
+        nextPosition,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
+    }
+  }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
 
@@ -41,7 +67,7 @@ class BestProductsListView extends ConsumerWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Text(
-                  title,
+                  widget.title,
                   textAlign: TextAlign.left,
 
                   style: TextStyle(
@@ -53,14 +79,12 @@ class BestProductsListView extends ConsumerWidget {
                 IconButton(
                   padding: EdgeInsets.zero,
                   constraints: const BoxConstraints(),
-                  onPressed: () {},
+                  onPressed: _scrollToNextItem,
                   icon: Container(
                     padding: const EdgeInsets.all(6),
                     decoration: BoxDecoration(
                       color: btnBgColor,
-                      shape:
-                          BoxShape
-                              .circle, 
+                      shape: BoxShape.circle,
                     ),
                     child: Icon(
                       Icons.arrow_forward,
@@ -72,13 +96,14 @@ class BestProductsListView extends ConsumerWidget {
               ],
             ),
             SizedBox(height: height * 0.006),
-            bestProducts.when(
+            widget.bestProducts.when(
               data:
                   (bestProducts) => RefreshIndicator(
-                    onRefresh: () => onRefresh(),
+                    onRefresh: () => widget.onRefresh(),
                     child: SizedBox(
                       height: height * 0.203,
                       child: ListView.builder(
+                        controller: _scrollController,
                         scrollDirection: Axis.horizontal,
                         itemCount: bestProducts.length,
                         itemBuilder: (context, index) {
