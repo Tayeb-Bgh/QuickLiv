@@ -212,7 +212,7 @@ class OrderCard extends ConsumerWidget {
                           ),
                         ),
                         Text(
-                          "${p.price} DZD",
+                          "${p.price.toStringAsFixed(2)} DZD",
                           style: TextStyle(
                             color:
                                 isDarkMode ? kSecondaryWhite : kSecondaryDark,
@@ -225,7 +225,7 @@ class OrderCard extends ConsumerWidget {
             const SizedBox(height: 8),
             // Total
             Text(
-              "${roundToTwoDecimals(totalNet)} DZD",
+              "${totalNet.toStringAsFixed(2)} DZD",
               style: const TextStyle(
                 color: kPrimaryRed,
                 fontWeight: FontWeight.bold,

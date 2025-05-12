@@ -53,7 +53,7 @@ class BillWidget extends ConsumerWidget {
               style: TextStyle(color: textColor1, fontWeight: FontWeight.bold),
             ),
             Text(
-              "$totalProd DZD",
+              "${totalProd.toStringAsFixed(2)} DZD",
               style: TextStyle(color: textColor1, fontWeight: FontWeight.bold),
             ),
           ],
@@ -66,7 +66,7 @@ class BillWidget extends ConsumerWidget {
               style: TextStyle(color: textColor2, fontSize: 12),
             ),
             Text(
-              "$totalDeliv DZD",
+              "${totalDeliv.toStringAsFixed(2)} DZD",
               style: TextStyle(color: textColor1, fontSize: 12),
             ),
           ],
@@ -79,7 +79,7 @@ class BillWidget extends ConsumerWidget {
               style: TextStyle(color: textColor2, fontSize: 12),
             ),
             Text(
-              "-$totalReduc DZD",
+              "-${totalReduc.toStringAsFixed(2)} DZD",
               style: TextStyle(color: reducColor, fontSize: 12),
             ),
           ],
@@ -92,7 +92,7 @@ class BillWidget extends ConsumerWidget {
               style: TextStyle(color: textColor1, fontWeight: FontWeight.bold),
             ),
             Text(
-              "$total DZD",
+              "${total.toStringAsFixed(2)} DZD",
               style: TextStyle(color: totalColor, fontWeight: FontWeight.bold),
             ),
           ],

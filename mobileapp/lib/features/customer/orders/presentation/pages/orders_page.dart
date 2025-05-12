@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mobileapp/core/config/dark_mode_provider.dart';
@@ -31,9 +33,8 @@ class _OrdersPageState extends ConsumerState<OrdersPage> {
     _socketService.connect();
 
     _socketService.listenForOrderUpdates((data) {
-      ref.invalidate(new_providers.customerFullOrdersProvider);
       if (mounted) {
-        // On déclenche manuellement le rafraîchissement
+        ref.invalidate(new_providers.customerFullOrdersProvider);
         _refreshKey.currentState?.show();
       }
     });
@@ -42,11 +43,13 @@ class _OrdersPageState extends ConsumerState<OrdersPage> {
   Future<void> _refreshOrders() async {
     // On invalide le provider pour forcer le rafraîchissement
     ref.invalidate(new_providers.customerFullOrdersProvider);
+    _refreshKey.currentState?.show();
   }
 
   @override
   void dispose() {
     _socketService.disconnect();
+    log("IN ORDERS DISPOSE");
     super.dispose();
   }
 

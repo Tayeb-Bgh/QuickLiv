@@ -186,4 +186,67 @@ router.get("/customer-orders-ids", authenticate, async (req, res) => {
     }
 });
 
+router.delete("/customer-orders/:id", authenticate, (req, res) => {
+  const { id } = req.params;
+
+  const query = `
+    DELETE Cart, CustomerOrder
+    FROM Cart
+    JOIN CustomerOrder ON Cart.idCart = CustomerOrder.idCartOrd
+    WHERE CustomerOrder.idOrd = ?
+  `;
+
+  db.query(query, [id], (error, result) => {
+    if (error) {
+      console.error("Error deleting order:", error);
+      return res.status(500).json({ message: "Internal server error", error });
+    }
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ message: "Order not found" });
+    }
+
+    res.status(200).json({ message: "Order deleted successfully" });
+  });
+});
+
+router.put("/customer-orders/:id/rate", authenticate, async (req, res) => {
+    console.log("oui ça marche wow")
+  const { id } = req.params;
+  const { rateDel, rateBusns } = req.body;
+  try {
+    let baseQuery = "UPDATE CustomerOrder SET";
+    const params = [];
+    const updates = [];
+
+    if (rateDel !== undefined) {
+      updates.push(" ratingDelOrd = ?");
+      params.push(rateDel);
+    }
+
+    if (rateBusns !== undefined) {
+      updates.push(" ratingBusnsOrd = ?");
+      params.push(rateBusns);
+    }
+
+    if (updates.length === 0) {
+      return res.status(400).json({ message: "No fields provided to update" });
+    }
+
+    baseQuery += updates.join(",") + " WHERE idOrd = ?";
+    params.push(id);
+
+    const [result] = await db.query(baseQuery, params);
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ message: "Order not found" });
+    }
+
+    res.status(200).json({ message: "Order updated successfully" });
+  } catch (error) {
+    console.error("Error updating order:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
+
 module.exports = router;

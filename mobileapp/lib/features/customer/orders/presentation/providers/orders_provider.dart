@@ -27,22 +27,25 @@ final customerFullOrdersProvider = FutureProvider.autoDispose<List<Order>>((
   final ordersService = ref.watch(ordersServiceProvider);
   final secureStorage = ref.watch(secureStorageProvider);
 
-  // Récupération du token
+  //log("RECUPERATION DU TOKEN ...");
   final token = await secureStorage.read(key: "authToken");
   if (token == null) {
     throw Exception('No authentication token found');
   }
 
+  //log("RECUPERATION DU TOKEN FINI");
+
   // 1. Récupérer les IDs des commandes
+  //log("RECUPERATION DES ORDER IDS ...");
   final orderIds = await ordersService.getCustomerOrderIds(token);
+  //log("RECUPERATION DES ORDER IDS FINI");
 
   // 2. Pour chaque ID, récupérer les détails complets
+  //log("RECUPERATION DES ORDERS ...");
   final orders = await Future.wait(
     orderIds.map((id) => ordersService.getOrderDetails(id)),
   );
-  log("le nombre d ordres : ${orders.length}");
+  //log("RECUPERATION DES ORDERS FINI");
+  //log("le nombre d ordres : ${orders.length}");
   return orders;
 });
-
-// Dans votre fichier providers.dart (ou un fichier similaire)
-final currentOrderProvider = StateProvider<Order?>((ref) => null);
