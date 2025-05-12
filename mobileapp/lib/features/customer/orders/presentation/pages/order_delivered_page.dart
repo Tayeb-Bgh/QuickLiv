@@ -1,4 +1,6 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:mobileapp/core/config/dark_mode_provider.dart';
@@ -303,6 +305,73 @@ class OrderDeliveredPage extends ConsumerWidget {
     );
   }
 
+  Widget _buildLocationInfo() {
+    return SizedBox(
+      width: double.infinity,
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(
+                  children: [
+                    Text(
+                      "Position du livreur",
+                      style: TextStyle(
+                        fontSize: 10,
+                        fontWeight: FontWeight.bold,
+                        color: kPrimaryRed,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
+                ),
+                Column(
+                  children: [
+                    Text(
+                      order.business.name,
+                      style: TextStyle(
+                        fontSize: 10,
+                        fontWeight: FontWeight.bold,
+                        color: kPrimaryRed,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
+                ),
+                Column(
+                  children: [
+                    Text(
+                      "Votre position  ",
+                      style: TextStyle(
+                        fontSize: 10,
+                        fontWeight: FontWeight.bold,
+                        color: kPrimaryRed,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          SizedBox(height: 16),
+          Text(
+            "La livraison est bien arrivée !",
+            style: TextStyle(
+              color: kPrimaryRed,
+              fontWeight: FontWeight.bold,
+              fontSize: 12,
+            ),
+            textAlign: TextAlign.center,
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildPointsEarned() {
     final pointsEarned = (order.totalAmount / 20).round();
     return Container(
@@ -384,19 +453,34 @@ class OrderDeliveredPage extends ConsumerWidget {
     );
   }
 
-  Widget _buildRatingSection(WidgetRef ref) {
+  Widget _buildRatingSection(WidgetRef ref, BuildContext context) {
     return Column(
       children: [
         _buildSectionTitle("Notation", ref),
         const SizedBox(height: 12),
-        _buildRatingItem("Livraison", order.ratingDel?.toDouble(), ref),
+        _buildRatingItem(
+          context,
+          "Livraison",
+          order.ratingDel?.toDouble(),
+          ref,
+        ),
         const SizedBox(height: 8),
-        _buildRatingItem("Commerce", order.ratingBusns?.toDouble(), ref),
+        _buildRatingItem(
+          context,
+          "Commerce",
+          order.ratingBusns?.toDouble(),
+          ref,
+        ),
       ],
     );
   }
 
-  Widget _buildRatingItem(String title, double? rating, WidgetRef ref) {
+  Widget _buildRatingItem(
+    BuildContext context,
+    String title,
+    double? rating,
+    WidgetRef ref,
+  ) {
     final isDarkMode = ref.watch(darkModeProvider);
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16),
@@ -430,9 +514,7 @@ class OrderDeliveredPage extends ConsumerWidget {
                 }),
               )
               : GestureDetector(
-                onTap: () {
-                  // Laisser vide comme demandé
-                },
+                onTap: () {},
                 child: Container(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 12,
@@ -443,7 +525,7 @@ class OrderDeliveredPage extends ConsumerWidget {
                     borderRadius: BorderRadius.circular(16),
                   ),
                   child: Text(
-                    "Noter",
+                    "Aucune note attribuée",
                     style: const TextStyle(
                       color: kPrimaryRed,
                       fontWeight: FontWeight.bold,
@@ -451,6 +533,59 @@ class OrderDeliveredPage extends ConsumerWidget {
                   ),
                 ),
               ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildProgressTracker() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 15),
+      child: Column(
+        children: [
+          SizedBox(
+            height: 50, // Hauteur explicite pour que Stack puisse se mesurer
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                // Ligne de base
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Container(
+                      width: 30,
+                      height: 30,
+                      decoration: BoxDecoration(
+                        color: kPrimaryRed,
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(Icons.my_location, color: kPrimaryWhite),
+                    ),
+                    Expanded(child: Container(height: 2, color: kPrimaryRed)),
+                    Container(
+                      width: 30,
+                      height: 30,
+                      decoration: BoxDecoration(
+                        color: kPrimaryRed,
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(Icons.store, color: kPrimaryWhite),
+                    ),
+                    Expanded(child: Container(height: 2, color: kPrimaryRed)),
+                    Container(
+                      width: 30,
+                      height: 30,
+                      decoration: BoxDecoration(
+                        color: kPrimaryRed,
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(Icons.location_on, color: kPrimaryWhite),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
         ],
       ),
     );
@@ -482,6 +617,7 @@ class OrderDeliveredPage extends ConsumerWidget {
               Padding(
                 padding: const EdgeInsets.all(16),
                 child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     CircleAvatar(
                       radius: 24,
@@ -495,7 +631,7 @@ class OrderDeliveredPage extends ConsumerWidget {
                           order.business.name,
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
-                            fontSize: 18,
+                            fontSize: 16,
                             color:
                                 isDarkMode ? kSecondaryWhite : kSecondaryDark,
                           ),
@@ -506,12 +642,16 @@ class OrderDeliveredPage extends ConsumerWidget {
                         ),
                       ],
                     ),
-                    const Spacer(),
-                    Text(
-                      date,
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: isDarkMode ? kSecondaryWhite : kMediumGray,
+                    Expanded(
+                      child: AutoSizeText(
+                        date,
+                        style: TextStyle(
+                          color: isDarkMode ? kSecondaryWhite : kMediumGray,
+                        ),
+                        maxFontSize: 10,
+                        minFontSize: 8,
+                        maxLines: 3,
+                        textAlign: TextAlign.right,
                       ),
                     ),
                   ],
@@ -519,6 +659,15 @@ class OrderDeliveredPage extends ConsumerWidget {
               ),
               _buildPointsEarned(),
               _buildSectionTitle("Livraison", ref),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16),
+                child: _buildProgressTracker(),
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 10),
+                child: _buildLocationInfo(),
+              ),
+
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: _buildDeliveryInfo(ref),
@@ -533,7 +682,7 @@ class OrderDeliveredPage extends ConsumerWidget {
                 padding: const EdgeInsets.all(16),
                 child: _buildPaymentDetails(ref),
               ),
-              _buildRatingSection(ref),
+              _buildRatingSection(ref, context),
               const SizedBox(height: 20),
             ],
           ),

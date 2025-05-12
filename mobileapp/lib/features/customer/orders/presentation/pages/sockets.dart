@@ -4,7 +4,7 @@ import 'package:socket_io_client/socket_io_client.dart' as IO;
 class SocketService {
   late IO.Socket socket;
   static final SocketService _instance = SocketService._internal();
-  final String _serverUrl = 'http://192.168.54.114:3000';
+  final String _serverUrl = 'http://192.168.54.7:3000';
   factory SocketService() => _instance;
 
   SocketService._internal() {

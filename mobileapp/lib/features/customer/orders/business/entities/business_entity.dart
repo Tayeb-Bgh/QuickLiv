@@ -5,10 +5,8 @@ class Business {
 
   Business({required this.id, required this.name, required this.imgUrl});
 
-  
-
   @override
   String toString() {
-   return 'Business{id: $id, name: $name, imgUrl: $imgUrl}';  
-   }
+    return 'Business{id: $id, name: $name, imgUrl: $imgUrl}';
+  }
 }

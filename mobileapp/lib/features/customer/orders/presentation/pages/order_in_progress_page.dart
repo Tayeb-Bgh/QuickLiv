@@ -1,13 +1,18 @@
 import 'dart:developer';
 
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:mobileapp/core/config/backend_api_config.dart';
 import 'package:mobileapp/core/config/dark_mode_provider.dart';
 import 'package:mobileapp/core/constants/constants.dart';
+import 'package:mobileapp/features/auth/presentation/providers/auth_provider.dart';
 import 'package:mobileapp/features/customer/orders/business/entities/order_entity.dart';
 import 'package:mobileapp/features/customer/orders/presentation/pages/sockets.dart';
+import 'package:mobileapp/features/customer/orders/presentation/providers/orders_provider.dart';
 import 'package:mobileapp/features/customer/orders/presentation/widgets/animated_progress.dart';
 
 class OrderDetailsPage extends ConsumerStatefulWidget {
@@ -35,13 +40,304 @@ class _OrderDetailsPageState extends ConsumerState<OrderDetailsPage> {
     _socketService.joinOrderRoom(_currentOrder.id.toString());
 
     _socketService.listenForOrderUpdates((data) {
-      log("la je peut reload ${data['status']}");
-      if (mounted && data['commandeId'] == _currentOrder.id) {
-        setState(() {
-          _currentOrder = _currentOrder.copyWithStatus(data['status']);
-        });
+      log("LISTENING FOOOR");
+      _currentOrder.status = data['status'];
+      if (data['status'] != 4) {
+        if (mounted) {
+          setState(() {});
+        }
+      } else {
+        if (mounted) {
+          setState(() {
+            showRatingDialog(context);
+          });
+        }
       }
     });
+  }
+
+  Future<bool> insertCart(Map<String, dynamic> orderData, int orderId) async {
+    final baseUrl = await ApiConfig.getBaseUrl();
+    final url = "$baseUrl/orders/customer-orders/$orderId/rate";
+    log("at URL $url");
+    try {
+      final secureStorage = ref.watch(secureStorageProvider);
+      Dio dio = Dio();
+      String? token = await secureStorage.read(key: "authToken");
+
+      final response = await dio.put(
+        url,
+        options: Options(
+          headers: {
+            'Content-Type': 'application/json',
+            'authorization': 'Bearer $token',
+          },
+        ),
+        data: orderData,
+      );
+
+      if (response.statusCode == 201) {
+        return true;
+      } else {
+        throw Error();
+      }
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Widget _buildIconButton(
+    IconData icon,
+    Color bgColor,
+    VoidCallback onPressed,
+  ) {
+    return IconButton(
+      icon: Icon(icon, color: Colors.white),
+      onPressed: onPressed,
+      style: ButtonStyle(
+        backgroundColor: WidgetStateProperty.all(bgColor),
+        shape: WidgetStateProperty.all(const CircleBorder()),
+        padding: WidgetStateProperty.all(const EdgeInsets.all(12)),
+      ),
+    );
+  }
+
+  void showRatingDialog(BuildContext context) {
+    double ratingDel = 0;
+    double ratingBusns = 0;
+    bool showThankYou = true;
+
+    showGeneralDialog(
+      context: context,
+      barrierLabel: "Rating",
+      barrierDismissible: true,
+      transitionDuration: const Duration(milliseconds: 300),
+      pageBuilder: (context, anim1, anim2) => const SizedBox(),
+      transitionBuilder: (context, animation, secondaryAnimation, child) {
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return Transform.scale(
+              scale: Curves.easeOutBack.transform(animation.value),
+              child: Opacity(
+                opacity: animation.value,
+                child: AlertDialog(
+                  backgroundColor:
+                      ref.watch(darkModeProvider)
+                          ? kPrimaryDark
+                          : kSecondaryWhite,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  title: AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 300),
+                    child:
+                        showThankYou
+                            ? Text(
+                              key: ValueKey("thankyou-title"),
+                              "Merci pour votre commande !",
+                              style: TextStyle(
+                                color:
+                                    ref.watch(darkModeProvider)
+                                        ? kSecondaryWhite
+                                        : kPrimaryBlack,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18,
+                              ),
+                            )
+                            : Column(
+                              key: const ValueKey("rating-title"),
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "Comment a été votre expérience ?",
+                                  style: TextStyle(
+                                    color:
+                                        ref.watch(darkModeProvider)
+                                            ? kWhiteGray
+                                            : kSecondaryDark,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 18,
+                                  ),
+                                ),
+                                SizedBox(height: 8),
+                                Text(
+                                  "Merci de prendre un moment pour nous donner votre avis.",
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color:
+                                        ref.watch(darkModeProvider)
+                                            ? kWhiteGray
+                                            : kSecondaryDark,
+                                  ),
+                                ),
+                              ],
+                            ),
+                  ),
+                  content: AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 300),
+                    child:
+                        showThankYou
+                            ? Text(
+                              key: ValueKey("thankyou-content"),
+                              "Nous espérons que tout s'est bien passé. Appuyez sur 'Suivant' pour évaluer votre expérience.",
+                              style: TextStyle(
+                                fontSize: 15,
+                                color:
+                                    ref.watch(darkModeProvider)
+                                        ? kWhiteGray
+                                        : kSecondaryDark,
+                              ),
+                            )
+                            : Column(
+                              key: const ValueKey("rating-content"),
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                const Divider(thickness: 1.2),
+                                const SizedBox(height: 12),
+                                Row(
+                                  children: [
+                                    Icon(
+                                      Icons.delivery_dining,
+                                      color: Colors.red,
+                                    ),
+                                    SizedBox(width: 8),
+                                    Text(
+                                      "Noter le livreur",
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        color:
+                                            ref.watch(darkModeProvider)
+                                                ? kWhiteGray
+                                                : kSecondaryDark,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 8),
+                                RatingBar.builder(
+                                  initialRating: ratingDel,
+                                  minRating: 1,
+                                  unratedColor:
+                                      ref.watch(darkModeProvider)
+                                          ? kMediumGray
+                                          : kLightGray,
+                                  direction: Axis.horizontal,
+                                  allowHalfRating: false,
+                                  itemCount: 5,
+                                  itemSize: 36,
+                                  itemPadding: const EdgeInsets.symmetric(
+                                    horizontal: 4.0,
+                                  ),
+                                  itemBuilder:
+                                      (context, _) => const Icon(
+                                        Icons.star,
+                                        color: Colors.amber,
+                                      ),
+                                  onRatingUpdate: (newRating) {
+                                    ratingDel = newRating;
+                                  },
+                                ),
+                                const SizedBox(height: 24),
+                                Row(
+                                  children: [
+                                    Icon(Icons.store, color: Colors.blue),
+                                    SizedBox(width: 8),
+                                    Text(
+                                      "Noter le commerce",
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        color:
+                                            ref.watch(darkModeProvider)
+                                                ? kWhiteGray
+                                                : kSecondaryDark,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 8),
+                                RatingBar.builder(
+                                  initialRating: ratingBusns,
+                                  minRating: 1,
+                                  direction: Axis.horizontal,
+                                  allowHalfRating: false,
+                                  itemCount: 5,
+                                  unratedColor:
+                                      ref.watch(darkModeProvider)
+                                          ? kMediumGray
+                                          : kLightGray,
+                                  itemSize: 36,
+                                  itemPadding: const EdgeInsets.symmetric(
+                                    horizontal: 4.0,
+                                  ),
+                                  itemBuilder:
+                                      (context, _) => const Icon(
+                                        Icons.star,
+                                        color: Colors.amber,
+                                      ),
+                                  onRatingUpdate: (newRating) {
+                                    ratingBusns = newRating;
+                                  },
+                                ),
+                              ],
+                            ),
+                  ),
+                  actionsPadding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 10,
+                  ),
+                  actionsAlignment: MainAxisAlignment.spaceBetween,
+                  actions: [
+                    AnimatedSwitcher(
+                      duration: const Duration(milliseconds: 300),
+                      child:
+                          showThankYou
+                              ? Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  _buildIconButton(
+                                    Icons.arrow_forward,
+                                    kPrimaryRed,
+                                    () {
+                                      setState(() {
+                                        showThankYou = false;
+                                      });
+                                    },
+                                  ),
+                                ],
+                              )
+                              : Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  _buildIconButton(
+                                    Icons.check,
+                                    kPrimaryRed,
+                                    () {
+                                      final data = {
+                                        "rateDel":
+                                            ratingDel != 0
+                                                ? ratingDel.round()
+                                                : null,
+                                        "rateBusns":
+                                            ratingBusns != 0
+                                                ? ratingBusns.round()
+                                                : null,
+                                      };
+
+                                      insertCart(data, widget.order.id);
+                                      Navigator.pop(context);
+                                    },
+                                  ),
+                                ],
+                              ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
   }
 
   String getStatusLabel(int status) {
@@ -155,52 +451,6 @@ class _OrderDetailsPageState extends ConsumerState<OrderDetailsPage> {
                       ],
                     ),
                   ),
-
-                /* if (status == 2)
-                  Positioned(
-                    left: 169,
-                    top:
-                        12, // pour l'aligner verticalement au centre approximatif
-                    child: SizedBox(
-                      width: 36,
-                      height: 36,
-                      child: PulsatingCircle(
-                        color: Color(
-                          0x1AFF0000,
-                        ), // kPrimaryRed avec .withOpacity(0.1)
-                        size: 56,
-                        child: Icon(
-                          Icons.shopping_bag,
-                          color: kPrimaryRed,
-                          size: 0,
-                        ),
-                      ),
-                    ),
-                  ),
- */
-                /* if (status == 3)
-                  Positioned.fill(
-                    child: Row(
-                      children: [
-                        const SizedBox(width: 12),
-                        const Expanded(child: SizedBox()),
-                        const SizedBox(width: 20),
-                        const Expanded(
-                          child: Stack(
-                            children: [
-                              MovingDot(
-                                color: kPrimaryRed,
-                                size: 8,
-                                reverse: false,
-                              ),
-                            ],
-                          ),
-                        ),
-                        const SizedBox(width: 12),
-                      ],
-                    ),
-                  ),
-               */
               ],
             ),
           ),
@@ -235,7 +485,7 @@ class _OrderDetailsPageState extends ConsumerState<OrderDetailsPage> {
                 Column(
                   children: [
                     Text(
-                      "Burger King, Algérie",
+                      _currentOrder.business.name,
                       style: TextStyle(
                         fontSize: 10,
                         fontWeight: FontWeight.bold,
@@ -300,9 +550,9 @@ class _OrderDetailsPageState extends ConsumerState<OrderDetailsPage> {
     );
   }
 
-  Widget _buildDeliveryInfo(WidgetRef ref) {
+  Widget _buildDeliveryInfo(WidgetRef ref, int status) {
     final isDarkMode = ref.watch(darkModeProvider);
-    if (_currentOrder.status == 0) {
+    if (status == 0) {
       return Row(
         children: [
           Container(
@@ -351,8 +601,8 @@ class _OrderDetailsPageState extends ConsumerState<OrderDetailsPage> {
     }
     return Column(
       children: [
-        _buildProgressTracker(_currentOrder.status),
-        if (_currentOrder.status >= 1) _buildLocationInfo(_currentOrder.status),
+        _buildProgressTracker(status),
+        if (status >= 1) _buildLocationInfo(status),
         const SizedBox(height: 16),
         Row(
           children: [
@@ -672,8 +922,97 @@ class _OrderDetailsPageState extends ConsumerState<OrderDetailsPage> {
     );
   }
 
-  Widget _buildCancelNote() {
-    if (_currentOrder.status == 0) {
+  Future<bool> deleteOrder(int orderId) async {
+    final baseUrl = await ApiConfig.getBaseUrl();
+    final url = "$baseUrl/orders/customer-orders/$orderId";
+    log("at URL $url");
+    try {
+      final secureStorage = ref.watch(secureStorageProvider);
+      Dio dio = Dio();
+      String? token = await secureStorage.read(key: "authToken");
+
+      final response = await dio.delete(
+        url,
+        options: Options(
+          headers: {
+            'Content-Type': 'application/json',
+            'authorization': 'Bearer $token',
+          },
+        ),
+      );
+
+      if (response.statusCode == 201) {
+        return true;
+      } else {
+        throw Error();
+      }
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  void showDeleteConfirmationDialog(BuildContext context) {
+    showGeneralDialog(
+      context: context,
+      barrierLabel: "DeleteConfirmation",
+      barrierDismissible: true,
+      transitionDuration: const Duration(milliseconds: 300),
+      pageBuilder: (context, anim1, anim2) => const SizedBox(),
+      transitionBuilder: (context, animation, secondaryAnimation, child) {
+        return Transform.scale(
+          scale: Curves.easeOutBack.transform(animation.value),
+          child: Opacity(
+            opacity: animation.value,
+            child: AlertDialog(
+              backgroundColor:
+                  ref.watch(darkModeProvider) ? kPrimaryDark : kSecondaryWhite,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
+              ),
+              title: Text(
+                "Êtes-vous sûr ?",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18,
+                  color:
+                      ref.watch(darkModeProvider)
+                          ? kSecondaryWhite
+                          : kPrimaryBlack,
+                ),
+              ),
+              content: Text(
+                "Voulez-vous vraiment supprimer cette commande ? Cette action est irréversible.",
+                style: TextStyle(
+                  fontSize: 15,
+                  color:
+                      ref.watch(darkModeProvider) ? kWhiteGray : kSecondaryDark,
+                ),
+              ),
+              actionsPadding: const EdgeInsets.symmetric(
+                horizontal: 20,
+                vertical: 10,
+              ),
+              actionsAlignment: MainAxisAlignment.spaceEvenly,
+              actions: [
+                _buildIconButton(Icons.close, kPrimaryBlack, () {
+                  Navigator.pop(context);
+                }),
+                _buildIconButton(Icons.check, kPrimaryRed, () {
+                  deleteOrder(widget.order.id);
+                  Navigator.pop(context);
+                  Navigator.pop(context);
+                  ref.invalidate(customerFullOrdersProvider);
+                }),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildCancelNote(int status) {
+    if (status == 0) {
       return Container(
         width: double.infinity,
         child: ElevatedButton(
@@ -682,68 +1021,11 @@ class _OrderDetailsPageState extends ConsumerState<OrderDetailsPage> {
             padding: const EdgeInsets.symmetric(vertical: 12),
           ),
           onPressed: () {
-            // Annulation possible
+            showDeleteConfirmationDialog(context);
           },
           child: const Text(
             "Annuler",
             style: TextStyle(color: kPrimaryWhite, fontSize: 16),
-          ),
-        ),
-      );
-    } else if (_currentOrder.status == 1) {
-      return Column(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              border: Border.all(color: Colors.grey.shade300),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Text(
-              "La livraison est déjà en route, si vous voulez annuler votre commande, en cliquant sur le bouton annuler en bas, vous appellerez automatiquement votre livreur afin de vous arranger avec lui.",
-              style: TextStyle(color: Colors.grey.shade700, fontSize: 14),
-            ),
-          ),
-          const SizedBox(height: 16),
-          Container(
-            width: double.infinity,
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: kPrimaryRed,
-                padding: const EdgeInsets.symmetric(vertical: 12),
-              ),
-              onPressed: () {
-                // Annulation possible
-              },
-              child: const Text(
-                "Annuler",
-                style: TextStyle(color: kPrimaryWhite, fontSize: 16),
-              ),
-            ),
-          ),
-        ],
-      );
-    } else if (_currentOrder.status == 2) {
-      return Container(
-        padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          border: Border.all(color: Colors.grey.shade300),
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: RichText(
-          text: TextSpan(
-            style: TextStyle(color: Colors.grey.shade700, fontSize: 14),
-            children: [
-              const TextSpan(
-                text:
-                    "La livraison est déjà en route, et il est deja arrivé au commerce correspondant vous ne pouvez plus ",
-              ),
-              TextSpan(
-                text: "annuler",
-                style: const TextStyle(color: kPrimaryRed),
-              ),
-              const TextSpan(text: " votre commande."),
-            ],
           ),
         ),
       );
@@ -760,7 +1042,7 @@ class _OrderDetailsPageState extends ConsumerState<OrderDetailsPage> {
             children: [
               const TextSpan(
                 text:
-                    "La livraison est déjà en route, le livreur est en route vers vous avec les produits commander. Vous ne pouvez plus ",
+                    "La livraison est déjà en route, le livreur est en route avec les produits commandés. Vous ne pouvez plus ",
               ),
               TextSpan(
                 text: "annuler",
@@ -774,7 +1056,7 @@ class _OrderDetailsPageState extends ConsumerState<OrderDetailsPage> {
     }
   }
 
-  Widget _buildSectionTitle(String title, WidgetRef ref) {
+  Widget _buildSectionTitle(String title, WidgetRef ref, int status) {
     final isDarkMode = ref.watch(darkModeProvider);
     return Column(
       children: [
@@ -816,6 +1098,7 @@ class _OrderDetailsPageState extends ConsumerState<OrderDetailsPage> {
   @override
   void dispose() {
     _socketService.disconnect();
+    log("IN PROGRESS DISPOSE");
     super.dispose();
   }
 
@@ -826,6 +1109,9 @@ class _OrderDetailsPageState extends ConsumerState<OrderDetailsPage> {
       "dd/MM/yyyy à HH:mm",
     ).format(_currentOrder.createdAt);
 
+    //final int status = ref.watch(currentOrderProvider)!.status;
+    log("rebuildiiiiiiiiiiing");
+    //log("STATUS IN THE WIDGET $status");
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -889,24 +1175,32 @@ class _OrderDetailsPageState extends ConsumerState<OrderDetailsPage> {
                   ],
                 ),
               ),
-              _buildSectionTitle("Livraison", ref),
+              _buildSectionTitle("Livraison", ref, _currentOrder.status),
               Padding(
                 padding: const EdgeInsets.only(bottom: 3, left: 18, right: 18),
-                child: _buildDeliveryInfo(ref),
+                child: _buildDeliveryInfo(ref, _currentOrder.status),
               ),
-              _buildSectionTitle("Produits commandés", ref),
+              _buildSectionTitle(
+                "Produits commandés",
+                ref,
+                _currentOrder.status,
+              ),
               Padding(
                 padding: const EdgeInsets.all(16),
                 child: _buildProducts(ref),
               ),
-              _buildSectionTitle("Détails de paiement", ref),
+              _buildSectionTitle(
+                "Détails de paiement",
+                ref,
+                _currentOrder.status,
+              ),
               Padding(
                 padding: const EdgeInsets.all(16),
                 child: _buildPaymentDetails(ref),
               ),
               Padding(
                 padding: const EdgeInsets.all(16),
-                child: _buildCancelNote(),
+                child: _buildCancelNote(_currentOrder.status),
               ),
               SizedBox(height: 20), // Espace supplémentaire en bas
             ],
