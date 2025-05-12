@@ -5,12 +5,16 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mobileapp/core/config/dark_mode_provider.dart';
 import 'package:mobileapp/core/constants/constants.dart';
+import 'package:mobileapp/features/deliverer/orders/business/entities/order_entity.dart';
+import 'package:mobileapp/features/deliverer/orders/business/entities/product_entity.dart';
+import 'package:mobileapp/features/deliverer/orders/presentation/providers/orders_providers.dart';
 import 'package:mobileapp/features/deliverer/orders/presentation/widgets/client_section.dart';
 import 'package:mobileapp/features/deliverer/orders/presentation/widgets/row_counter.dart';
 
 class AtBusinessCard extends ConsumerWidget {
   final VoidCallback onNext;
-  AtBusinessCard({super.key, required this.onNext});
+  final OrderEntity order;
+  AtBusinessCard({super.key, required this.onNext, required this.order});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -29,7 +33,7 @@ class AtBusinessCard extends ConsumerWidget {
           child: Column(
             children: [
               Text(
-                'CMD N° - 62361 ',
+                'CMD N° - ${order.id} ',
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
@@ -64,7 +68,7 @@ class AtBusinessCard extends ConsumerWidget {
                   color: kPrimaryRed,
                 ),
               ),
-              _buildProductsList(height, fontColor),
+              _buildProductsList(height, fontColor, order.products),
               SizedBox(height: height * 0.01),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -78,7 +82,7 @@ class AtBusinessCard extends ConsumerWidget {
                     ),
                   ),
                   Text(
-                    '3000 DZD',
+                    '${order.totalPrice} DZD',
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
@@ -88,30 +92,23 @@ class AtBusinessCard extends ConsumerWidget {
                 ],
               ),
               SizedBox(height: height * 0.05),
-              ClientSection(),
+              ClientSection(order: order),
               Expanded(
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: kPrimaryDark,
-                      ),
-                      onPressed: () {},
-                      child: const AutoSizeText(
-                        "Annuler",
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: kPrimaryWhite,
-                        ),
-                      ),
-                    ),
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
                         backgroundColor: kPrimaryRed,
                       ),
-                      onPressed: onNext,
+                      onPressed: () async {
+                        final putStatus = ref.read(
+                          updateOrderStatusUseCaseProvider,
+                        );
+                        await putStatus(order.id, '3');
+
+                        onNext();
+                      },
                       child: const AutoSizeText(
                         "J’ai récupéré",
                         style: TextStyle(
@@ -131,7 +128,11 @@ class AtBusinessCard extends ConsumerWidget {
     );
   }
 
-  Widget _buildProductsList(double screenHeight, Color fontColor) {
+  Widget _buildProductsList(
+    double screenHeight,
+    Color fontColor,
+    List<Product> products,
+  ) {
     return Padding(
       padding: const EdgeInsets.all(20.0),
       child: Column(
@@ -147,7 +148,10 @@ class AtBusinessCard extends ConsumerWidget {
           ),
           const SizedBox(height: 8),
           Container(
-            constraints: BoxConstraints(maxHeight: screenHeight * 0.14),
+            constraints: BoxConstraints(
+              maxHeight: screenHeight * 0.14,
+              minHeight: screenHeight * 0.14,
+            ),
             decoration: BoxDecoration(
               border: Border.all(color: Colors.grey.shade300),
               borderRadius: BorderRadius.circular(10),
@@ -156,20 +160,20 @@ class AtBusinessCard extends ConsumerWidget {
               thickness: 8,
               thumbVisibility: true,
               child: SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(horizontal: 40),
+                padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    _buildProductText("Burger Cheese", 1, fontColor),
-                    _buildProductText("Fries Large", 2, fontColor),
-                    _buildProductText("Coke 500ml", 1, fontColor),
-                    _buildProductText("Nuggets", 1, fontColor),
-                    _buildProductText("Ice Cream", 1, fontColor),
-                    _buildProductText("Nuggets", 1, fontColor),
-                    _buildProductText("Ice Cream", 1, fontColor),
-                    _buildProductText("Nuggets", 1, fontColor),
-                    _buildProductText("Ice Cream", 1, fontColor),
-                  ],
+                  children:
+                      products
+                          .map(
+                            (product) => _buildProductText(
+                              product.name,
+                              product.quantity,
+                              fontColor,
+                              product.unitProd,
+                            ),
+                          )
+                          .toList(),
                 ),
               ),
             ),
@@ -179,11 +183,18 @@ class AtBusinessCard extends ConsumerWidget {
     );
   }
 
-  Widget _buildProductText(String productName, int quantity, Color fontColor) {
+  Widget _buildProductText(
+    String productName,
+    int quantity,
+    Color fontColor,
+    bool unitProd,
+  ) {
+    final quantityText = unitProd ? "x$quantity g" : "x$quantity";
+
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 20),
       child: Text(
-        "x$quantity  $productName",
+        "$quantityText  $productName",
         style: TextStyle(
           fontSize: 14,
           fontWeight: FontWeight.bold,

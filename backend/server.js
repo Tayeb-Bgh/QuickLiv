@@ -56,7 +56,7 @@ io.on("connection", (socket) => {
     // Ajouter ce socket à la liste des sockets actifs pour cette commande
     if (!socketsParCommande[commandeId]) {
       socketsParCommande[commandeId] = new Set();
-    }
+    }+
     socketsParCommande[commandeId].add(socket.id);
 
     // Démarrer le polling s'il n'est pas déjà actif

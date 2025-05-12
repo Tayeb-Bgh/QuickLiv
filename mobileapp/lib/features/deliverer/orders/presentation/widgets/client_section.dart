@@ -6,11 +6,12 @@ import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:mobileapp/core/config/dark_mode_provider.dart';
 import 'package:mobileapp/core/constants/constants.dart';
+import 'package:mobileapp/features/deliverer/orders/business/entities/order_entity.dart';
 import 'package:mobileapp/features/pick_location/providers/pick_location_providers.dart';
 
 class ClientSection extends ConsumerWidget {
-  const ClientSection({super.key});
-
+  const ClientSection({super.key, required this.order});
+  final OrderEntity order;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final height = MediaQuery.of(context).size.height;
@@ -21,7 +22,7 @@ class ClientSection extends ConsumerWidget {
     final addressFont = isDarkMode ? kSecondaryWhite : kPrimaryRed;
     final dmsFont = isDarkMode ? kLightGray : kPrimaryBlack;
 
-    LatLng? positionCust = LatLng(36.749915937615256, 5.0552245389692745);
+    LatLng? positionCust = LatLng(order.customer.latClt, order.customer.lngClt);
 
     return Column(
       children: [
@@ -43,7 +44,7 @@ class ClientSection extends ConsumerWidget {
               children: [
                 Icon(Icons.person, size: 18, color: fontColor),
                 AutoSizeText(
-                  "anis AYOUAZ",
+                  order.customer.name,
 
                   style: TextStyle(
                     fontWeight: FontWeight.w600,
@@ -70,7 +71,7 @@ class ClientSection extends ConsumerWidget {
                       Icon(Icons.phone, size: 14, color: fontColor),
                       const SizedBox(width: 5),
                       Text(
-                        '0561006662',
+                        order.customer.phone,
                         style: TextStyle(fontSize: 12, color: fontColor),
                       ),
                     ],
@@ -79,7 +80,9 @@ class ClientSection extends ConsumerWidget {
                 const SizedBox(width: 8),
                 GestureDetector(
                   onTap: () {
-                    Clipboard.setData(ClipboardData(text: '0561006662'));
+                    Clipboard.setData(
+                      ClipboardData(text: order.customer.phone),
+                    );
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
                         content: Text('Phone number copied to clipboard'),

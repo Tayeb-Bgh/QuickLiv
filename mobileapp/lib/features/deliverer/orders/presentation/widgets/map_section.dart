@@ -9,30 +9,34 @@ import 'package:mobileapp/core/constants/constants.dart';
 import 'package:mobileapp/core/params/origin_dest_params.dart';
 import 'package:mobileapp/core/utils/location_provider.dart';
 import 'package:mobileapp/core/utils/utility_functions.dart';
+import 'package:mobileapp/features/deliverer/orders/business/entities/order_entity.dart';
+import 'package:mobileapp/features/deliverer/orders/presentation/pages/maps.dart';
 
 import 'package:mobileapp/features/maps_example/polyline_current_to_destination.dart';
 
 class MapSection extends ConsumerWidget {
-  const MapSection({super.key});
-
+  const MapSection({super.key, required this.order, required this.isClt});
+  final OrderEntity order;
+  final bool isClt;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
     final isDarkMode = ref.watch(darkModeProvider);
     final fontColor = isDarkMode ? kWhiteGray : kDarkGray;
-
-    LatLng? positionCust = LatLng(36.749915937615256, 5.0552245389692745);
-
+    final latLng =
+        isClt
+            ? LatLng(order.customer.latClt, order.customer.lngClt)
+            : LatLng(order.busns.latBusns, order.busns.lngBusns);
     final originDestParams = OriginDestParams(
       origin: ref
           .watch(locationProvider)
           .when(
             data: (pos) => pos!,
-            error: (error, _) => LatLng(36.75, 3.05),
-            loading: () => LatLng(36.75, 3.05),
+            error: (error, _) => LatLng(36.7515126, 5.0371626),
+            loading: () => LatLng(36.7515126, 5.0371626),
           ), // example: Algiers
-      destination: positionCust, // example: Bejaia
+      destination: latLng, // example: Bejaia
     );
 
     final distanceAsync = ref.watch(distanceInMetersProvider(originDestParams));
@@ -64,24 +68,8 @@ class MapSection extends ConsumerWidget {
             ),
             child: Stack(
               children: [
-                Positioned.fill(child: GoogleMapsPageToDest()),
-                Positioned(
-                  bottom: 10,
-                  left: width * 0.15,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: kPrimaryRed,
-                    ),
-                    onPressed: () {},
-                    child: const AutoSizeText(
-                      "Ouvrir la navigation",
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                        color: kPrimaryWhite,
-                      ),
-                    ),
-                  ),
+                Positioned.fill(
+                  child: GoogleMapsPageToDest(destinationPos: latLng),
                 ),
               ],
             ),

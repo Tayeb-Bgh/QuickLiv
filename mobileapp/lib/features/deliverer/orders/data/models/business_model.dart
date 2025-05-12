@@ -7,7 +7,7 @@ class BusinessModel {
   final double latitude;
   final double longitude;
   final String imageUrl;
-
+  final String address;
   BusinessModel({
     required this.id,
     required this.name,
@@ -15,6 +15,7 @@ class BusinessModel {
     required this.latitude,
     required this.longitude,
     required this.imageUrl,
+    required this.address
   });
 
   factory BusinessModel.fromJson(Map<String, dynamic> json) => BusinessModel(
@@ -24,6 +25,7 @@ class BusinessModel {
     latitude: json['latBusns'],
     longitude: json['lngBusns'],
     imageUrl: json['imgUrlBusns'],
+    address: json['adrsBusns']
   );
   Business toEntity() {
     return Business(
@@ -34,6 +36,7 @@ class BusinessModel {
       lngBusns: longitude,
       imgUrl: imageUrl,
       time: DateTime.now(),
+      address  :address
     );
   }
 }

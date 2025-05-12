@@ -62,4 +62,122 @@ class OrdersService {
       );
     }
   }
+
+  Future<OrderModel?> fetchOrderForDeliverer() async {
+    final url = await ApiConfig.getBaseUrl();
+    final secureStorage = ref.watch(secureStorageProvider);
+    String? token = await secureStorage.read(key: 'authToken');
+
+    final response = await dio.get(
+      '$url/deliverer/order',
+      options: Options(
+        headers: {'authorization': 'Bearer $token'},
+        sendTimeout: Duration(seconds: 8),
+        receiveTimeout: Duration(seconds: 8),
+      ),
+    );
+
+    if (response.statusCode == 200) {
+      final List<dynamic> data = response.data;
+
+      if (data.isEmpty) return null;
+
+      final order = OrderModel.fromJson(data[0]);
+      return order;
+    } else {
+      throw Exception('Failed to load orders: ${response.statusCode}');
+    }
+  }
+
+  Future<void> assignOrderToDeliverer(int orderId) async {
+    final url = await ApiConfig.getBaseUrl();
+    final secureStorage = ref.watch(secureStorageProvider);
+    String? token = await secureStorage.read(key: 'authToken');
+    log('u are in assignOrder');
+    final response = await dio.post(
+      '$url/deliverer/order/assign/$orderId',
+      options: Options(
+        headers: {'authorization': 'Bearer $token'},
+        sendTimeout: Duration(seconds: 8),
+        receiveTimeout: Duration(seconds: 8),
+      ),
+    );
+
+    if (response.statusCode == 200) {
+      log('Order $orderId successfully assigned to deliverer');
+    } else {
+      throw Exception('Failed to assign order: ${response.statusCode}');
+    }
+  }
+
+  Future<void> updateOrderStatus({
+    required int orderId,
+    required String status,
+  }) async {
+    final url = await ApiConfig.getBaseUrl();
+    final secureStorage = ref.watch(secureStorageProvider);
+    String? token = await secureStorage.read(key: 'authToken');
+    try {
+      final response = await dio.put(
+        '$url/deliverer/orders/$orderId',
+        data: {'statusOrd': status},
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $token',
+            'Content-Type': 'application/json',
+          },
+          sendTimeout: const Duration(seconds: 8),
+          receiveTimeout: const Duration(seconds: 8),
+        ),
+      );
+
+      if (response.statusCode == 200) {
+        log("Order status updated successfully.");
+      } else {
+        throw Exception('Failed to update order: ${response.statusCode}');
+      }
+    } on DioException catch (e) {
+      log("DioException: ${e.message}");
+      throw Exception(
+        'Dio error while updating order status: ${e.response?.data}',
+      );
+    }
+  }
+
+  Future<void> updateOrderStatusLanLng({
+    required int orderId,
+    required String status,
+    required double lan,
+    required double lng,
+  }) async {
+    final url = await ApiConfig.getBaseUrl();
+    final secureStorage = ref.watch(secureStorageProvider);
+    String? token = await secureStorage.read(key: 'authToken');
+    try {
+      log('u are trying to update the status o=with lan and lng');
+      final response = await dio.put(
+        '$url/deliverer/ordersLanLng/$orderId',
+        data: {'statusOrd': status, 'lanDel': lan, 'lngDel': lng},
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $token',
+            'Content-Type': 'application/json',
+          },
+          sendTimeout: const Duration(seconds: 20),
+          receiveTimeout: const Duration(seconds: 20),
+        ),
+      );
+
+      if (response.statusCode == 200) {
+        log("Order status updated successfully.");
+      } else {
+        throw Exception('Failed to update order: ${response.statusCode}');
+      }
+    } on DioException catch (e) {
+      log("DioException: ${e.message}");
+      throw Exception(
+        'Dio error while updating order status: ${e.response?.data}',
+      );
+    }
+  }
 }

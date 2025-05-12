@@ -10,9 +10,11 @@ class OrderModel {
   final bool transactionNumber;
   final CustomerModel customer;
   final BusinessModel business;
+  final int status;
 
   OrderModel({
     required this.id,
+    required this.status,
     required this.createdAt,
     required this.weightCategory,
     required this.deliveryPrice,
@@ -27,6 +29,7 @@ class OrderModel {
     weightCategory: json['weightCatOrd'] ?? '',
     deliveryPrice: (json['delivPriceOrd'] ?? 0).toDouble(),
     transactionNumber: (json['transNbrOrd'] ?? 0) == 1,
+    status: json['statusOrd'],
     customer: CustomerModel(
       id: json['idCust'] ?? 0,
       firstName: json['firstNameCust'] ?? '',
@@ -42,6 +45,7 @@ class OrderModel {
       latitude: (json['latBusns'] as num?)?.toDouble() ?? 0,
       longitude: (json['lngBusns'] as num?)?.toDouble() ?? 0,
       imageUrl: json['imgUrlBusns'] ?? '',
+      address: json['adrsBusns'],
     ),
   );
 
@@ -54,7 +58,7 @@ class OrderModel {
       payMethod: transactionNumber,
       customer: customer.toEntity(),
       busns: business.toEntity(),
-      status: '0',
+      status: status,
       totalPrice: 0,
       products: [],
     );

@@ -4,19 +4,21 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mobileapp/core/utils/location_provider.dart';
 
 class GoogleMapsPageToDest extends ConsumerStatefulWidget {
-  const GoogleMapsPageToDest({super.key});
+  final LatLng destinationPos;
+  const GoogleMapsPageToDest({super.key, required this.destinationPos});
 
   @override
-  ConsumerState<GoogleMapsPageToDest> createState() => _GoogleMapsPageToDestState();
+  ConsumerState<GoogleMapsPageToDest> createState() =>
+      _GoogleMapsPageToDestState();
 }
 
 class _GoogleMapsPageToDestState extends ConsumerState<GoogleMapsPageToDest> {
-  final LatLng _destinationPos = LatLng(36.5448475773023, 4.609514253196802);
+ 
 
   @override
   Widget build(BuildContext context) {
     final location = ref.watch(locationAutoRefreshProvider);
-    final polylineRoute = ref.watch(polylineProvider(_destinationPos));
+    final polylineRoute = ref.watch(polylineProvider(widget.destinationPos));
 
     return location.when(
       data: (LatLng? currentPosition) {
@@ -44,7 +46,7 @@ class _GoogleMapsPageToDestState extends ConsumerState<GoogleMapsPageToDest> {
                 ),
                 Marker(
                   markerId: const MarkerId("Market"),
-                  position: _destinationPos,
+                  position: widget.destinationPos,
                   icon: BitmapDescriptor.defaultMarker,
                 ),
               },

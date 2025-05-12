@@ -6,7 +6,7 @@ class Business {
   final double latBusns;
   final double lngBusns;
   final DateTime time;
-
+  final String address;
   Business({
     required this.id,
     required this.name,
@@ -15,5 +15,6 @@ class Business {
     required this.latBusns,
     required this.lngBusns,
     required this.time,
+    required this.address,
   });
 }

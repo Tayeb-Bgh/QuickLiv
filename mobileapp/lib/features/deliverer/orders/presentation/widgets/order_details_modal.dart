@@ -1,18 +1,33 @@
+import 'dart:developer';
+
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:dio/dio.dart';
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart'; // Add this to access ConsumerWidget
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:mobileapp/core/config/dark_mode_provider.dart';
 import 'package:mobileapp/core/constants/constants.dart';
+import 'package:mobileapp/core/utils/location_provider.dart';
+import 'package:mobileapp/core/utils/utility_functions.dart';
+
 import 'package:mobileapp/features/deliverer/orders/business/entities/business_entity.dart';
 import 'package:mobileapp/features/deliverer/orders/business/entities/order_entity.dart';
+import 'package:mobileapp/features/deliverer/orders/data/service/orders_service.dart';
 import 'package:mobileapp/features/deliverer/orders/presentation/providers/orders_providers.dart';
 import 'package:mobileapp/features/maps_example/polyline_current_to_destination.dart';
+import 'package:mobileapp/features/maps_example/polyline_origin_to_destination.dart';
+import 'package:mobileapp/features/pick_location/providers/pick_location_providers.dart';
 
 class OrderDetailsModal extends ConsumerWidget {
   final OrderEntity order;
-  const OrderDetailsModal({super.key, required this.order});
+  final originDestParams;
+  const OrderDetailsModal({
+    super.key,
+    required this.order,
+    required this.originDestParams,
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -20,11 +35,12 @@ class OrderDetailsModal extends ConsumerWidget {
     final screenWidth = MediaQuery.of(context).size.width;
     final cardWidth = screenWidth * 0.8;
     final busns = order.busns;
-    final customer = order.customer;
+
     final isDarkMode = ref.watch(darkModeProvider);
     final fontColor = isDarkMode ? kPrimaryWhite : kPrimaryBlack;
     final backgroundColor = isDarkMode ? kSecondaryDark : kPrimaryWhite;
-
+    LatLng? positionCust = LatLng(order.customer.latClt, order.customer.lngClt);
+    LatLng? positionBusns = LatLng(busns.latBusns, busns.lngBusns);
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -37,11 +53,11 @@ class OrderDetailsModal extends ConsumerWidget {
           children: [
             _buildHeader(cardWidth, fontColor, order),
             const SizedBox(height: 6),
-            _buildStoreInfo(cardWidth, fontColor, busns),
+            _buildStoreInfo(ref, cardWidth, fontColor, busns),
             const SizedBox(height: 8),
             _buildRouteLine(),
             const SizedBox(height: 4),
-            _buildAddresses(fontColor),
+            _buildAddresses(fontColor, ref, positionCust, busns.address),
             const SizedBox(height: 10),
             _buildOrderMeta(fontColor),
             const SizedBox(height: 10),
@@ -63,6 +79,8 @@ class OrderDetailsModal extends ConsumerWidget {
               screenHeight,
               screenWidth,
               fontColor,
+              positionBusns,
+              positionCust,
             ),
             SizedBox(
               width: cardWidth,
@@ -73,7 +91,7 @@ class OrderDetailsModal extends ConsumerWidget {
               ),
             ),
 
-            _buildTakeOrderButton(cardWidth),
+            _buildTakeOrderButton(cardWidth, ref, context, order.id),
           ],
         ),
       ),
@@ -110,7 +128,14 @@ class OrderDetailsModal extends ConsumerWidget {
     );
   }
 
-  Widget _buildStoreInfo(double cardWidth, Color fontColor, Business busns) {
+  Widget _buildStoreInfo(
+    ref,
+    double cardWidth,
+    Color fontColor,
+    Business busns,
+  ) {
+    final distanceAsync = ref.watch(distanceInMetersProvider(originDestParams));
+    final durationAsync = ref.watch(drivingDurationProvider(originDestParams));
     return Row(
       children: [
         CircleAvatar(
@@ -118,20 +143,44 @@ class OrderDetailsModal extends ConsumerWidget {
           backgroundImage: NetworkImage(busns.imgUrl),
         ),
         const SizedBox(width: 8),
-        Expanded(
-          child: AutoSizeText(
-            busns.name,
-            maxLines: 1,
-            style: TextStyle(fontWeight: FontWeight.bold, color: fontColor),
-          ),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            AutoSizeText(
+              busns.name,
+              maxLines: 1,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: fontColor,
+                fontSize: 16,
+              ),
+            ),
+            SizedBox(height: 10),
+            Row(
+              children: [
+                Icon(Icons.location_on_outlined, size: 16, color: fontColor),
+                const SizedBox(width: 4),
+                AutoSizeText(
+                  distanceAsync is AsyncData<double>
+                      ? "${toKilometers(distanceAsync.value)} Km"
+                      : distanceAsync is AsyncError
+                      ? "La distance n'a pu être calculée."
+                      : "... Km", //
+                  style: TextStyle(color: fontColor),
+                ),
+                const SizedBox(width: 10),
+                Icon(Icons.timer_outlined, size: 16, color: fontColor),
+                const SizedBox(width: 4),
+                AutoSizeText(
+                  durationAsync is AsyncData<int>
+                      ? formatDurationInReadableText(durationAsync.value)
+                      : "....",
+                  style: TextStyle(color: fontColor),
+                ),
+              ],
+            ),
+          ],
         ),
-        Icon(Icons.location_on_outlined, size: 16, color: fontColor),
-        const SizedBox(width: 4),
-        AutoSizeText("3.6 km", style: TextStyle(color: fontColor)),
-        const SizedBox(width: 10),
-        Icon(Icons.timer_outlined, size: 16, color: fontColor),
-        const SizedBox(width: 4),
-        AutoSizeText("10 min", style: TextStyle(color: fontColor)),
       ],
     );
   }
@@ -155,13 +204,63 @@ class OrderDetailsModal extends ConsumerWidget {
     );
   }
 
-  Widget _buildAddresses(Color fontColor) {
+  Widget _buildAddresses(Color fontColor, ref, positionCust, String busnsAddr) {
+    final AsyncValue<String> asyncAddress = ref.watch(
+      formattedAddressProvider(positionCust),
+    );
+
+    return asyncAddress.when(
+      data: (address) {
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Flexible(
+              child: AutoSizeText(
+                busnsAddr,
+                maxLines: 1,
+                minFontSize: 10,
+                style: TextStyle(
+                  fontSize: 12,
+                  color: fontColor.withOpacity(0.6),
+                ),
+              ),
+            ),
+            Flexible(
+              child: AutoSizeText(
+                address,
+                textAlign: TextAlign.end,
+                maxLines: 1,
+                minFontSize: 10,
+                style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold,
+                  color: fontColor,
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+      error: (error, _) {
+        return _buildLoadingOrErrorRow(fontColor, busnsAddr, "Erreur...");
+      },
+      loading: () {
+        return _buildLoadingOrErrorRow(fontColor, busnsAddr, "Chargement...");
+      },
+    );
+  }
+
+  Widget _buildLoadingOrErrorRow(
+    Color fontColor,
+    String busnsAddr,
+    String rightText,
+  ) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Flexible(
           child: AutoSizeText(
-            "Burger King, Béjaïa, Algérie",
+            busnsAddr,
             maxLines: 1,
             minFontSize: 10,
             style: TextStyle(fontSize: 12, color: fontColor.withOpacity(0.6)),
@@ -169,11 +268,15 @@ class OrderDetailsModal extends ConsumerWidget {
         ),
         Flexible(
           child: AutoSizeText(
-            "Q229+V73, Béjaïa, Algérie",
+            rightText,
             textAlign: TextAlign.end,
             maxLines: 1,
-            minFontSize: 12,
-            style: TextStyle(fontSize: 12, color: fontColor.withOpacity(0.6)),
+            minFontSize: 10,
+            style: TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.bold,
+              color: fontColor,
+            ),
           ),
         ),
       ],
@@ -225,6 +328,8 @@ class OrderDetailsModal extends ConsumerWidget {
     double height,
     double width,
     Color fontColor,
+    LatLng positionBusns,
+    LatLng positionCust,
   ) {
     final mapViewType = ref.watch(mapViewProvider);
 
@@ -237,6 +342,7 @@ class OrderDetailsModal extends ConsumerWidget {
           children: [
             ElevatedButton(
               style: ElevatedButton.styleFrom(
+                padding: EdgeInsets.all(10),
                 backgroundColor:
                     mapViewType == MapViewType.business
                         ? kPrimaryRed
@@ -258,6 +364,7 @@ class OrderDetailsModal extends ConsumerWidget {
             ),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
+                padding: EdgeInsets.all(10),
                 backgroundColor:
                     mapViewType == MapViewType.client
                         ? kPrimaryRed
@@ -273,7 +380,7 @@ class OrderDetailsModal extends ConsumerWidget {
                 ref.read(mapViewProvider.notifier).state = MapViewType.client;
               },
               child: const AutoSizeText(
-                "Actuel → Client",
+                "Commerce → Client",
                 style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
               ),
             ),
@@ -295,26 +402,11 @@ class OrderDetailsModal extends ConsumerWidget {
                 Positioned.fill(
                   child:
                       mapViewType == MapViewType.business
-                          ? const GoogleMapsPageToDest()
-                          : Container(),
-                ),
-                Positioned(
-                  bottom: 10,
-                  left: width * 0.2,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: kPrimaryRed,
-                    ),
-                    onPressed: () {},
-                    child: const AutoSizeText(
-                      "Ouvrir la navigation",
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                        color: kPrimaryWhite,
-                      ),
-                    ),
-                  ),
+                          ? GoogleMapsPageToDest(destinationPos: positionBusns)
+                          : GoogleMapsPosToPos(
+                            pointA: positionBusns,
+                            marketPos: positionCust,
+                          ),
                 ),
               ],
             ),
@@ -376,7 +468,7 @@ class OrderDetailsModal extends ConsumerWidget {
     );
   }
 
-  Widget _buildTakeOrderButton(double cardWidth) {
+  Widget _buildTakeOrderButton(double cardWidth, ref, context, idOrd) {
     return SizedBox(
       width: double.infinity,
       child: Center(
@@ -384,7 +476,33 @@ class OrderDetailsModal extends ConsumerWidget {
           width: cardWidth * 0.6,
           child: ElevatedButton(
             style: ElevatedButton.styleFrom(backgroundColor: kPrimaryRed),
-            onPressed: () {},
+            onPressed: () async {
+  final currenPos = await ref.read(locationProvider.future);
+  final updateStatus = ref.read(updateOrderStatusProvider);
+  
+  try {
+    await updateStatus(
+      idOrd,
+      "1",
+      currenPos.latitude,
+      currenPos.longitude,
+    );
+    await ref.read(assignOrderProvider)(idOrd);
+
+    // Update state BEFORE pop
+    ref.read(selectedCategoryIndexProvider.notifier).state = false;
+    ref.read(isTakenProvider.notifier).state = true;
+
+    // Optional: await fetchCurrentOrderProvider to ensure UI updates
+    await ref.refresh(fetchCurrentOrderProvider.future);
+
+    Navigator.pop(context);
+  } catch (e) {
+    log("Erreur lors de l'assignation: $e");
+    // Optional: Show a SnackBar or Dialog for feedback
+  }
+},
+
             child: const AutoSizeText(
               "Prendre la commande",
               style: TextStyle(

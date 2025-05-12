@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:flutter/services.dart';
+
 import 'package:mobileapp/core/config/dark_mode_provider.dart';
 import 'package:mobileapp/core/constants/constants.dart';
+import 'package:mobileapp/features/deliverer/orders/business/entities/order_entity.dart';
 
 class PaymentSection extends ConsumerWidget {
-  const PaymentSection({super.key});
+  final OrderEntity order;
+  const PaymentSection({super.key, required this.order});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -15,7 +17,6 @@ class PaymentSection extends ConsumerWidget {
     final width = MediaQuery.of(context).size.width;
     final isDarkMode = ref.watch(darkModeProvider);
 
-    
     final fontColor = isDarkMode ? kPrimaryWhite : kPrimaryBlack;
     return Column(
       spacing: 5,
@@ -47,7 +48,7 @@ class PaymentSection extends ConsumerWidget {
               ),
             ),
             Text(
-              '3000 DZD',
+              '${(order.totalPrice - order.delPrice).toStringAsFixed(0)}. DZD',
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
@@ -68,7 +69,7 @@ class PaymentSection extends ConsumerWidget {
               ),
             ),
             Text(
-              '300 DZD',
+              '${order.delPrice.toStringAsFixed(0)} DZD',
               style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
@@ -77,27 +78,7 @@ class PaymentSection extends ConsumerWidget {
             ),
           ],
         ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              'Réduction',
-              style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
-                color: fontColor,
-              ),
-            ),
-            Text(
-              '-300 DZD',
-              style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
-                color: kPrimaryGreen,
-              ),
-            ),
-          ],
-        ),
+
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -110,7 +91,7 @@ class PaymentSection extends ConsumerWidget {
               ),
             ),
             Text(
-              '3000 DZD',
+              '${order.totalPrice.toStringAsFixed(0)} DZD',
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
@@ -134,29 +115,48 @@ class PaymentSection extends ConsumerWidget {
               padding: EdgeInsets.all(2),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.all(Radius.circular(12)),
-                border: Border.all(
-                  color: fontColor, // or any color you prefer
-                  width: 2, // optional, default is 1.0
-                ),
+                border: Border.all(color: fontColor, width: 2),
               ),
-              child: Row(
-                children: [
-                  Icon(Icons.credit_card, size: 16, color: fontColor),
-                  Text(
-                    'Carte',
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
-                      color: fontColor,
-                    ),
-                  ),
-                ],
-              ),
+              child:
+                  order.payMethod
+                      ? Row(
+                        children: [
+                          Icon(Icons.credit_card, size: 16, color: fontColor),
+                          Text(
+                            'Carte',
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                              color: fontColor,
+                            ),
+                          ),
+                        ],
+                      )
+                      : Row(
+                        children: [
+                          Icon(
+                            Icons.monetization_on,
+                            size: 16,
+                            color: fontColor,
+                          ),
+                          Text(
+                            'especes',
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                              color: fontColor,
+                            ),
+                          ),
+                        ],
+                      ),
             ),
           ],
         ),
         SizedBox(height: height * 0.02),
-        _customerPayed(fontColor),
+        order.payMethod
+            ? _customerPayed(fontColor)
+            : _customerNotPayed(fontColor),
+        SizedBox(height: height * 0.02),
       ],
     );
   }
@@ -184,7 +184,7 @@ class PaymentSection extends ConsumerWidget {
                     AutoSizeText(
                       'Le client a payé par carte !',
                       style: TextStyle(
-                        fontSize: 20,
+                        fontSize: 16,
                         color: kPrimaryGreen,
                         fontWeight: FontWeight.bold,
                       ),

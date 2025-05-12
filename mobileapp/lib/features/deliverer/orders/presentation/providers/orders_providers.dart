@@ -2,20 +2,24 @@ import 'dart:developer';
 
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mobileapp/features/deliverer/home/business/usecases/put_deliverer_stat.dart';
 import 'package:mobileapp/features/deliverer/orders/business/entities/order_entity.dart';
 import 'package:mobileapp/features/deliverer/orders/business/repositories/orders_repo.dart';
 import 'package:mobileapp/features/deliverer/orders/business/usecases/get_orders.dart';
+import 'package:mobileapp/features/deliverer/orders/business/usecases/put_status.dart';
 import 'package:mobileapp/features/deliverer/orders/data/repositories/orders_repo_impl.dart';
 import 'package:mobileapp/features/deliverer/orders/data/service/orders_service.dart';
 import 'package:mobileapp/features/deliverer/orders/presentation/pages/socket.dart';
+import 'package:mobileapp/features/deliverer/home/business/repositories/deliverer_set_stat_repo.dart';
+import 'package:mobileapp/features/deliverer/home/data/repositories/deliverer_set_stat_repo_impl.dart';
 
-final selectedCategoryIndexProvider = StateProvider<bool>((ref) => false);
+final selectedCategoryIndexProvider = StateProvider<bool>((ref) => true);
 final currentCardIndexProvider = StateProvider<int>((ref) => 0);
+final isTakenProvider = StateProvider<bool>((ref) => false);
 final mapViewProvider = StateProvider<MapViewType>(
   (ref) => MapViewType.business,
 );
 
-// Providers existants
 final getOrdersUseCaseProvider = Provider<GetOrders>((ref) {
   final repository = ref.watch(ordersRepositoryProvider);
   return GetOrders(repository);
@@ -29,7 +33,7 @@ final fetchOrdersProvider = FutureProvider<List<OrderEntity>>((ref) async {
 });
 
 final ordersServiceProvider = Provider<OrdersService>((ref) {
-  final dio = Dio(); // ou ref.watch(dioProvider) si vous gérez Dio ailleurs
+  final dio = Dio();
   return OrdersService(dio: dio, ref: ref);
 });
 
@@ -40,7 +44,6 @@ final ordersRepositoryProvider = Provider<OrdersRepo>((ref) {
   return OrdersRepoImpl(ordersService: service);
 });
 
-// Providers pour la gestion temps réel
 final socketServiceProvider = Provider<SocketService>((ref) {
   final service = SocketService();
   ref.onDispose(() => service.disconnect());
@@ -83,3 +86,25 @@ final realTimeOrdersProvider = Provider<void>((ref) {
     ordersNotifier.removeOrders(removedIds.cast<int>());
   });
 });
+final assignOrderProvider = Provider((ref) {
+  final repo = ref.watch(ordersRepositoryProvider);
+  return (int orderId) => repo.assignOrder(orderId);
+});
+
+final fetchCurrentOrderProvider = FutureProvider<OrderEntity?>((ref) async {
+  final repo = ref.watch(ordersRepositoryProvider);
+  return await repo.fetchCurrentOrder();
+});
+
+final updateOrderStatusUseCaseProvider = Provider<PutStatus>((ref) {
+  final repository = ref.watch(ordersRepositoryProvider);
+  return PutStatus(repository);
+});
+final updateOrderStatusProvider =
+    Provider<Future<void> Function(int, String, double, double)>((ref) {
+      final repository = ref.watch(ordersRepositoryProvider);
+      return (int idOrd, String status, double lat, double lng) async {
+       
+        await repository.updateStatusLatLng(idOrd, status, lat, lng);
+      };
+    });
