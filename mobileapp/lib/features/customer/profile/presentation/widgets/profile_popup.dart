@@ -22,7 +22,17 @@ class ProfilePopup extends ConsumerStatefulWidget {
 }
 
 class _ProfilePopupState extends ConsumerState<ProfilePopup> {
+  bool isLoading = false;
+  String? loadingButton;  // Variable pour suivre quel bouton est en cours de chargement
+
   Future<void> checkDelivererStatus() async {
+    setState(() {
+      isLoading = true;
+      loadingButton = 'Devenir Livreur'; // Mettre à jour le bouton en cours de chargement
+    });
+
+    await Future.delayed(Duration(seconds: 1));
+
     final token = await ref.read(jwtTokenProvider.future);
     final url = await ApiConfig.getBaseUrl();
 
@@ -49,10 +59,22 @@ class _ProfilePopupState extends ConsumerState<ProfilePopup> {
       }
     } catch (e) {
       print('Erreur lors de la récupération du statut : $e');
+    } finally {
+      setState(() {
+        isLoading = false;
+        loadingButton = null; // Réinitialiser après la fin du chargement
+      });
     }
   }
 
   Future<void> checkDelivererStatus2() async {
+    setState(() {
+      isLoading = true;
+      loadingButton = 'Devenir Partenaire'; // Mettre à jour le bouton en cours de chargement
+    });
+
+    await Future.delayed(Duration(seconds: 2));
+
     final token = await ref.read(jwtTokenProvider.future);
     final url = await ApiConfig.getBaseUrl();
 
@@ -79,6 +101,11 @@ class _ProfilePopupState extends ConsumerState<ProfilePopup> {
       }
     } catch (e) {
       print('Erreur lors de la récupération du statut : $e');
+    } finally {
+      setState(() {
+        isLoading = false;
+        loadingButton = null; // Réinitialiser après la fin du chargement
+      });
     }
   }
 
@@ -90,116 +117,125 @@ class _ProfilePopupState extends ConsumerState<ProfilePopup> {
     final backgroumdColor = isDarkMode ? kPrimaryDark : kPrimaryWhite;
     final iconColor = isDarkMode ? kDarkGray : kSecondaryWhite;
 
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.only(
-          bottomLeft: Radius.circular(width * 0.05),
-          bottomRight: Radius.circular(width * 0.05),
-        ),
-        color: backgroumdColor,
-      ),
-      child: Column(
-        children: [
-          Stack(
+    return Stack(
+      children: [
+        Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.only(
+              bottomLeft: Radius.circular(width * 0.05),
+              bottomRight: Radius.circular(width * 0.05),
+            ),
+            color: backgroumdColor,
+          ),
+          child: Column(
             children: [
-              CustomPaint(
-                size: Size(double.infinity, height * 0.38),
-                painter: ProfileTopBar(isDarkMode: isDarkMode),
-              ),
-              Positioned(
-                top: width * 0.17,
-                left: 20,
-                right: 20,
-                child: ProfileCard(),
-              ),
-              Positioned(
-                top: width * 0.085,
-                left: width * 0.42,
-                child: Container(
-                  width: width * 0.15,
-                  height: width * 0.15,
-                  decoration: BoxDecoration(
-                    color: Colors.grey.shade300,
-                    shape: BoxShape.circle,
+              Stack(
+                children: [
+                  CustomPaint(
+                    size: Size(double.infinity, height * 0.38),
+                    painter: ProfileTopBar(isDarkMode: isDarkMode),
                   ),
-                ),
+                  Positioned(
+                    top: width * 0.17,
+                    left: 20,
+                    right: 20,
+                    child: ProfileCard(),
+                  ),
+                  Positioned(
+                    top: width * 0.085,
+                    left: width * 0.42,
+                    child: Container(
+                      width: width * 0.15,
+                      height: width * 0.15,
+                      decoration: BoxDecoration(
+                        color: Colors.grey.shade300,
+                        shape: BoxShape.circle,
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    top: height * 0.31,
+                    left: width * 0.83,
+                    child: LightDarkThemeToggle(
+                      value: isDarkMode,
+                      onChanged: (bool value) {
+                        ref.read(darkModeProvider.notifier).state = value;
+                      },
+                      size: width * 0.07,
+                      themeIconType: ThemeIconType.classic,
+                      color: iconColor,
+                      tooltip: 'Toggle Theme',
+                      duration: Duration(milliseconds: 500),
+                      curve: Curves.easeInOut,
+                    ),
+                  ),
+                  Positioned(
+                    top: height * 0.312,
+                    right: width * 0.88,
+                    child: IconButton(
+                      color: iconColor,
+                      iconSize: width * 0.07,
+                      onPressed: () async {
+                        print('Logout pressed');
+                        Navigator.pop(context); 
+                        showDialog(
+                          context: context,
+                          builder: (context) => LogoutProfile(),
+                        );
+                      },
+                      icon: Icon(Icons.logout),
+                    ),
+                  ),
+                ],
               ),
-              Positioned(
-                top: height * 0.31,
-                left: width * 0.83,
-                child: LightDarkThemeToggle(
-                  value: isDarkMode,
-                  onChanged: (bool value) {
-                    ref.read(darkModeProvider.notifier).state = value;
-                  },
-                  size: width * 0.07,
-                  themeIconType: ThemeIconType.classic,
-                  color: iconColor,
-                  tooltip: 'Toggle Theme',
-                  duration: Duration(milliseconds: 500),
-                  curve: Curves.easeInOut,
-                ),
-              ),
-              Positioned(
-                top: height * 0.312,
-                right: width * 0.88,
-                child: IconButton(
-                  color: iconColor,
-                  iconSize: width * 0.07,
-                  onPressed: () async {
-                    print('Logout pressed');
-                    Navigator.pop(context); // just close the dialog
-                    showDialog(
-                      context: context,
-                      builder: (context) => LogoutProfile(),
-                    );
-                  },
-                  icon: Icon(Icons.logout),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      _createRow(
+                        width,
+                        height,
+                        'Devenir Livreur',
+                        Icons.delivery_dining,
+                        ref,
+                        'Devenir Livreur',
+                      ),
+                      _createRow(
+                        width,
+                        height,
+                        'Devenier Partenaire',
+                        Icons.business_center,
+                        ref,
+                        'Devenir Partenaire',
+                      ),
+                      _createRow(
+                        width,
+                        height,
+                        'A propos de nous',
+                        Icons.info,
+                        ref,
+                        '',
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ],
           ),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  _createRow(
-                    width,
-                    height,
-                    'Devenir Livreur',
-                    Icons.delivery_dining,
-                    ref,
-                  ),
-                  _createRow(
-                    width,
-                    height,
-                    'Devenier Partenaire',
-                    Icons.business_center,
-                    ref,
-                  ),
-                  _createRow(
-                    width,
-                    height,
-                    'A propos de nous',
-                    Icons.info,
-                    ref,
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
+        ),
+        
+      ],
     );
   }
 
-  _createRow(double width, double height, String text, IconData icon, ref) {
+  _createRow(double width, double height, String text, IconData icon, ref, String buttonType) {
     final isDarkMode = ref.watch(darkModeProvider);
     final backgroundColor = isDarkMode ? kSecondaryDark : kLightGrayWhite;
     final textColor = isDarkMode ? kPrimaryWhite : kPrimaryBlack;
     final iconColor = isDarkMode ? kPrimaryWhite : kPrimaryBlack;
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -216,7 +252,7 @@ class _ProfilePopupState extends ConsumerState<ProfilePopup> {
               splashColor: kLightGreen,
               onTap: () {
                 if (text == 'Devenir Livreur') {
-                  checkDelivererStatus(); // Appeler la fonction pour vérifier le statut
+                  checkDelivererStatus();
                 } else if (text == 'Devenier Partenaire') {
                   checkDelivererStatus2();
                 } else if (text == 'A propos de nous') {
@@ -224,10 +260,11 @@ class _ProfilePopupState extends ConsumerState<ProfilePopup> {
                 }
               },
               child: Row(
-                spacing: width * 0.02,
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   SizedBox(width: width * 0.02),
                   Icon(icon, size: width * 0.06, color: iconColor),
+                  SizedBox(width: width * 0.02),
                   Text(
                     text,
                     style: TextStyle(
@@ -236,6 +273,18 @@ class _ProfilePopupState extends ConsumerState<ProfilePopup> {
                       color: textColor,
                     ),
                   ),
+                  if (loadingButton == buttonType)
+                    Padding(
+                      padding: EdgeInsets.only(left: 130.0),
+                      child: SizedBox(
+                        width: width * 0.06,
+                        height: width * 0.06,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 3,
+                          color: kPrimaryRed,
+                        ),
+                      ),
+                    ),
                 ],
               ),
             ),
