@@ -14,29 +14,14 @@ QuickLiv handles the entire delivery workflow: a client places an order from a m
 
 ## Features
 
-- **Real-time GPS tracking** — Socket.IO + Google Maps SDK. The client sees the driver's position update live from pickup to doorstep.
-- **AI vehicle assignment** — Mistral AI analyses each order's weight and volume to automatically dispatch the right vehicle type (scooter or car) to the nearest driver.
-- **OTP via Telegram bot** — custom 2FA flow, secure and free with no SMS provider needed.
-- **Multi-basket system** — up to 5 simultaneous baskets (one per merchant), persisted across app restarts.
-- **Loyalty & coupons** — points accumulate with every order and can be redeemed for delivery discounts (30%, 60%, or 100% off).
-- **Two distinct interfaces** — separate Flutter apps for clients and drivers, both built on Clean Architecture.
+- **Real-time GPS tracking** : Socket.IO + Google Maps SDK. The client sees the driver's position update live from pickup to doorstep.
+- **AI vehicle assignment** : Mistral AI analyses each order's weight and volume to automatically dispatch the right vehicle type (scooter or car) to the nearest driver.
+- **OTP via Telegram bot** : custom 2FA flow, secure and free with no SMS provider needed.
+- **Multi-basket system** : up to 5 simultaneous baskets (one per merchant), persisted across app restarts.
+- **Loyalty & coupons** : points accumulate with every order and can be redeemed for delivery discounts (30%, 60%, or 100% off).
+- **Two distinct interfaces** : separate Flutter apps for clients and drivers, both built on Clean Architecture.
 
 ---
-
-## Architecture
-
-```
-QuickLiv/
-├── client-app/          # Flutter app (client interface)
-├── driver-app/          # Flutter app (driver interface)
-└── backend/             # Node.js / Express REST API
-    ├── src/
-    │   ├── routes/
-    │   ├── controllers/
-    │   ├── models/
-    │   └── sockets/     # Socket.IO real-time layer
-    └── ...
-```
 
 The backend is a Node.js/Express REST API backed by PostgreSQL (16 relational tables). The architecture was designed using UML diagrams (use-case, sequence, class) following the Unified Process methodology.
 
